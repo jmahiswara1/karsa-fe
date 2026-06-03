@@ -4,6 +4,7 @@ import '../globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { GlobalDialogProvider } from '@/components/providers/GlobalDialogProvider';
 
 const poppins = Poppins({
   weight: ['400', '500', '600', '700', '800'],
@@ -45,7 +46,9 @@ export default async function RootLayout(
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          <GlobalDialogProvider>{children}</GlobalDialogProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

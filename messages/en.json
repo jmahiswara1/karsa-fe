@@ -4,7 +4,8 @@
     "how_it_works": "How it works",
     "faq": "FAQ",
     "log_in": "Log in",
-    "sign_up": "Sign up"
+    "sign_up": "Sign up",
+    "go_to_dashboard": "Dashboard"
   },
   "Hero": {
     "badge": "AI Productivity",
@@ -57,6 +58,47 @@
     "title_3": " in deep work.",
     "subtitle": "Plan, organize, and execute your daily tasks effortlessly.",
     "button": "Try Karsa Free"
+  },
+  "AuthCarousel": {
+    "slide1_title": "Plan less. Do more.",
+    "slide1_desc": "Karsa helps you manage your projects, tasks, and energy in one peaceful dashboard.",
+    "slide2_title": "Organize Your Thoughts",
+    "slide2_desc": "Keep all your notes, ideas, and meeting summaries in one clutter-free space.",
+    "slide3_title": "Master Your Day",
+    "slide3_desc": "Set your daily priorities and let Karsa guide you to achieve them without burnout.",
+    "slide4_title": "Your AI Companion",
+    "slide4_desc": "Get smart suggestions to balance your workload and maintain your well-being."
+  },
+  "Auth": {
+    "branding_title": "Plan less. Do more.",
+    "branding_subtitle": "Karsa helps you manage your projects, tasks, and energy in one peaceful dashboard. Focus on what truly matters.",
+    "google_button": "Continue with Google",
+    "login_title": "Welcome Back",
+    "login_subtitle": "Log in to your account to continue.",
+    "register_title": "Create an Account",
+    "register_subtitle": "Enter your details to get started with Karsa.",
+    "email_label": "Email",
+    "email_placeholder": "m@example.com",
+    "password_label": "Password",
+    "password_placeholder": "••••••••",
+    "name_label": "Full Name",
+    "name_placeholder": "John Doe",
+    "login_button": "Log in",
+    "register_button": "Sign up",
+    "login_loading": "Logging in...",
+    "register_loading": "Signing up...",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "signup_link": "Sign up",
+    "login_link": "Log in",
+    "error_invalid_email": "Please enter a valid email address.",
+    "error_password_min": "Password must be at least 8 characters.",
+    "error_name_min": "Name must be at least 2 characters.",
+    "logout_confirm_title": "Log out of Karsa?",
+    "logout_confirm_desc": "Your session will be ended and you will need to log in again later.",
+    "logout_confirm_yes": "Yes, Log out",
+    "logout_confirm_no": "Cancel",
+    "logout_success_toast": "Successfully logged out."
   },
   "Footer": {
     "description": "Your go-to platform for intelligent workspace tools and daily planning insights.",

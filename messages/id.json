@@ -4,7 +4,8 @@
     "how_it_works": "Cara Kerja",
     "faq": "FAQ",
     "log_in": "Masuk",
-    "sign_up": "Daftar"
+    "sign_up": "Daftar",
+    "go_to_dashboard": "Buka Dashboard"
   },
   "Hero": {
     "badge": "Produktivitas AI",
@@ -57,6 +58,47 @@
     "title_3": " dalam fokus kerja.",
     "subtitle": "Rencanakan, atur, dan selesaikan tugas harian Anda tanpa hambatan.",
     "button": "Coba Karsa Gratis"
+  },
+  "AuthCarousel": {
+    "slide1_title": "Bekerja Lebih Tenang.",
+    "slide1_desc": "Karsa membantu Anda mengelola proyek, tugas, dan energi di satu dasbor yang damai.",
+    "slide2_title": "Rapikan Pikiran Anda",
+    "slide2_desc": "Simpan semua catatan, ide, dan ringkasan rapat dalam satu tempat yang bebas gangguan.",
+    "slide3_title": "Kuasai Hari Anda",
+    "slide3_desc": "Tentukan prioritas harian dan biarkan Karsa memandu Anda mencapainya tanpa kelelahan berlebih.",
+    "slide4_title": "Asisten AI Pribadi Anda",
+    "slide4_desc": "Dapatkan saran cerdas untuk menyeimbangkan beban kerja dan menjaga kesejahteraan Anda."
+  },
+  "Auth": {
+    "branding_title": "Bekerja Lebih Tenang.",
+    "branding_subtitle": "Karsa membantu Anda mengelola proyek, tugas, dan energi di satu dasbor yang damai. Fokuslah hanya pada hal yang benar-benar bermakna hari ini.",
+    "google_button": "Lanjutkan dengan Google",
+    "login_title": "Selamat Datang Kembali",
+    "login_subtitle": "Masuk ke akun Anda untuk melanjutkan.",
+    "register_title": "Buat Akun Baru",
+    "register_subtitle": "Masukkan data diri Anda untuk memulai dengan Karsa.",
+    "email_label": "Email",
+    "email_placeholder": "m@contoh.com",
+    "password_label": "Kata Sandi",
+    "password_placeholder": "••••••••",
+    "name_label": "Nama Lengkap",
+    "name_placeholder": "Budi Santoso",
+    "login_button": "Masuk",
+    "register_button": "Daftar",
+    "login_loading": "Memproses...",
+    "register_loading": "Mendaftar...",
+    "no_account": "Belum punya akun?",
+    "have_account": "Sudah punya akun?",
+    "signup_link": "Daftar sekarang",
+    "login_link": "Masuk di sini",
+    "error_invalid_email": "Mohon masukkan alamat email yang valid.",
+    "error_password_min": "Kata sandi minimal harus 8 karakter.",
+    "error_name_min": "Nama minimal harus 2 karakter.",
+    "logout_confirm_title": "Keluar dari Karsa?",
+    "logout_confirm_desc": "Sesi Anda akan diakhiri dan Anda perlu masuk kembali nanti.",
+    "logout_confirm_yes": "Ya, Keluar",
+    "logout_confirm_no": "Batal",
+    "logout_success_toast": "Berhasil keluar dari akun."
   },
   "Footer": {
     "description": "Platform andalan Anda untuk alat ruang kerja cerdas dan wawasan perencanaan harian.",

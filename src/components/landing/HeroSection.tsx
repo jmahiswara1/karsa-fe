@@ -125,7 +125,7 @@ export function HeroSection() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              className="absolute top-0 left-1/2 z-20 flex h-32 w-32 -translate-x-1/2 -translate-y-1/4 rotate-12 transform items-center justify-center rounded-full border-4 border-gray-50 bg-gradient-to-br from-gray-100 to-gray-300 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+              className="absolute top-0 left-1/2 z-20 flex h-32 w-32 -translate-x-1/2 rotate-12 transform items-center justify-center rounded-full border-4 border-gray-50 bg-gradient-to-br from-gray-100 to-gray-300 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
             >
               {/* Fake 3D inner edge */}
               <div className="absolute inset-2 rounded-full border-t-2 border-l-2 border-white/80 mix-blend-overlay"></div>
@@ -290,7 +290,7 @@ export function HeroSection() {
             <div className="flex items-center justify-between">
               <Link
                 href="/register"
-                className="rounded-full bg-blue-600 px-7 py-3.5 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.3)] transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_12px_25px_rgba(37,99,235,0.4)]"
+                className="rounded-xl bg-blue-600 px-7 py-3.5 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.3)] transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_12px_25px_rgba(37,99,235,0.4)]"
               >
                 Try Karsa Free
               </Link>

@@ -1,6 +1,73 @@
 {
-  "Index": {
-    "title": "Work with clarity, not chaos",
-    "subtitle": "Karsa is an AI-powered personal productivity assistant."
+  "Navbar": {
+    "features": "Features",
+    "how_it_works": "How it works",
+    "faq": "FAQ",
+    "log_in": "Log in",
+    "sign_up": "Sign up"
+  },
+  "Hero": {
+    "badge": "AI Productivity",
+    "title_1": "Make today ",
+    "title_2": "feel lighter",
+    "title_3": "with Karsa",
+    "users_rating": "Over 10,000+ users"
+  },
+  "AiDemo": {
+    "title_1": "Type like a human. ",
+    "title_2": "Organize like a machine.",
+    "description": "No drop-downs, no date pickers. Just type what you need to do, and Karsa's AI handles the rest."
+  },
+  "Feature": {
+    "title_1": "Everything you need to execute. ",
+    "title_2": "Nothing you don't.",
+    "subtitle": "Karsa replaces your scattered to-do apps, calendars, and note-taking tools with one unified, calm workspace.",
+    "card1_title": "Unified Projects & Notes",
+    "card1_desc": "Connect your daily tasks to your highest-level goals. Attach meeting notes, documents, and milestones directly to your project space so context is always one click away.",
+    "card2_title": "Intelligent Daily Plan",
+    "card2_desc": "Start every day with clarity. Karsa analyzes your backlog, deadlines, and past productivity to generate an optimal daily schedule tailored just for you."
+  },
+  "HowItWorks": {
+    "title_1": "Three steps to ",
+    "title_2": "total clarity",
+    "subtitle": "We designed Karsa to get out of your way. Spend less time organizing, and more time doing what matters.",
+    "step1_title": "Brain Dump",
+    "step1_desc": "Just type what's on your mind. Don't worry about dates, tags, or projects. Let it all out in natural language.",
+    "step2_title": "AI Magic",
+    "step2_desc": "Our AI instantly understands intent. It extracts deadlines, assigns priorities, and places it in your optimal schedule.",
+    "step3_title": "Execute",
+    "step3_desc": "Wake up to a perfectly planned day. Tick off tasks with zero friction and watch your productivity score soar."
+  },
+  "Faq": {
+    "title_1": "Frequently asked ",
+    "title_2": "questions",
+    "subtitle": "Everything you need to know about the product and billing.",
+    "q1": "How is Karsa different from other task managers?",
+    "a1": "Karsa uses advanced AI to understand your natural language intent. Instead of manually filling out due dates, priorities, and tags, you just type what's on your mind and Karsa structures it for you automatically.",
+    "q2": "Can I use Karsa for my team?",
+    "a2": "Currently, Karsa is optimized for individual productivity and deep work. However, we are actively developing team collaboration features which will be available in our upcoming Enterprise plan.",
+    "q3": "Do I have to pay to use Karsa?",
+    "a3": "Currently, Karsa is completely free to use! Since we are in the early stages, all features are available at no cost, though AI requests may be subject to fair use limits to ensure stability for everyone.",
+    "q4": "Is my data secure?",
+    "a4": "Yes. We take privacy seriously. All your data is encrypted at rest and in transit. We never use your personal tasks to train public AI models."
+  },
+  "Cta": {
+    "title_1": "Karsa, ",
+    "title_2": "your partner",
+    "title_3": " in deep work.",
+    "subtitle": "Plan, organize, and execute your daily tasks effortlessly.",
+    "button": "Try Karsa Free"
+  },
+  "Footer": {
+    "description": "Your go-to platform for intelligent workspace tools and daily planning insights.",
+    "product": "Product",
+    "features": "Features",
+    "support": "Support",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "rights": "Karsa. All rights reserved."
   }
 }

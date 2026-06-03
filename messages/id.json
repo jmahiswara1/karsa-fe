@@ -1,6 +1,73 @@
 {
-  "Index": {
-    "title": "Kerja dengan tenang, bukan kekacauan",
-    "subtitle": "Karsa adalah asisten produktivitas pribadi berbasis AI."
+  "Navbar": {
+    "features": "Fitur",
+    "how_it_works": "Cara Kerja",
+    "faq": "FAQ",
+    "log_in": "Masuk",
+    "sign_up": "Daftar"
+  },
+  "Hero": {
+    "badge": "Produktivitas AI",
+    "title_1": "Buat hari ",
+    "title_2": "terasa ringan",
+    "title_3": "bersama Karsa",
+    "users_rating": "Lebih dari 10.000+ pengguna"
+  },
+  "AiDemo": {
+    "title_1": "Ketik selayaknya manusia. ",
+    "title_2": "Tertata secara otomatis.",
+    "description": "Tanpa drop-down, tanpa pemilih tanggal. Cukup ketik apa yang perlu Anda lakukan, dan AI Karsa menangani sisanya."
+  },
+  "Feature": {
+    "title_1": "Semua yang Anda butuhkan. ",
+    "title_2": "Tanpa hal yang tak perlu.",
+    "subtitle": "Karsa menggantikan aplikasi to-do, kalender, dan pencatat Anda yang berserakan dengan satu ruang kerja yang tenang dan menyatu.",
+    "card1_title": "Proyek & Catatan Terpadu",
+    "card1_desc": "Hubungkan tugas harian dengan tujuan tingkat tinggi Anda. Lampirkan catatan rapat, dokumen, dan pencapaian langsung ke ruang proyek Anda.",
+    "card2_title": "Rencana Harian Cerdas",
+    "card2_desc": "Mulai hari dengan kejelasan. Karsa menganalisis tumpukan tugas, tenggat waktu, dan produktivitas Anda untuk menghasilkan jadwal harian optimal."
+  },
+  "HowItWorks": {
+    "title_1": "Tiga langkah menuju ",
+    "title_2": "kejelasan total",
+    "subtitle": "Kami merancang Karsa agar tidak menghalangi Anda. Habiskan sedikit waktu mengatur, dan lebih banyak waktu mengerjakan yang penting.",
+    "step1_title": "Tumpahkan Ide",
+    "step1_desc": "Ketik saja apa yang ada di pikiran Anda. Jangan khawatir tentang tanggal, label, atau proyek. Keluarkan semuanya dalam bahasa alami.",
+    "step2_title": "Keajaiban AI",
+    "step2_desc": "AI kami langsung memahami maksud Anda. Ia mengekstrak tenggat waktu, menetapkan prioritas, dan menempatkannya di jadwal optimal.",
+    "step3_title": "Eksekusi",
+    "step3_desc": "Bangun dengan hari yang terencana. Selesaikan tugas tanpa hambatan dan saksikan skor produktivitas Anda melonjak."
+  },
+  "Faq": {
+    "title_1": "Pertanyaan yang sering ",
+    "title_2": "ditanyakan",
+    "subtitle": "Semua yang perlu Anda ketahui tentang produk dan tagihan.",
+    "q1": "Apa bedanya Karsa dengan aplikasi tugas lainnya?",
+    "a1": "Karsa menggunakan AI untuk memahami maksud bahasa alami Anda. Daripada mengisi tanggal dan prioritas manual, cukup ketikkan apa yang Anda pikirkan dan Karsa akan menyusunnya.",
+    "q2": "Bolehkah saya menggunakan Karsa untuk tim?",
+    "a2": "Saat ini, Karsa dioptimalkan untuk produktivitas individu. Namun, kami sedang mengembangkan fitur kolaborasi tim yang akan tersedia di paket Enterprise.",
+    "q3": "Apakah Karsa berbayar?",
+    "a3": "Saat ini Karsa sepenuhnya gratis untuk digunakan! Karena kami masih dalam tahap awal, seluruh fitur dapat dinikmati tanpa biaya, namun penggunaan AI dibatasi secara wajar demi menjaga kestabilan sistem bagi semua pengguna.",
+    "q4": "Apakah data saya aman?",
+    "a4": "Ya. Kami sangat menjaga privasi. Seluruh data Anda dienkripsi baik saat disimpan maupun transit. Kami tidak pernah menggunakan data Anda untuk melatih AI publik."
+  },
+  "Cta": {
+    "title_1": "Karsa, ",
+    "title_2": "rekan Anda",
+    "title_3": " dalam fokus kerja.",
+    "subtitle": "Rencanakan, atur, dan selesaikan tugas harian Anda tanpa hambatan.",
+    "button": "Coba Karsa Gratis"
+  },
+  "Footer": {
+    "description": "Platform andalan Anda untuk alat ruang kerja cerdas dan wawasan perencanaan harian.",
+    "product": "Produk",
+    "features": "Fitur",
+    "support": "Dukungan",
+    "faq": "FAQ",
+    "contact": "Kontak",
+    "legal": "Legal",
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "rights": "Karsa. Hak cipta dilindungi."
   }
 }

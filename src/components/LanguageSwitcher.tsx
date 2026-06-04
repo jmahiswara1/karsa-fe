@@ -10,7 +10,17 @@ export function LanguageSwitcher() {
 
   const toggleLocale = () => {
     const nextLocale = locale === 'en' ? 'id' : 'en';
-    router.replace(pathname, { locale: nextLocale });
+
+    // Fallback to window.location.pathname to handle Next.js stale usePathname bug on Back navigation
+    let currentPath = pathname;
+    if (typeof window !== 'undefined') {
+      const wPath = window.location.pathname;
+      if (wPath === '/' || wPath === '/en' || wPath === '/id') {
+        currentPath = '/';
+      }
+    }
+
+    router.replace(currentPath, { locale: nextLocale });
   };
 
   return (

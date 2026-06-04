@@ -13,6 +13,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  isLoggingOut: boolean;
   fetchProfile: () => Promise<void>;
   logout: () => void;
 }
@@ -22,9 +23,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isLoading: true,
   error: null,
+  isLoggingOut: false,
 
   fetchProfile: async () => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, isLoggingOut: false });
     try {
       const response = await api.get('/api/auth/me');
       set({
@@ -44,9 +46,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
+    set({ isLoggingOut: true });
     if (typeof window !== 'undefined') {
-      document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-      document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie =
+        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax';
+      document.cookie =
+        'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax';
     }
     set({ user: null, isAuthenticated: false });
   },

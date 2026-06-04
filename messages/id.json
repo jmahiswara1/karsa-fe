@@ -5,7 +5,7 @@
     "faq": "FAQ",
     "log_in": "Masuk",
     "sign_up": "Daftar",
-    "go_to_dashboard": "Buka Dashboard"
+    "go_to_dashboard": "Dashboard"
   },
   "Hero": {
     "badge": "Produktivitas AI",
@@ -130,7 +130,7 @@
     "greeting_afternoon": "Selamat siang",
     "greeting_evening": "Selamat sore",
     "greeting_night": "Selamat malam",
-    "greeting_subtitle": "Ini yang sedang terjadi dengan pekerjaan Anda hari ini.",
+    "greeting_subtitle": "Berikut ringkasan aktivitas dan pekerjaan Anda hari ini.",
     "today_focus": "Fokus Hari Ini",
     "today_focus_desc": "Prioritas utama Anda untuk hari ini",
     "today_focus_empty": "Belum ada tugas untuk hari ini",
@@ -139,8 +139,9 @@
     "task_summary_total": "Total",
     "task_summary_in_progress": "Dikerjakan",
     "task_summary_done": "Selesai",
-    "task_summary_overdue": "Terlambat",
-    "upcoming_deadlines": "Deadline Terdekat",
+    "task_summary_overdue": "Terlewat",
+    "unit_tasks": "tugas",
+    "upcoming_deadlines": "Tenggat Waktu Terdekat",
     "upcoming_deadlines_desc": "Deadline terdekat dari semua proyek Anda",
     "upcoming_deadlines_empty": "Tidak ada deadline mendekat",
     "upcoming_deadlines_empty_desc": "Semua sudah terkendali. Tambahkan deadline ke tugas atau proyek.",
@@ -359,6 +360,7 @@
     "create_success": "Catatan berhasil dibuat",
     "edit_success": "Catatan berhasil diperbarui",
     "convert_to_task": "Jadikan Task",
+    "convert_success": "Catatan berhasil diubah menjadi tugas",
     "source_manual": "Manual",
     "source_ai": "Dibuat AI",
     "source_quick_capture": "Quick Capture"

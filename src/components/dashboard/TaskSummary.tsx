@@ -38,7 +38,7 @@ export function InsightCards() {
       border: 'border-rose-100 dark:border-rose-900/30',
       value: summary.overdue,
       labelKey: 'task_summary_overdue',
-      unit: 'tugas',
+      unitKey: 'unit_tasks',
     },
     {
       key: 'today',
@@ -49,7 +49,7 @@ export function InsightCards() {
       border: 'border-amber-100 dark:border-amber-900/30',
       value: todayRemaining,
       labelKey: 'date_today',
-      unit: 'tersisa',
+      unitKey: 'unit_tasks',
     },
     {
       key: 'done',
@@ -60,7 +60,7 @@ export function InsightCards() {
       border: 'border-emerald-100 dark:border-emerald-900/30',
       value: summary.done,
       labelKey: 'task_summary_done',
-      unit: 'tugas',
+      unitKey: 'unit_tasks',
     },
     {
       key: 'progress',
@@ -71,7 +71,7 @@ export function InsightCards() {
       border: 'border-blue-100 dark:border-blue-900/30',
       value: summary.inProgress,
       labelKey: 'task_summary_in_progress',
-      unit: 'tugas',
+      unitKey: 'unit_tasks',
     },
   ];
 
@@ -79,13 +79,13 @@ export function InsightCards() {
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {isLoading
         ? Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="relative rounded-2xl border p-4 bg-card">
+            <div key={i} className="bg-card relative rounded-2xl border p-4">
               <div className="flex items-start justify-between">
                 <Skeleton className="h-5 w-5 rounded-full" />
                 <Skeleton className="h-8 w-10" />
               </div>
               <div className="mt-3">
-                <Skeleton className="h-4 w-16 mb-1" />
+                <Skeleton className="mb-1 h-4 w-16" />
                 <Skeleton className="h-3 w-10" />
               </div>
             </div>
@@ -119,8 +119,8 @@ export function InsightCards() {
                 </div>
                 {/* Bottom: label + unit */}
                 <div className="mt-3">
-                  <p className="text-sm font-bold text-foreground">{t(card.labelKey as any)}</p>
-                  <p className="text-[11px] text-muted-foreground">{card.unit}</p>
+                  <p className="text-foreground text-sm font-bold">{t(card.labelKey as any)}</p>
+                  <p className="text-muted-foreground text-[11px]">{t(card.unitKey as any)}</p>
                 </div>
               </motion.div>
             );

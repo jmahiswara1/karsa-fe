@@ -9,13 +9,13 @@ import { useAuthStore } from '@/store/auth.store';
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { fetchProfile, user } = useAuthStore();
+  const { fetchProfile, user, isLoggingOut } = useAuthStore();
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !isLoggingOut) {
       fetchProfile();
     }
-  }, [fetchProfile, user]);
+  }, [fetchProfile, user, isLoggingOut]);
 
   return (
     <div className="bg-background flex h-screen overflow-hidden">

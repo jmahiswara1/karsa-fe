@@ -5,7 +5,8 @@ import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { AlertTriangle, CheckCircle2, Flame, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { mockTaskSummary, mockTodayTasks } from './mock-data';
+import { useDashboardSummary } from '@/hooks/use-dashboard';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 8 },
@@ -20,94 +21,110 @@ const itemVariants = {
   }),
 };
 
-const cards = [
-  {
-    key: 'overdue',
-    icon: AlertTriangle,
-    numberColor: 'text-rose-500',
-    iconColor: 'text-rose-400',
-    bg: 'bg-rose-50 dark:bg-rose-950/20',
-    border: 'border-rose-100 dark:border-rose-900/30',
-    getValue: () => mockTaskSummary.overdue,
-    labelKey: 'task_summary_overdue',
-    unit: 'tugas',
-  },
-  {
-    key: 'today',
-    icon: Flame,
-    numberColor: 'text-amber-500',
-    iconColor: 'text-amber-400',
-    bg: 'bg-amber-50 dark:bg-amber-950/20',
-    border: 'border-amber-100 dark:border-amber-900/30',
-    getValue: () => mockTodayTasks.filter((t) => t.status !== 'DONE').length,
-    labelKey: 'date_today',
-    unit: 'tersisa',
-  },
-  {
-    key: 'done',
-    icon: CheckCircle2,
-    numberColor: 'text-emerald-500',
-    iconColor: 'text-emerald-400',
-    bg: 'bg-emerald-50 dark:bg-emerald-950/20',
-    border: 'border-emerald-100 dark:border-emerald-900/30',
-    getValue: () => mockTaskSummary.done,
-    labelKey: 'task_summary_done',
-    unit: 'tugas',
-  },
-  {
-    key: 'progress',
-    icon: TrendingUp,
-    numberColor: 'text-primary',
-    iconColor: 'text-primary/60',
-    bg: 'bg-blue-50 dark:bg-blue-950/20',
-    border: 'border-blue-100 dark:border-blue-900/30',
-    getValue: () => mockTaskSummary.inProgress,
-    labelKey: 'task_summary_in_progress',
-    unit: 'tugas',
-  },
-] as const;
-
 export function InsightCards() {
   const t = useTranslations('Dashboard');
+  const { data, isLoading } = useDashboardSummary();
+
+  const summary = data?.taskSummary || { total: 0, inProgress: 0, done: 0, overdue: 0 };
+  const todayRemaining = data?.todayTasks?.filter((t: any) => t.status !== 'DONE').length || 0;
+
+  const cards = [
+    {
+      key: 'overdue',
+      icon: AlertTriangle,
+      numberColor: 'text-rose-500',
+      iconColor: 'text-rose-400',
+      bg: 'bg-rose-50 dark:bg-rose-950/20',
+      border: 'border-rose-100 dark:border-rose-900/30',
+      value: summary.overdue,
+      labelKey: 'task_summary_overdue',
+      unit: 'tugas',
+    },
+    {
+      key: 'today',
+      icon: Flame,
+      numberColor: 'text-amber-500',
+      iconColor: 'text-amber-400',
+      bg: 'bg-amber-50 dark:bg-amber-950/20',
+      border: 'border-amber-100 dark:border-amber-900/30',
+      value: todayRemaining,
+      labelKey: 'date_today',
+      unit: 'tersisa',
+    },
+    {
+      key: 'done',
+      icon: CheckCircle2,
+      numberColor: 'text-emerald-500',
+      iconColor: 'text-emerald-400',
+      bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+      border: 'border-emerald-100 dark:border-emerald-900/30',
+      value: summary.done,
+      labelKey: 'task_summary_done',
+      unit: 'tugas',
+    },
+    {
+      key: 'progress',
+      icon: TrendingUp,
+      numberColor: 'text-primary',
+      iconColor: 'text-primary/60',
+      bg: 'bg-blue-50 dark:bg-blue-950/20',
+      border: 'border-blue-100 dark:border-blue-900/30',
+      value: summary.inProgress,
+      labelKey: 'task_summary_in_progress',
+      unit: 'tugas',
+    },
+  ];
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {cards.map((card, i) => {
-        const Icon = card.icon;
-        const value = card.getValue();
-        return (
-          <motion.div
-            key={card.key}
-            custom={i}
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-            className={cn(
-              'relative rounded-2xl border p-4 transition-all duration-200',
-              card.bg,
-              card.border,
-            )}
-          >
-            {/* Top row: icon left, number right */}
-            <div className="flex items-start justify-between">
-              <Icon className={cn('h-5 w-5', card.iconColor)} />
-              <span
+      {isLoading
+        ? Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="relative rounded-2xl border p-4 bg-card">
+              <div className="flex items-start justify-between">
+                <Skeleton className="h-5 w-5 rounded-full" />
+                <Skeleton className="h-8 w-10" />
+              </div>
+              <div className="mt-3">
+                <Skeleton className="h-4 w-16 mb-1" />
+                <Skeleton className="h-3 w-10" />
+              </div>
+            </div>
+          ))
+        : cards.map((card, i) => {
+            const Icon = card.icon;
+            return (
+              <motion.div
+                key={card.key}
+                custom={i}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
                 className={cn(
-                  'text-2xl leading-none font-extrabold tabular-nums',
-                  card.numberColor,
+                  'relative rounded-2xl border p-4 transition-all duration-200',
+                  card.bg,
+                  card.border,
                 )}
               >
-                {value}
-              </span>
-            </div>
-            {/* Bottom: label + unit */}
-            <div className="mt-3">
-              <p className="text-foreground text-sm font-semibold">{t(card.labelKey as any)}</p>
-              <p className="text-muted-foreground text-[11px]">{card.unit}</p>
-            </div>
-          </motion.div>
-        );
-      })}
+                {/* Top row: icon left, number right */}
+                <div className="flex items-start justify-between">
+                  <Icon className={cn('h-5 w-5', card.iconColor)} />
+                  <span
+                    className={cn(
+                      'text-2xl leading-none font-extrabold tabular-nums',
+                      card.numberColor,
+                    )}
+                  >
+                    {card.value}
+                  </span>
+                </div>
+                {/* Bottom: label + unit */}
+                <div className="mt-3">
+                  <p className="text-sm font-bold text-foreground">{t(card.labelKey as any)}</p>
+                  <p className="text-[11px] text-muted-foreground">{card.unit}</p>
+                </div>
+              </motion.div>
+            );
+          })}
     </div>
   );
 }

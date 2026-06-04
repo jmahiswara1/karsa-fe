@@ -1,13 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/sidebar';
 import { MobileSidebar } from '@/components/layout/mobile-sidebar';
 import { DashboardHeader } from '@/components/layout/dashboard-header';
 import { ReactNode } from 'react';
+import { useAuthStore } from '@/store/auth.store';
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { fetchProfile, user } = useAuthStore();
+
+  useEffect(() => {
+    if (!user) {
+      fetchProfile();
+    }
+  }, [fetchProfile, user]);
 
   return (
     <div className="bg-background flex h-screen overflow-hidden">

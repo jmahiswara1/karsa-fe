@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { mockTodayTasks } from './mock-data';
+import { useDashboardSummary } from '@/hooks/use-dashboard';
 
 interface User {
   id: string;
@@ -29,8 +29,11 @@ export function GreetingBanner({ user }: GreetingBannerProps) {
   };
 
   const greeting = getGreeting();
-  const doneTasks = mockTodayTasks.filter((t) => t.status === 'DONE').length;
-  const totalTasks = mockTodayTasks.length;
+  const { data, isLoading } = useDashboardSummary();
+  
+  const todayTasks = data?.todayTasks || [];
+  const doneTasks = todayTasks.filter((t: any) => t.status === 'DONE').length;
+  const totalTasks = todayTasks.length;
 
   return (
     <motion.div

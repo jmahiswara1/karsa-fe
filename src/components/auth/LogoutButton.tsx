@@ -23,7 +23,7 @@ export function LogoutButton() {
       onConfirm: () => {
         logout();
         toast.success(t('logout_success_toast'));
-        router.push('/login');
+        router.push('/');
       },
     });
   };

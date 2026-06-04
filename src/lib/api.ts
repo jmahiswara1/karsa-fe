@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '@/store/auth.store';
 
 // Helper to get cookie value by name on the client side
 function getCookie(name: string): string | null {
@@ -68,8 +69,15 @@ api.interceptors.response.use(
         // Refresh token is also invalid → force logout
         deleteCookie('access_token');
         deleteCookie('refresh_token');
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+        if (typeof window !== 'undefined' && !useAuthStore.getState().isLoggingOut) {
+          if (
+            !window.location.pathname.includes('/login') &&
+            window.location.pathname !== '/' &&
+            window.location.pathname !== '/en' &&
+            window.location.pathname !== '/id'
+          ) {
+            window.location.href = '/login';
+          }
         }
         return Promise.reject(error);
       }
@@ -97,8 +105,15 @@ api.interceptors.response.use(
         // No refresh token available → force logout
         isRefreshing = false;
         deleteCookie('access_token');
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+        if (typeof window !== 'undefined' && !useAuthStore.getState().isLoggingOut) {
+          if (
+            !window.location.pathname.includes('/login') &&
+            window.location.pathname !== '/' &&
+            window.location.pathname !== '/en' &&
+            window.location.pathname !== '/id'
+          ) {
+            window.location.href = '/login';
+          }
         }
         return Promise.reject(error);
       }
@@ -134,8 +149,15 @@ api.interceptors.response.use(
         processQueue(refreshError, null);
         deleteCookie('access_token');
         deleteCookie('refresh_token');
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+        if (typeof window !== 'undefined' && !useAuthStore.getState().isLoggingOut) {
+          if (
+            !window.location.pathname.includes('/login') &&
+            window.location.pathname !== '/' &&
+            window.location.pathname !== '/en' &&
+            window.location.pathname !== '/id'
+          ) {
+            window.location.href = '/login';
+          }
         }
         return Promise.reject(refreshError);
       } finally {

@@ -31,7 +31,7 @@ export function CtaSection() {
 
           <div className="flex flex-col items-start gap-4 sm:flex-row">
             <Link
-              href="/register"
+              href="/dashboard"
               className="flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-bold text-blue-900 shadow-[0_8px_20px_rgba(255,255,255,0.1)] transition-all hover:bg-gray-50"
             >
               {t('button')}

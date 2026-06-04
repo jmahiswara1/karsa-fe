@@ -289,10 +289,10 @@ export function HeroSection() {
 
             <div className="flex items-center justify-between">
               <Link
-                href="/register"
+                href="/dashboard"
                 className="rounded-xl bg-blue-600 px-7 py-3.5 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.3)] transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_12px_25px_rgba(37,99,235,0.4)]"
               >
-                Try Karsa Free
+                {t('button')}
               </Link>
 
               {/* Small Bar Chart Icon */}

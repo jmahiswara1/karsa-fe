@@ -38,7 +38,8 @@ export default function SettingsPage() {
     setMounted(true);
   }, []);
 
-  const handleLanguageChange = (value: string) => {
+  const handleLanguageChange = (value: string | null) => {
+    if (!value) return;
     updatePreferences.mutate(
       { language: value },
       {
@@ -51,7 +52,8 @@ export default function SettingsPage() {
     );
   };
 
-  const handleThemeChange = (value: string) => {
+  const handleThemeChange = (value: string | null) => {
+    if (!value) return;
     setTheme(value);
     updatePreferences.mutate(
       { theme: value },

@@ -399,5 +399,22 @@
     "source_manual": "Manual",
     "source_ai": "Dibuat AI",
     "source_quick_capture": "Quick Capture"
+  },
+  "Settings": {
+    "profile_title": "Profil",
+    "profile_desc": "Informasi profil Anda dari Google.",
+    "field_name": "Nama",
+    "field_email": "Email",
+    "language_title": "Bahasa",
+    "language_desc": "Pilih bahasa pilihan Anda untuk antarmuka.",
+    "language_en": "Inggris",
+    "language_id": "Indonesia",
+    "theme_title": "Tampilan",
+    "theme_desc": "Pilih tema pilihan Anda.",
+    "theme_light": "Terang",
+    "theme_dark": "Gelap",
+    "theme_system": "Sistem",
+    "save_success": "Preferensi disimpan.",
+    "save_error": "Gagal menyimpan preferensi."
   }
 }

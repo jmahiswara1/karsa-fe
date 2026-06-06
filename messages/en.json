@@ -364,5 +364,22 @@
     "source_manual": "Manual",
     "source_ai": "AI Generated",
     "source_quick_capture": "Quick Capture"
+  },
+  "Settings": {
+    "profile_title": "Profile",
+    "profile_desc": "Your profile information from Google.",
+    "field_name": "Name",
+    "field_email": "Email",
+    "language_title": "Language",
+    "language_desc": "Choose your preferred language for the interface.",
+    "language_en": "English",
+    "language_id": "Indonesian",
+    "theme_title": "Appearance",
+    "theme_desc": "Choose your preferred theme.",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "theme_system": "System",
+    "save_success": "Preferences saved.",
+    "save_error": "Failed to save preferences."
   }
 }

@@ -111,7 +111,7 @@ export default function NotesPage() {
   );
 
   const { data, isLoading } = useNotesQuery(queryParams);
-  const notes = data?.data || [];
+  const notes = useMemo(() => data?.data || [], [data?.data]);
   const meta = data?.meta;
 
   const { data: projectsData } = useProjectsQuery({ limit: 100 });

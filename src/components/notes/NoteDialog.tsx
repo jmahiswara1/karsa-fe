@@ -15,13 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { useCreateNote, useUpdateNote, type Note, type CreateNoteInput } from '@/hooks/use-notes';
 import { useProjectsQuery } from '@/hooks/use-projects';
@@ -36,11 +30,17 @@ interface NoteDialogProps {
   defaultFolderId?: string;
 }
 
-export function NoteDialog({ open, onOpenChange, note, defaultProjectId, defaultFolderId }: NoteDialogProps) {
+export function NoteDialog({
+  open,
+  onOpenChange,
+  note,
+  defaultProjectId,
+  defaultFolderId,
+}: NoteDialogProps) {
   const t = useTranslations('Notes');
   const createNote = useCreateNote();
   const updateNote = useUpdateNote();
-  
+
   // Fetch projects for the dropdown
   const { data: projectsData } = useProjectsQuery({ limit: 100 });
   const projects = projectsData?.data || [];
@@ -95,10 +95,10 @@ export function NoteDialog({ open, onOpenChange, note, defaultProjectId, default
     // Let's rely on undefined for creation, and null for update if supported.
     if (data.projectId === 'none') {
       delete payload.projectId;
-      // For update, to remove a project, we might need to send projectId: null 
+      // For update, to remove a project, we might need to send projectId: null
       // This depends on the backend, let's assume empty string or undefined clears it.
       if (isEditing) {
-         // @ts-ignore - bypassing DTO strictly typed as string
+        // @ts-expect-error - bypassing DTO strictly typed as string
         payload.projectId = null;
       }
     }
@@ -112,7 +112,8 @@ export function NoteDialog({ open, onOpenChange, note, defaultProjectId, default
         toast.success(t('create_success') || 'Note created successfully');
       }
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } }; message?: string };
       toast.error(error?.response?.data?.message || error?.message || 'Failed to save note');
     }
   };
@@ -129,21 +130,23 @@ export function NoteDialog({ open, onOpenChange, note, defaultProjectId, default
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mt-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-2 flex flex-col gap-5">
           {/* Title */}
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-sm font-semibold">{t('field_title')}</Label>
+            <Label htmlFor="title" className="text-sm font-semibold">
+              {t('field_title')}
+            </Label>
             <Input
               id="title"
               placeholder={t('field_title_placeholder')}
-              className={cn("text-lg px-4 py-5 font-medium", errors.title ? 'border-red-500' : '')}
+              className={cn('px-4 py-5 text-lg font-medium', errors.title ? 'border-red-500' : '')}
               {...register('title', { required: true })}
             />
           </div>
 
           {/* Project Selection */}
-          <div className="space-y-2 bg-muted/20 p-4 rounded-xl border border-border/50">
-            <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">
+          <div className="bg-muted/20 border-border/50 space-y-2 rounded-xl border p-4">
+            <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
               {t('field_project')}
             </Label>
             <Select
@@ -151,7 +154,15 @@ export function NoteDialog({ open, onOpenChange, note, defaultProjectId, default
               onValueChange={(val) => setValue('projectId', val === 'none' ? '' : (val as string))}
             >
               <SelectTrigger>
-                <SelectValue placeholder={t('field_project_placeholder')} />
+                {selectedProject && selectedProject !== 'none' ? (
+                  <span className="truncate">
+                    {projects.find((p) => p.id === selectedProject)?.title || selectedProject}
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground truncate">
+                    {t('field_project_placeholder')}
+                  </span>
+                )}
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none" className="text-muted-foreground italic">
@@ -167,18 +178,23 @@ export function NoteDialog({ open, onOpenChange, note, defaultProjectId, default
           </div>
 
           {/* Content */}
-          <div className="space-y-2 flex-1">
-            <Label htmlFor="content" className="text-sm font-semibold">{t('field_content')}</Label>
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="content" className="text-sm font-semibold">
+              {t('field_content')}
+            </Label>
             <Textarea
               id="content"
               placeholder={t('field_content_placeholder')}
               rows={8}
-              className={cn("resize-none p-4 leading-relaxed", errors.content ? 'border-red-500' : '')}
+              className={cn(
+                'resize-none p-4 leading-relaxed',
+                errors.content ? 'border-red-500' : '',
+              )}
               {...register('content', { required: true })}
             />
           </div>
 
-          <DialogFooter className="pt-2 border-t border-border/40">
+          <DialogFooter className="border-border/40 border-t pt-2">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
               {t('cancel')}
             </Button>

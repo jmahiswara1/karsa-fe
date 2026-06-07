@@ -195,6 +195,10 @@
     "section_timeline": "Jadwal & Deadline",
     "section_projects": "Proyek Anda",
     "section_notes": "Catatan Terbaru",
+    "section_schedule": "Jadwal Hari Ini",
+    "empty_schedule": "Belum ada jadwal",
+    "empty_schedule_desc": "Buat rencana harian Anda dengan AI atau tambahkan manual.",
+    "go_to_planner": "Ke Planner",
     "assistant_hint": "Karsa siap membantu Anda",
     "date_today": "Hari ini",
     "date_format_full": "{day}, {date} {month} {year}"

@@ -12,6 +12,7 @@ export interface DashboardSummary {
   activeProjects: any[];
   upcomingDeadlines: any[];
   recentNotes: any[];
+  todaySchedule: any[];
 }
 
 export const useDashboardSummary = () => {

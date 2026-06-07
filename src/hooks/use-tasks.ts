@@ -121,6 +121,7 @@ export const useCreateTask = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
     },
   });
 };
@@ -135,13 +136,14 @@ export const useUpdateTask = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
     },
   });
 };
 
 export const useReorderTasks = () => {
   return useMutation({
-    mutationFn: async (tasks: { id: string; order: number; columnId?: string }[]) => {
+    mutationFn: async (tasks: { id: string; order: number; columnId?: string; status?: TaskStatus }[]) => {
       await api.post('/api/tasks/reorder', { tasks });
     },
     // optimistic updates handled by component mostly, but can invalidate later
@@ -157,6 +159,7 @@ export const useDeleteTask = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
     },
   });
 };

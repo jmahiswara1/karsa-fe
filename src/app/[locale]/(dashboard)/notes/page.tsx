@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Plus, FileText, Search, X, ChevronRight, Home } from 'lucide-react';
+import { Plus, FileText, Search, X, ChevronRight } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,9 +20,14 @@ import {
   useUpdateNote,
   type Note,
 } from '@/hooks/use-notes';
-import { useNoteFoldersQuery, useDeleteNoteFolder, useUpdateNoteFolder, type NoteFolder } from '@/hooks/use-note-folders';
+import {
+  useNoteFoldersQuery,
+  useDeleteNoteFolder,
+  useUpdateNoteFolder,
+  type NoteFolder,
+} from '@/hooks/use-note-folders';
 import { useProjectsQuery } from '@/hooks/use-projects';
-import { useCreateTask } from '@/hooks/use-tasks';
+import { useCreateTask, useTaskColumns } from '@/hooks/use-tasks';
 import { useDialogStore } from '@/store/dialog.store';
 import {
   DropdownMenu,
@@ -56,11 +61,12 @@ export default function NotesPage() {
   const t = useTranslations('Notes');
   const tPages = useTranslations('Pages');
   const { showConfirm } = useDialogStore();
-  
+
   const deleteNote = useDeleteNote();
   const updateNote = useUpdateNote();
   const deleteFolder = useDeleteNoteFolder();
   const createTask = useCreateTask();
+  const { data: taskColumns } = useTaskColumns();
   const reorderNotes = useReorderNotes();
   const updateFolder = useUpdateNoteFolder();
 
@@ -74,7 +80,7 @@ export default function NotesPage() {
   // Dialogs
   const [noteDialogOpen, setNoteDialogOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
-  
+
   const [folderDialogOpen, setFolderDialogOpen] = useState(false);
   const [editingFolder, setEditingFolder] = useState<NoteFolder | null>(null);
   const [createFolderParentId, setCreateFolderParentId] = useState<string | null>(null);
@@ -101,7 +107,7 @@ export default function NotesPage() {
       page,
       limit,
     }),
-    [debouncedSearch, projectId, page, currentFolderId]
+    [debouncedSearch, projectId, page, currentFolderId],
   );
 
   const { data, isLoading } = useNotesQuery(queryParams);
@@ -111,13 +117,16 @@ export default function NotesPage() {
   const { data: projectsData } = useProjectsQuery({ limit: 100 });
   const projects = projectsData?.data || [];
 
-  const { data: currentFolders, isLoading: isLoadingFolders } = useNoteFoldersQuery(currentFolderId);
+  const { data: currentFolders, isLoading: isLoadingFolders } =
+    useNoteFoldersQuery(currentFolderId);
 
   // Optimistic UI for Drag and Drop
-  const [optimisticNotes, setOptimisticNotes] = useState<Note[]>([]);
-  useEffect(() => {
+  const [optimisticNotes, setOptimisticNotes] = useState<Note[]>(notes);
+  const prevNotesRef = React.useRef(notes);
+  if (prevNotesRef.current !== notes) {
+    prevNotesRef.current = notes;
     setOptimisticNotes(notes);
-  }, [notes]);
+  }
 
   // DnD Sensors
   const sensors = useSensors(
@@ -128,7 +137,7 @@ export default function NotesPage() {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -141,18 +150,25 @@ export default function NotesPage() {
 
       if (active.data.current?.type === 'Note') {
         const noteId = active.id as string;
-        
+
         // Don't move if it's already in the target folder
-        if (targetFolderId === currentFolderId || (targetFolderId === null && currentFolderId === null)) return;
-        
+        if (
+          targetFolderId === currentFolderId ||
+          (targetFolderId === null && currentFolderId === null)
+        )
+          return;
+
         // Update optimistic state
         setOptimisticNotes((items) => items.filter((n) => n.id !== noteId));
 
         try {
-          const realFolderId = targetFolderId === 'folder-root' ? null : (targetFolderId?.replace('folder-', '') || null);
+          const realFolderId =
+            targetFolderId === 'folder-root'
+              ? null
+              : targetFolderId?.replace('folder-', '') || null;
           await updateNote.mutateAsync({ id: noteId, folderId: realFolderId });
           toast.success('Note moved to folder');
-        } catch (e) {
+        } catch {
           toast.error('Failed to move note');
           setOptimisticNotes(notes); // revert
         }
@@ -161,42 +177,49 @@ export default function NotesPage() {
 
       if (active.data.current?.type === 'Folder') {
         const sourceFolderId = (active.id as string).replace('folder-', '');
-        
+
         // Prevent dropping a folder into itself
         if (sourceFolderId === targetFolderId?.replace('folder-', '')) return;
         // Don't move if it's already in the target folder
-        if (targetFolderId === currentFolderId || (targetFolderId === null && currentFolderId === null)) return;
+        if (
+          targetFolderId === currentFolderId ||
+          (targetFolderId === null && currentFolderId === null)
+        )
+          return;
 
         try {
-          const realFolderId = targetFolderId === 'folder-root' ? null : (targetFolderId?.replace('folder-', '') || null);
+          const realFolderId =
+            targetFolderId === 'folder-root'
+              ? null
+              : targetFolderId?.replace('folder-', '') || null;
           await updateFolder.mutateAsync({ id: sourceFolderId, data: { parentId: realFolderId } });
           toast.success('Folder moved');
-        } catch (e) {
+        } catch {
           toast.error('Failed to move folder');
         }
         return;
       }
     }
 
-      // Otherwise, just reordering among notes
-      if (active.id !== over.id) {
-        setOptimisticNotes((items) => {
-          const oldIndex = items.findIndex((i) => i.id === active.id);
-          const newIndex = items.findIndex((i) => i.id === over.id);
-          
-          const newArray = arrayMove(items, oldIndex, newIndex);
-          
-          // Prepare reorder payload
-          const reorderPayload = newArray.map((note, idx) => ({
-            id: note.id,
-            order: (page - 1) * limit + idx,
-          }));
-          
-          reorderNotes.mutate(reorderPayload);
-          
-          return newArray;
-        });
-      }
+    // Otherwise, just reordering among notes
+    if (active.id !== over.id) {
+      setOptimisticNotes((items) => {
+        const oldIndex = items.findIndex((i) => i.id === active.id);
+        const newIndex = items.findIndex((i) => i.id === over.id);
+
+        const newArray = arrayMove(items, oldIndex, newIndex);
+
+        // Prepare reorder payload
+        const reorderPayload = newArray.map((note, idx) => ({
+          id: note.id,
+          order: (page - 1) * limit + idx,
+        }));
+
+        reorderNotes.mutate(reorderPayload);
+
+        return newArray;
+      });
+    }
   };
 
   const handleCreateNote = () => {
@@ -221,7 +244,7 @@ export default function NotesPage() {
           if (notes.length === 1 && page > 1) {
             setPage(page - 1);
           }
-        } catch (error) {
+        } catch {
           toast.error('Failed to delete note');
         }
       },
@@ -248,7 +271,7 @@ export default function NotesPage() {
         try {
           await deleteFolder.mutateAsync(folder.id);
           toast.success('Folder deleted successfully');
-        } catch (error) {
+        } catch {
           toast.error('Failed to delete folder');
         }
       },
@@ -262,15 +285,24 @@ export default function NotesPage() {
       confirmText: t('convert_to_task'),
       onConfirm: async () => {
         try {
+          const defaultColumn =
+            taskColumns?.find(
+              (c) =>
+                c.name.toLowerCase().includes('todo') ||
+                c.name.toLowerCase().includes('to do') ||
+                c.name.toLowerCase().includes('to-do'),
+            ) || taskColumns?.[0];
+
           await createTask.mutateAsync({
             title: note.title,
             description: note.content,
             projectId: note.projectId || undefined,
+            columnId: defaultColumn?.id || undefined,
             status: 'TODO',
             priority: 'MEDIUM',
           });
           toast.success(t('convert_success') || 'Converted to task successfully');
-        } catch (error) {
+        } catch {
           toast.error('Failed to convert note to task');
         }
       },
@@ -287,117 +319,138 @@ export default function NotesPage() {
   const hasFilters = !!search || !!projectId;
 
   return (
-    <div className="flex flex-col space-y-6 pb-2 w-full">
+    <div className="flex w-full flex-col space-y-6 pb-2">
       {/* Header */}
       <PageHeader
-            title={tPages('notes_title')}
-            description={tPages('notes_desc')}
-            actions={
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => handleCreateFolderClick(currentFolderId)} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  New Folder
-                </Button>
-                <Button onClick={handleCreateNote} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  {t('create_note')}
-                </Button>
-              </div>
-            }
+        title={tPages('notes_title')}
+        description={tPages('notes_desc')}
+        actions={
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => handleCreateFolderClick(currentFolderId)}
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              New Folder
+            </Button>
+            <Button onClick={handleCreateNote} className="gap-2">
+              <Plus className="h-4 w-4" />
+              {t('create_note')}
+            </Button>
+          </div>
+        }
+      />
+
+      {/* Breadcrumbs */}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <div className="text-muted-foreground border-border/40 flex flex-wrap items-center gap-2 border-b pb-2 text-sm">
+          <DroppableBreadcrumbItem
+            folderId={null}
+            label="Notes"
+            isCurrent={currentFolderId === null}
+            onClick={() => {
+              setCurrentFolderId(null);
+              setFolderStack([]);
+              setPage(1);
+            }}
           />
 
-          {/* Breadcrumbs */}
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground pb-2 border-b border-border/40">
-            <DroppableBreadcrumbItem
-              folderId={null}
-              label="Notes"
-              isCurrent={currentFolderId === null}
-              onClick={() => {
-                setCurrentFolderId(null);
-                setFolderStack([]);
-                setPage(1);
-              }}
-            />
-            
-            {folderStack.map((crumb, index) => (
-              <div key={crumb.id} className="flex items-center gap-2">
-                <ChevronRight className="h-4 w-4 opacity-50" />
-                <DroppableBreadcrumbItem
-                  folderId={crumb.id}
-                  label={crumb.name}
-                  isCurrent={index === folderStack.length - 1}
-                  onClick={() => {
-                    setCurrentFolderId(crumb.id);
-                    setFolderStack(folderStack.slice(0, index + 1));
-                    setPage(1);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Search */}
-            <div className="relative w-full max-w-xs">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-              <Input
-                value={search}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                placeholder={t('search_placeholder')}
-                className="pl-9 h-9"
+          {folderStack.map((crumb, index) => (
+            <div key={crumb.id} className="flex items-center gap-2">
+              <ChevronRight className="h-4 w-4 opacity-50" />
+              <DroppableBreadcrumbItem
+                folderId={crumb.id}
+                label={crumb.name}
+                isCurrent={index === folderStack.length - 1}
+                onClick={() => {
+                  setCurrentFolderId(crumb.id);
+                  setFolderStack(folderStack.slice(0, index + 1));
+                  setPage(1);
+                }}
               />
             </div>
+          ))}
+        </div>
 
-            {/* Project Filter */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'outline' }), 'h-9 gap-2 font-medium text-sm max-w-[200px]')}>
-                <span className="truncate">
-                  {projectId ? projects.find(p => p.id === projectId)?.title || t('filter_project') : t('filter_project')}
-                </span>
-                <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-[200px] max-h-[300px] overflow-y-auto">
-                <DropdownMenuItem
-                  onClick={() => { setProjectId(''); setPage(1); }}
-                  className={cn(!projectId && 'bg-accent font-semibold')}
-                >
-                  {t('filter_project')}
-                </DropdownMenuItem>
-                {projects.map(p => (
-                  <DropdownMenuItem
-                    key={p.id}
-                    onClick={() => { setProjectId(p.id); setPage(1); }}
-                    className={cn(projectId === p.id && 'bg-accent font-semibold')}
-                  >
-                    {p.title}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Clear Filters */}
-            {hasFilters && (
-              <Button variant="ghost" size="sm" onClick={handleClearFilters} className="gap-1.5 text-muted-foreground">
-                <X className="h-3.5 w-3.5" />
-                {t('clear_filters')}
-              </Button>
-            )}
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Search */}
+          <div className="relative w-full max-w-xs">
+            <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+            <Input
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder={t('search_placeholder')}
+              className="h-9 pl-9"
+            />
           </div>
 
-          {/* Grid View */}
-          <div>
-            {/* Render Folders First */}
-            {(!isLoadingFolders && currentFolders && currentFolders.length > 0 && !hasFilters) && (
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-muted-foreground mb-3">Folders</h4>
-                <SortableContext items={currentFolders.map(f => `folder-${f.id}`)} strategy={rectSortingStrategy}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {/* Project Filter */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                buttonVariants({ variant: 'outline' }),
+                'h-9 max-w-[200px] gap-2 text-sm font-medium',
+              )}
+            >
+              <span className="truncate">
+                {projectId
+                  ? projects.find((p) => p.id === projectId)?.title || t('filter_project')
+                  : t('filter_project')}
+              </span>
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-[300px] w-[200px] overflow-y-auto">
+              <DropdownMenuItem
+                onClick={() => {
+                  setProjectId('');
+                  setPage(1);
+                }}
+                className={cn(!projectId && 'bg-accent font-semibold')}
+              >
+                {t('filter_project')}
+              </DropdownMenuItem>
+              {projects.map((p) => (
+                <DropdownMenuItem
+                  key={p.id}
+                  onClick={() => {
+                    setProjectId(p.id);
+                    setPage(1);
+                  }}
+                  className={cn(projectId === p.id && 'bg-accent font-semibold')}
+                >
+                  {p.title}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Clear Filters */}
+          {hasFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearFilters}
+              className="text-muted-foreground gap-1.5"
+            >
+              <X className="h-3.5 w-3.5" />
+              {t('clear_filters')}
+            </Button>
+          )}
+        </div>
+
+        {/* Grid View */}
+        <div>
+          {/* Render Folders First */}
+          {!isLoadingFolders && currentFolders && currentFolders.length > 0 && !hasFilters && (
+            <div className="mb-6">
+              <h4 className="text-muted-foreground mb-3 text-sm font-semibold">Folders</h4>
+              <SortableContext
+                items={currentFolders.map((f) => `folder-${f.id}`)}
+                strategy={rectSortingStrategy}
+              >
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {currentFolders.map((folder) => (
                     <FolderCard
                       key={folder.id}
@@ -411,94 +464,106 @@ export default function NotesPage() {
                       onDelete={() => handleDeleteFolder(folder)}
                     />
                   ))}
-                  </div>
-                </SortableContext>
-              </div>
-            )}
-
-            {/* Render Notes */}
-            <div>
-              {(!hasFilters && currentFolders && currentFolders.length > 0) && (
-                <h4 className="text-sm font-semibold text-muted-foreground mb-3">Files</h4>
-              )}
-              {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="flex flex-col h-[200px] rounded-xl border border-border/50 p-5 space-y-3">
-                      <div className="flex items-center gap-2.5">
-                        <Skeleton className="h-8 w-8 rounded-lg" />
-                        <div className="space-y-1.5">
-                          <Skeleton className="h-4 w-32" />
-                          <Skeleton className="h-3 w-16" />
-                        </div>
-                      </div>
-                      <div className="flex-1 space-y-2 mt-2">
-                        <Skeleton className="h-3 w-full" />
-                        <Skeleton className="h-3 w-full" />
-                        <Skeleton className="h-3 w-2/3" />
-                      </div>
-                      <div className="flex justify-between mt-auto">
-                        <Skeleton className="h-4 w-20" />
-                        <Skeleton className="h-4 w-16" />
-                      </div>
-                    </div>
-                  ))}
                 </div>
-              ) : optimisticNotes.length === 0 ? (
-                <EmptyState
-                  icon={FileText}
-                  title={hasFilters ? t('no_results') : (currentFolders?.length ? 'No files in this folder' : t('no_notes'))}
-                  description={hasFilters ? t('no_results_desc') : t('no_notes_desc')}
-                  actionLabel={!hasFilters ? t('create_note') : undefined}
-                  onAction={!hasFilters ? handleCreateNote : undefined}
-                />
-              ) : (
-                <SortableContext items={optimisticNotes.map(n => n.id)} strategy={rectSortingStrategy}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    {optimisticNotes.map((note, index) => (
-                      <NoteCard
-                        key={note.id}
-                        note={note}
-                        index={index}
-                        onEdit={handleEditNote}
-                        onDelete={handleDeleteNote}
-                        onConvertToTask={handleConvertToTask}
-                        onClick={handleEditNote}
-                      />
-                    ))}
-                  </div>
-                </SortableContext>
-              )}
-            </div>
-            </div>
-          </DndContext>
-          
-          {/* Pagination */}
-          {meta && meta.totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-6">
-              <span className="text-sm text-muted-foreground">
-                Page {meta.page} of {meta.totalPages}
-              </span>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                >
-                  Previous
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setPage(p => Math.min(meta.totalPages, p + 1))}
-                  disabled={page === meta.totalPages}
-                >
-                  Next
-                </Button>
-              </div>
+              </SortableContext>
             </div>
           )}
+
+          {/* Render Notes */}
+          <div>
+            {!hasFilters && currentFolders && currentFolders.length > 0 && (
+              <h4 className="text-muted-foreground mb-3 text-sm font-semibold">Files</h4>
+            )}
+            {isLoading ? (
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="border-border/50 flex h-[200px] flex-col space-y-3 rounded-xl border p-5"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Skeleton className="h-8 w-8 rounded-lg" />
+                      <div className="space-y-1.5">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-16" />
+                      </div>
+                    </div>
+                    <div className="mt-2 flex-1 space-y-2">
+                      <Skeleton className="h-3 w-full" />
+                      <Skeleton className="h-3 w-full" />
+                      <Skeleton className="h-3 w-2/3" />
+                    </div>
+                    <div className="mt-auto flex justify-between">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-4 w-16" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : optimisticNotes.length === 0 ? (
+              <EmptyState
+                icon={FileText}
+                title={
+                  hasFilters
+                    ? t('no_results')
+                    : currentFolders?.length
+                      ? 'No files in this folder'
+                      : t('no_notes')
+                }
+                description={hasFilters ? t('no_results_desc') : t('no_notes_desc')}
+                actionLabel={!hasFilters ? t('create_note') : undefined}
+                onAction={!hasFilters ? handleCreateNote : undefined}
+              />
+            ) : (
+              <SortableContext
+                items={optimisticNotes.map((n) => n.id)}
+                strategy={rectSortingStrategy}
+              >
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {optimisticNotes.map((note, index) => (
+                    <NoteCard
+                      key={note.id}
+                      note={note}
+                      index={index}
+                      onEdit={handleEditNote}
+                      onDelete={handleDeleteNote}
+                      onConvertToTask={handleConvertToTask}
+                      onClick={handleEditNote}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            )}
+          </div>
+        </div>
+      </DndContext>
+
+      {/* Pagination */}
+      {meta && meta.totalPages > 1 && (
+        <div className="border-border/40 mt-6 flex items-center justify-between border-t pt-4">
+          <span className="text-muted-foreground text-sm">
+            Page {meta.page} of {meta.totalPages}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
+              disabled={page === meta.totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Create/Edit Dialogs */}
       <NoteDialog

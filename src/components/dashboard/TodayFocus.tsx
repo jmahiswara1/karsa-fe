@@ -8,6 +8,7 @@ import { CheckCircle2, Circle, ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 import { useDashboardSummary } from '@/hooks/use-dashboard';
+import { useUpdateTask, type Task, type TaskStatus } from '@/hooks/use-tasks';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const containerVariants = {
@@ -26,6 +27,19 @@ const itemVariants = {
 export function TodayFocus() {
   const t = useTranslations('Dashboard');
   const { data, isLoading } = useDashboardSummary();
+  const updateTask = useUpdateTask();
+
+  const handleToggleStatus = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const statusCycle: Record<TaskStatus, TaskStatus> = {
+      TODO: 'IN_PROGRESS',
+      IN_PROGRESS: 'DONE',
+      DONE: 'TODO',
+      CANCELLED: 'TODO',
+    };
+    const nextStatus = statusCycle[task.status];
+    updateTask.mutate({ id: task.id, status: nextStatus });
+  };
 
   const tasks = data?.todayTasks || [];
 
@@ -80,7 +94,11 @@ export function TodayFocus() {
               className="group flex items-center gap-3.5 rounded-2xl border border-border/40 bg-card px-5 py-3.5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)] transition-all hover:shadow-md hover:border-primary/20 cursor-pointer"
             >
               {/* Checkbox circle */}
-              <button className="shrink-0 transition-transform hover:scale-110">
+              <button 
+                onClick={(e) => handleToggleStatus(task, e)}
+                disabled={updateTask.isPending}
+                className="shrink-0 transition-transform hover:scale-110 disabled:opacity-50"
+              >
                 {task.status === 'DONE' ? (
                   <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                 ) : (

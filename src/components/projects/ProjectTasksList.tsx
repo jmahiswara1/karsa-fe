@@ -2,10 +2,10 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { Task } from '@/hooks/use-tasks';
+import { useUpdateTask, type Task, type TaskStatus } from '@/hooks/use-tasks';
 import { cn } from '@/lib/utils';
+import { Loader2, CheckCircle2, Circle, Plus } from 'lucide-react';
 
 interface ProjectTasksListProps {
   tasks: Task[];
@@ -13,8 +13,22 @@ interface ProjectTasksListProps {
   onEditTask: (task: Task) => void;
 }
 
+const statusCycle: Record<TaskStatus, TaskStatus> = {
+  TODO: 'IN_PROGRESS',
+  IN_PROGRESS: 'DONE',
+  DONE: 'TODO',
+  CANCELLED: 'TODO',
+};
+
 export function ProjectTasksList({ tasks, onCreateTask, onEditTask }: ProjectTasksListProps) {
   const t = useTranslations('Projects');
+  const updateTask = useUpdateTask();
+
+  const handleToggleStatus = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextStatus = statusCycle[task.status];
+    updateTask.mutate({ id: task.id, status: nextStatus });
+  };
 
   return (
     <motion.div
@@ -42,33 +56,36 @@ export function ProjectTasksList({ tasks, onCreateTask, onEditTask }: ProjectTas
       ) : (
         <div className="divide-border/30 divide-y">
           {tasks.map((task) => (
-            <button
+            <div
               key={task.id}
-              onClick={() => onEditTask(task)}
-              className="hover:bg-muted/30 flex w-full items-center gap-3 px-5 py-3 text-left transition-colors"
+              className="hover:bg-muted/30 flex w-full items-center gap-3 px-5 py-3 transition-colors"
             >
-              <div
-                className={cn(
-                  'h-2 w-2 shrink-0 rounded-full',
-                  task.status === 'DONE'
-                    ? 'bg-emerald-500'
-                    : task.status === 'IN_PROGRESS'
-                      ? 'bg-blue-500'
-                      : 'bg-muted-foreground/40',
+              <button
+                onClick={(e) => handleToggleStatus(task, e)}
+                disabled={updateTask.isPending}
+                className="shrink-0 transition-transform hover:scale-110 disabled:opacity-50"
+              >
+                {task.status === 'DONE' ? (
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                ) : (
+                  <Circle className="h-5 w-5 text-muted-foreground/30 hover:text-primary/50 transition-colors" />
                 )}
-              />
-              <span
+              </button>
+              
+              <button
+                onClick={() => onEditTask(task)}
                 className={cn(
-                  'flex-1 truncate text-sm',
+                  'flex-1 truncate text-left text-sm font-medium transition-colors hover:text-primary',
                   task.status === 'DONE' && 'text-muted-foreground line-through',
                 )}
               >
                 {task.title}
-              </span>
-              <span className="text-muted-foreground text-[11px] capitalize">
+              </button>
+              
+              <span className="text-muted-foreground text-[11px] capitalize shrink-0">
                 {task.status.toLowerCase().replace('_', ' ')}
               </span>
-            </button>
+            </div>
           ))}
         </div>
       )}

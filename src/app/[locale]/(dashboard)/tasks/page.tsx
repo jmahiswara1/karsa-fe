@@ -111,7 +111,22 @@ export default function TasksPage() {
       1
     );
 
+    // Determine new status based on column name
+    const destColumn = columns.find((c) => c.id === destination.droppableId);
+    let newStatus = movedTask.status;
+    if (destColumn) {
+      const colName = destColumn.name.toLowerCase();
+      if (colName.includes('todo') || colName.includes('to do') || colName.includes('to-do')) {
+        newStatus = 'TODO';
+      } else if (colName.includes('progress') || colName.includes('doing') || colName.includes('active')) {
+        newStatus = 'IN_PROGRESS';
+      } else if (colName.includes('done') || colName.includes('complete') || colName.includes('finish')) {
+        newStatus = 'DONE';
+      }
+    }
+
     movedTask.columnId = destination.droppableId;
+    movedTask.status = newStatus;
     
     // Calculate new order
     const destTasks = newTasks.filter(t => t.columnId === destination.droppableId)
@@ -122,7 +137,12 @@ export default function TasksPage() {
     // Reassign orders for the destination column
     const updates = destTasks.map((t, index) => {
       t.order = index * 1000; // Provide gap
-      return { id: t.id, order: t.order, columnId: t.columnId || undefined };
+      return { 
+        id: t.id, 
+        order: t.order, 
+        columnId: t.columnId || undefined,
+        ...(t.id === movedTask.id ? { status: newStatus } : {})
+      };
     });
 
     queryClient.setQueryData(['tasks', queryParams], (old: any) => {
@@ -131,7 +151,12 @@ export default function TasksPage() {
       const updatedData = old.data.map((t: Task) => {
         const update = updates.find(u => u.id === t.id);
         if (update) {
-          return { ...t, order: update.order, columnId: update.columnId };
+          return { 
+            ...t, 
+            order: update.order, 
+            columnId: update.columnId,
+            ...(update.status ? { status: update.status } : {}) 
+          };
         }
         return t;
       });

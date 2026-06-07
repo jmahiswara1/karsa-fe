@@ -229,6 +229,12 @@
     "generate_button": "Generate Plan",
     "generating": "Generating...",
     "regenerate": "Regenerate",
+    "generate_plan_title": "Generate AI Plan",
+    "generate_plan_desc": "Select a date range (max 7 days), your energy level, and mood.",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "error_max_7_days": "Maximum date range is 7 days.",
+    "error_end_date_before_start": "End date cannot be before start date.",
     "workload_label": "Workload",
     "empty_title": "Plan Your Day",
     "empty_desc": "Select your energy level and mood, then let AI generate a daily schedule from your pending tasks.",
@@ -248,7 +254,10 @@
     "end_time": "End Time",
     "save": "Save",
     "saving": "Saving...",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "generate_week_plan": "Generate Week Plan"
   },
   "Assistant": {
     "title": "Ask Karsa",

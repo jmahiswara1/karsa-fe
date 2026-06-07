@@ -76,14 +76,14 @@ export function MoodEnergySelector({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="flex flex-wrap items-center gap-6"
+      className="flex flex-col gap-5"
     >
       {/* Energy */}
-      <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+      <div className="flex flex-col gap-3">
+        <label className="text-sm leading-normal font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           {t('energy_label')}
-        </span>
-        <div className="border-border/50 bg-muted/30 flex gap-1 rounded-xl border p-1">
+        </label>
+        <div className="border-border/50 bg-muted/30 flex w-fit flex-wrap gap-1 rounded-xl border p-1">
           {energyLevels.map((level) => {
             const Icon = level.icon;
             const selected = energy === level.key;
@@ -109,11 +109,11 @@ export function MoodEnergySelector({
       </div>
 
       {/* Mood */}
-      <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+      <div className="flex flex-col gap-3">
+        <label className="text-sm leading-normal font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           {t('mood_label')}
-        </span>
-        <div className="border-border/50 bg-muted/30 flex gap-1 rounded-xl border p-1">
+        </label>
+        <div className="border-border/50 bg-muted/30 flex w-fit flex-wrap gap-1 rounded-xl border p-1">
           {moods.map((m) => {
             const Icon = m.icon;
             const selected = mood === m.key;

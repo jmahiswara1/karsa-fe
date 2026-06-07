@@ -14,7 +14,6 @@ interface PlannerHeaderProps {
   onViewModeChange: (mode: ViewMode) => void;
   onGenerate: () => void;
   isGenerating: boolean;
-  children?: React.ReactNode;
 }
 
 function formatHeaderDate(date: Date, mode: ViewMode): string {
@@ -70,81 +69,74 @@ export function PlannerHeader({
   onViewModeChange,
   onGenerate,
   isGenerating,
-  children,
 }: PlannerHeaderProps) {
   const t = useTranslations('Planner');
 
   const handleToday = () => onDateChange(new Date());
 
   return (
-    <div className="space-y-3">
-      {/* Row 1: Navigation + View Switcher + AI Button */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {/* Nav */}
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => onDateChange(navigatePrev(date, viewMode))}
-            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
+    <div className="flex flex-col gap-3 pb-2 sm:flex-row sm:items-center sm:justify-between">
+      {/* Nav */}
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={() => onDateChange(navigatePrev(date, viewMode))}
+          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
 
-          <button
-            type="button"
-            onClick={handleToday}
-            className="text-foreground hover:bg-muted rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors"
-          >
-            {formatHeaderDate(date, viewMode)}
-          </button>
+        <button
+          type="button"
+          onClick={handleToday}
+          className="text-foreground hover:bg-muted rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors"
+        >
+          {formatHeaderDate(date, viewMode)}
+        </button>
 
-          <button
-            type="button"
-            onClick={() => onDateChange(navigateNext(date, viewMode))}
-            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* View Switcher + AI */}
-        <div className="flex items-center gap-2">
-          <div className="border-border/50 bg-muted/30 flex rounded-xl border p-1">
-            {views.map((v) => (
-              <button
-                key={v.key}
-                type="button"
-                onClick={() => onViewModeChange(v.key)}
-                className={cn(
-                  'rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all',
-                  viewMode === v.key
-                    ? 'text-foreground ring-border bg-white shadow-sm ring-1 dark:bg-slate-800'
-                    : 'text-muted-foreground hover:text-foreground',
-                )}
-              >
-                {t(v.labelKey)}
-              </button>
-            ))}
-          </div>
-
-          <Button onClick={onGenerate} disabled={isGenerating} size="sm" className="gap-1.5">
-            {isGenerating ? (
-              <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                {t('generating')}
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-3.5 w-3.5" />
-                {t('generate_button')}
-              </>
-            )}
-          </Button>
-        </div>
+        <button
+          type="button"
+          onClick={() => onDateChange(navigateNext(date, viewMode))}
+          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
       </div>
 
-      {/* Row 2: Mood/Energy (only visible if children provided) */}
-      {children}
+      {/* View Switcher + AI */}
+      <div className="flex items-center gap-2">
+        <div className="border-border/50 bg-muted/30 flex rounded-xl border p-1">
+          {views.map((v) => (
+            <button
+              key={v.key}
+              type="button"
+              onClick={() => onViewModeChange(v.key)}
+              className={cn(
+                'rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all',
+                viewMode === v.key
+                  ? 'text-foreground ring-border bg-white shadow-sm ring-1 dark:bg-slate-800'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              {t(v.labelKey)}
+            </button>
+          ))}
+        </div>
+
+        <Button onClick={onGenerate} disabled={isGenerating} size="sm" className="gap-1.5">
+          {isGenerating ? (
+            <>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              {t('generating')}
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-3.5 w-3.5" />
+              {t('generate_button')}
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

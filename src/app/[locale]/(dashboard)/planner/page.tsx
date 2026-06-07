@@ -1,10 +1,11 @@
 'use client';
 
+import { formatLocalDate } from '@/lib/date-utils';
 import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/components/shared/page-header';
-import { MoodEnergySelector } from '@/components/planner/MoodEnergySelector';
 import { PlannerHeader } from '@/components/planner/PlannerHeader';
+import { GeneratePlanDialog } from '@/components/planner/GeneratePlanDialog';
 import { DayView } from '@/components/planner/DayView';
 import { WeekView } from '@/components/planner/WeekView';
 import { MonthView } from '@/components/planner/MonthView';
@@ -22,7 +23,7 @@ import {
 type ViewMode = 'day' | 'week' | 'month';
 
 function formatDate(date: Date): string {
-  return date.toISOString().split('T')[0];
+  return formatLocalDate(date);
 }
 
 function getWeekRange(date: Date): { startDate: string; endDate: string } {
@@ -45,13 +46,13 @@ export default function PlannerPage() {
 
   const [date, setDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<ViewMode>('week');
-  const [energy, setEnergy] = useState('MEDIUM');
-  const [mood, setMood] = useState('NEUTRAL');
 
   // Dialog state
+  const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<PlannerEntry | null>(null);
   const [defaultHour, setDefaultHour] = useState(8);
+  const [clickedDate, setClickedDate] = useState(formatDate(date));
 
   // Queries
   const queryParams =
@@ -74,6 +75,7 @@ export default function PlannerPage() {
   const handleSlotClick = useCallback((dateStr: string, hour: number) => {
     setEditingEntry(null);
     setDefaultHour(hour);
+    setClickedDate(dateStr);
     setDialogOpen(true);
   }, []);
 
@@ -93,13 +95,13 @@ export default function PlannerPage() {
         createEntry.mutate(
           {
             ...data,
-            date: formatDate(date),
+            date: clickedDate,
           },
           { onSuccess: () => setDialogOpen(false) },
         );
       }
     },
-    [editingEntry, date, updateEntry, createEntry],
+    [editingEntry, clickedDate, updateEntry, createEntry],
   );
 
   const handleDelete = useCallback(() => {
@@ -110,13 +112,43 @@ export default function PlannerPage() {
     }
   }, [editingEntry, deleteEntry]);
 
-  const handleGenerate = useCallback(() => {
-    generatePlan.mutate({
-      energyLevel: energy,
-      mood,
-      date: formatDate(date),
-    });
-  }, [energy, mood, date, generatePlan]);
+  const handleEntryDrop = useCallback(
+    (entryId: string, newDate: string, newHour: number) => {
+      const entry = entries.find((e) => e.id === entryId);
+      const startTime = `${String(newHour).padStart(2, '0')}:00`;
+      let endTime = `${String(newHour + 1).padStart(2, '0')}:00`;
+
+      if (entry) {
+        const [sh, sm] = entry.startTime.split(':').map(Number);
+        const [eh, em] = entry.endTime.split(':').map(Number);
+        const durationMin = eh * 60 + em - (sh * 60 + sm);
+        const endMinutes = newHour * 60 + durationMin;
+        const endH = Math.floor(endMinutes / 60);
+        const endM = endMinutes % 60;
+        endTime = `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
+      }
+
+      updateEntry.mutate({ id: entryId, date: newDate, startTime, endTime });
+    },
+    [updateEntry, entries],
+  );
+
+  const handleGenerate = useCallback(
+    (data: { startDate: string; endDate: string; energy: string; mood: string }) => {
+      generatePlan.mutate(
+        {
+          energyLevel: data.energy,
+          mood: data.mood,
+          startDate: data.startDate,
+          endDate: data.endDate,
+        },
+        {
+          onSuccess: () => setGenerateDialogOpen(false),
+        },
+      );
+    },
+    [generatePlan],
+  );
 
   return (
     <div className="space-y-6 pb-8">
@@ -127,16 +159,9 @@ export default function PlannerPage() {
         viewMode={viewMode}
         onDateChange={setDate}
         onViewModeChange={setViewMode}
-        onGenerate={handleGenerate}
+        onGenerate={() => setGenerateDialogOpen(true)}
         isGenerating={generatePlan.isPending}
-      >
-        <MoodEnergySelector
-          energy={energy}
-          onEnergyChange={setEnergy}
-          mood={mood}
-          onMoodChange={setMood}
-        />
-      </PlannerHeader>
+      />
 
       {/* Calendar */}
       {isLoading ? (
@@ -150,6 +175,7 @@ export default function PlannerPage() {
           entries={entries}
           onEntryClick={handleEntryClick}
           onSlotClick={handleSlotClick}
+          onEntryDrop={handleEntryDrop}
         />
       ) : viewMode === 'week' ? (
         <WeekView
@@ -157,6 +183,7 @@ export default function PlannerPage() {
           entries={entries}
           onEntryClick={handleEntryClick}
           onSlotClick={handleSlotClick}
+          onEntryDrop={handleEntryDrop}
         />
       ) : (
         <MonthView
@@ -169,15 +196,24 @@ export default function PlannerPage() {
         />
       )}
 
-      {/* Entry Dialog */}
       <PlannerEntryDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         entry={editingEntry}
         defaultHour={defaultHour}
+        defaultDate={clickedDate}
         onSubmit={handleDialogSubmit}
         onDelete={editingEntry ? handleDelete : undefined}
         isSubmitting={createEntry.isPending || updateEntry.isPending}
+      />
+
+      {/* Generate Plan Dialog */}
+      <GeneratePlanDialog
+        open={generateDialogOpen}
+        onOpenChange={setGenerateDialogOpen}
+        defaultDate={date}
+        onGenerate={handleGenerate}
+        isGenerating={generatePlan.isPending}
       />
     </div>
   );

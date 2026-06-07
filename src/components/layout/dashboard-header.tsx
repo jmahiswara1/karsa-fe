@@ -1,13 +1,34 @@
 'use client';
 
-import { Menu, Bell, Search, ChevronDown, Sun, Moon, Monitor } from 'lucide-react';
+import {
+  Menu,
+  Bell,
+  Search,
+  ChevronDown,
+  Sun,
+  Moon,
+  Monitor,
+  LogOut,
+  Settings,
+} from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { usePathname } from '@/i18n/routing';
+import { usePathname, useRouter, Link } from '@/i18n/routing';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useAuthStore } from '@/store/auth.store';
+import { useDialogStore } from '@/store/dialog.store';
+import { toast } from 'sonner';
 import Image from 'next/image';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface DashboardHeaderProps {
   onMenuClick: () => void;
@@ -32,7 +53,10 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const tPages = useTranslations('Pages');
   const tSidebar = useTranslations('Sidebar');
   const tDash = useTranslations('Dashboard');
-  const { user } = useAuthStore();
+  const tAuth = useTranslations('Auth');
+  const { user, logout } = useAuthStore();
+  const showConfirm = useDialogStore((state) => state.showConfirm);
+  const router = useRouter();
   const title = useDashboardTitle(tPages, tSidebar);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -41,6 +65,21 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
+
+  const handleLogoutClick = () => {
+    showConfirm({
+      title: tAuth('logout_confirm_title'),
+      description: tAuth('logout_confirm_desc'),
+      confirmText: tAuth('logout_confirm_yes'),
+      cancelText: tAuth('logout_confirm_no'),
+      isDestructive: true,
+      onConfirm: () => {
+        logout();
+        toast.success(tAuth('logout_success_toast'));
+        router.push('/');
+      },
+    });
+  };
 
   const cycleTheme = () => {
     if (theme === 'light') setTheme('dark');
@@ -110,25 +149,75 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
         {/* User info — desktop */}
         {user && (
-          <div className="hover:bg-muted hidden cursor-pointer items-center gap-3 rounded-xl px-2 py-1 transition-colors md:flex">
-            <Image
-              src={
-                user.avatarUrl ??
-                'https://res.cloudinary.com/dij8whzbd/image/upload/v1780472089/profile_odszu1.jpg'
-              }
-              alt={user.name ?? 'User'}
-              width={36}
-              height={36}
-              className="ring-border rounded-full ring-2"
-            />
-            <div className="flex flex-col">
-              <span className="text-foreground text-sm leading-none font-semibold">
-                {user.name ?? user.email}
-              </span>
-              <span className="text-muted-foreground mt-1.5 text-xs leading-none">Admin</span>
-            </div>
-            <ChevronDown className="text-primary ml-1 h-4 w-4" />
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              <div className="hover:bg-muted hover:border-border/50 hidden cursor-pointer items-center gap-3 rounded-full border border-transparent px-2 py-1.5 transition-all hover:shadow-sm md:flex">
+                <Image
+                  src={
+                    user.avatarUrl ??
+                    'https://res.cloudinary.com/dij8whzbd/image/upload/v1780472089/profile_odszu1.jpg'
+                  }
+                  alt={user.name ?? 'User'}
+                  width={36}
+                  height={36}
+                  className="ring-border rounded-full shadow-sm ring-2"
+                />
+                <div className="flex max-w-[150px] flex-col">
+                  <span className="text-foreground truncate text-sm leading-none font-semibold">
+                    {user.name ?? user.email}
+                  </span>
+                  <span className="text-muted-foreground mt-1.5 truncate text-xs leading-none">
+                    {user.email}
+                  </span>
+                </div>
+                <ChevronDown className="text-muted-foreground ml-1 h-4 w-4 shrink-0 transition-transform" />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="border-border/50 w-64 rounded-2xl p-2 shadow-xl backdrop-blur-xl"
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="p-2 font-normal">
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={
+                        user.avatarUrl ??
+                        'https://res.cloudinary.com/dij8whzbd/image/upload/v1780472089/profile_odszu1.jpg'
+                      }
+                      alt={user.name ?? 'User'}
+                      width={40}
+                      height={40}
+                      className="ring-primary/10 rounded-full ring-2"
+                    />
+                    <div className="flex flex-col space-y-1 overflow-hidden">
+                      <p className="text-foreground truncate text-sm leading-none font-semibold">
+                        {user.name ?? 'User'}
+                      </p>
+                      <p className="text-muted-foreground truncate text-xs leading-none">
+                        {user.email}
+                      </p>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator className="bg-border/60 my-2" />
+              <DropdownMenuItem
+                onClick={() => router.push('/settings')}
+                className="focus:bg-primary/5 focus:text-primary cursor-pointer rounded-xl px-3 py-2.5 transition-colors"
+              >
+                <Settings className="text-muted-foreground mr-3 h-4.5 w-4.5" />
+                <span className="text-sm font-medium">Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleLogoutClick}
+                className="cursor-pointer rounded-xl px-3 py-2.5 text-red-600 transition-colors focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
+              >
+                <LogOut className="mr-3 h-4.5 w-4.5" />
+                <span className="text-sm font-medium">Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
     </header>

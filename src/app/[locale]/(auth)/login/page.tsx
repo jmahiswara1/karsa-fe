@@ -2,11 +2,17 @@
 
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'next/navigation';
 
 export default function LoginPage() {
   const t = useTranslations('Auth');
+  const searchParams = useSearchParams();
 
   const handleGoogleLogin = () => {
+    const returnTo = searchParams.get('returnTo');
+    if (returnTo) {
+      sessionStorage.setItem('returnTo', returnTo);
+    }
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
     window.location.href = `${apiUrl}/api/auth/google`;
   };

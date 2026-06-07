@@ -73,7 +73,7 @@ export async function Navbar() {
             </>
           ) : (
             <Link
-              href="/login"
+              href="/login?returnTo=/"
               className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-blue-200 transition-all hover:bg-blue-700 active:scale-95"
             >
               {t('log_in')}

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -19,8 +20,11 @@ export default function AuthCallbackPage() {
       document.cookie = `access_token=${accessToken}; path=/; max-age=${15 * 60}; SameSite=Lax`; // 15 mins
       document.cookie = `refresh_token=${refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`; // 7 days
 
-      // Redirect to dashboard
-      router.replace('/dashboard');
+      // Check if we need to redirect to a specific page
+      const returnTo = sessionStorage.getItem('returnTo') || '/dashboard';
+      sessionStorage.removeItem('returnTo');
+
+      router.replace(returnTo);
     } else {
       // If no tokens, redirect back to login
       router.replace('/login');

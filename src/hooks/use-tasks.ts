@@ -63,7 +63,7 @@ export interface CreateTaskInput {
   order?: number;
 }
 
-export interface UpdateTaskInput extends Partial<CreateTaskInput> {}
+export type UpdateTaskInput = Partial<CreateTaskInput>;
 
 // ── Hooks ──────────────────────────────────────────────────────────
 
@@ -142,11 +142,18 @@ export const useUpdateTask = () => {
 };
 
 export const useReorderTasks = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (tasks: { id: string; order: number; columnId?: string; status?: TaskStatus }[]) => {
+    mutationFn: async (
+      tasks: { id: string; order: number; columnId?: string; status?: TaskStatus }[],
+    ) => {
       await api.post('/api/tasks/reorder', { tasks });
     },
-    // optimistic updates handled by component mostly, but can invalidate later
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+    },
   });
 };
 

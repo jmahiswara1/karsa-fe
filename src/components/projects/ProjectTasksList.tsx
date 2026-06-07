@@ -3,9 +3,9 @@
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { useUpdateTask, type Task, type TaskStatus } from '@/hooks/use-tasks';
+import { useUpdateTask, useTaskColumns, type Task, type TaskStatus } from '@/hooks/use-tasks';
 import { cn } from '@/lib/utils';
-import { Loader2, CheckCircle2, Circle, Plus } from 'lucide-react';
+import { CheckCircle2, Circle, Plus } from 'lucide-react';
 
 interface ProjectTasksListProps {
   tasks: Task[];
@@ -23,11 +23,20 @@ const statusCycle: Record<TaskStatus, TaskStatus> = {
 export function ProjectTasksList({ tasks, onCreateTask, onEditTask }: ProjectTasksListProps) {
   const t = useTranslations('Projects');
   const updateTask = useUpdateTask();
+  const { data: taskColumns } = useTaskColumns();
+
+  const getStatusColumnId = (status: TaskStatus): string | undefined => {
+    const keyword = status === 'IN_PROGRESS' ? 'progress' : status.toLowerCase();
+    return (
+      taskColumns?.find((c) => c.name.toLowerCase().includes(keyword))?.id || taskColumns?.[0]?.id
+    );
+  };
 
   const handleToggleStatus = (task: Task, e: React.MouseEvent) => {
     e.stopPropagation();
     const nextStatus = statusCycle[task.status];
-    updateTask.mutate({ id: task.id, status: nextStatus });
+    const nextColumnId = getStatusColumnId(nextStatus);
+    updateTask.mutate({ id: task.id, status: nextStatus, columnId: nextColumnId });
   };
 
   return (
@@ -68,21 +77,21 @@ export function ProjectTasksList({ tasks, onCreateTask, onEditTask }: ProjectTas
                 {task.status === 'DONE' ? (
                   <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                 ) : (
-                  <Circle className="h-5 w-5 text-muted-foreground/30 hover:text-primary/50 transition-colors" />
+                  <Circle className="text-muted-foreground/30 hover:text-primary/50 h-5 w-5 transition-colors" />
                 )}
               </button>
-              
+
               <button
                 onClick={() => onEditTask(task)}
                 className={cn(
-                  'flex-1 truncate text-left text-sm font-medium transition-colors hover:text-primary',
+                  'hover:text-primary flex-1 truncate text-left text-sm font-medium transition-colors',
                   task.status === 'DONE' && 'text-muted-foreground line-through',
                 )}
               >
                 {task.title}
               </button>
-              
-              <span className="text-muted-foreground text-[11px] capitalize shrink-0">
+
+              <span className="text-muted-foreground shrink-0 text-[11px] capitalize">
                 {task.status.toLowerCase().replace('_', ' ')}
               </span>
             </div>

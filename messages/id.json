@@ -229,6 +229,12 @@
     "generate_button": "Buat Rencana",
     "generating": "Membuat...",
     "regenerate": "Buat Ulang",
+    "generate_plan_title": "Buat Rencana AI",
+    "generate_plan_desc": "Pilih rentang tanggal (maksimal 7 hari), energi, dan suasana hati Anda.",
+    "start_date": "Tanggal Mulai",
+    "end_date": "Tanggal Selesai",
+    "error_max_7_days": "Maksimal rentang waktu adalah 7 hari.",
+    "error_end_date_before_start": "Tanggal selesai tidak boleh sebelum tanggal mulai.",
     "workload_label": "Beban Kerja",
     "empty_title": "Rencanakan Hari Anda",
     "empty_desc": "Pilih level energi dan suasana hati Anda, lalu biarkan AI membuat jadwal harian dari tugas yang tertunda.",
@@ -248,7 +254,10 @@
     "end_time": "Waktu Selesai",
     "save": "Simpan",
     "saving": "Menyimpan...",
-    "cancel": "Batal"
+    "cancel": "Batal",
+    "close": "Tutup",
+    "edit": "Edit",
+    "generate_week_plan": "Buat Rencana Mingguan"
   },
   "Assistant": {
     "title": "Tanya Karsa",

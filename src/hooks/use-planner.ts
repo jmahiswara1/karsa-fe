@@ -31,6 +31,8 @@ export interface GeneratePlanInput {
   energyLevel: string;
   mood: string;
   date?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface GeneratePlanResult {

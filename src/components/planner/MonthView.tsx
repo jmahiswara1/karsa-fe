@@ -1,5 +1,6 @@
 'use client';
 
+import { formatLocalDate } from '@/lib/date-utils';
 import type { PlannerEntry } from '@/hooks/use-planner';
 import { cn } from '@/lib/utils';
 
@@ -19,7 +20,7 @@ function getMonthDays(year: number, month: number): (Date | null)[] {
 }
 
 function formatDateStr(d: Date): string {
-  return d.toISOString().split('T')[0];
+  return formatLocalDate(d);
 }
 
 const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

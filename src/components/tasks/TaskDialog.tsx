@@ -276,7 +276,11 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
                           }}
                         >
                           <SelectTrigger className="h-7 bg-muted/30 border-transparent hover:bg-muted/60 transition-colors text-xs font-semibold shadow-none focus:ring-0 px-2 w-full [&>span]:truncate rounded-md">
-                            <SelectValue placeholder="Select board" />
+                            {editColumnId && columns ? (
+                              <span className="truncate">{columns.find(c => c.id === editColumnId)?.name || 'Select board'}</span>
+                            ) : (
+                              <span className="truncate text-muted-foreground">Select board</span>
+                            )}
                           </SelectTrigger>
                           <SelectContent align="end" className="w-[180px] p-1">
                             {columns.map(c => (
@@ -311,7 +315,17 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
                         }}
                       >
                         <SelectTrigger className="h-7 bg-muted/30 border-transparent hover:bg-muted/60 transition-colors text-xs font-semibold shadow-none focus:ring-0 px-2 w-full [&>span]:truncate rounded-md">
-                          <SelectValue placeholder="Select priority" />
+                          {editPriority ? (
+                            <div className="flex items-center gap-2">
+                              {editPriority === 'LOW' && <SignalLow className="h-3.5 w-3.5 text-blue-500" />}
+                              {editPriority === 'MEDIUM' && <SignalMedium className="h-3.5 w-3.5 text-yellow-500" />}
+                              {editPriority === 'HIGH' && <SignalHigh className="h-3.5 w-3.5 text-orange-500" />}
+                              {editPriority === 'URGENT' && <AlertCircle className="h-3.5 w-3.5 text-red-500" />}
+                              <span className="truncate capitalize">{editPriority.toLowerCase()}</span>
+                            </div>
+                          ) : (
+                            <span className="truncate text-muted-foreground">Select priority</span>
+                          )}
                         </SelectTrigger>
                         <SelectContent align="end" className="p-1">
                           <SelectItem value="LOW" className="text-xs font-medium cursor-pointer py-1.5">
@@ -360,7 +374,14 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
                           }}
                         >
                           <SelectTrigger className="h-7 bg-muted/30 border-transparent hover:bg-muted/60 transition-colors text-xs font-semibold shadow-none focus:ring-0 px-2 w-full [&>span]:truncate rounded-md">
-                            <SelectValue placeholder="None" />
+                            {editProjectId && editProjectId !== "unassigned" && projects ? (
+                              <div className="flex items-center gap-2">
+                                <Folder className="h-3.5 w-3.5 text-primary/70" />
+                                <span className="truncate">{projects.find(p => p.id === editProjectId)?.title || 'Unknown'}</span>
+                              </div>
+                            ) : (
+                              <span className="truncate text-muted-foreground">No Project</span>
+                            )}
                           </SelectTrigger>
                           <SelectContent align="end" className="w-[180px] p-1">
                             <SelectItem value="unassigned" className="text-xs font-medium cursor-pointer py-1.5 text-muted-foreground">
@@ -453,7 +474,11 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
                     onValueChange={(val) => setValue('columnId', val || '')}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select column" />
+                      {watch('columnId') && columns ? (
+                        <span className="truncate">{columns.find(c => c.id === watch('columnId'))?.name || 'Select column'}</span>
+                      ) : (
+                        <span className="truncate text-muted-foreground">Select column</span>
+                      )}
                     </SelectTrigger>
                     <SelectContent>
                       {columns?.map((c) => (
@@ -471,7 +496,11 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
                     onValueChange={(val) => setValue('priority', (val || 'MEDIUM') as Priority)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select priority" />
+                      {selectedPriority ? (
+                        <span className="truncate capitalize">{t(`priority_${selectedPriority.toLowerCase()}`)}</span>
+                      ) : (
+                        <span className="truncate text-muted-foreground">Select priority</span>
+                      )}
                     </SelectTrigger>
                     <SelectContent>
                       {PRIORITY_OPTIONS.map((p) => (
@@ -489,7 +518,11 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
                     onValueChange={(val) => setValue('projectId', val === 'unassigned' || !val ? '' : val)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="No Project" />
+                      {watch('projectId') && watch('projectId') !== 'unassigned' && projects ? (
+                        <span className="truncate">{projects.find(p => p.id === watch('projectId'))?.title || 'Unknown'}</span>
+                      ) : (
+                        <span className="truncate text-muted-foreground">No Project</span>
+                      )}
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="unassigned">{t('no_project')}</SelectItem>

@@ -195,6 +195,10 @@
     "section_timeline": "Schedule & Deadlines",
     "section_projects": "Your Projects",
     "section_notes": "Recent Notes",
+    "section_schedule": "Today's Schedule",
+    "empty_schedule": "No schedule for today",
+    "empty_schedule_desc": "Generate your daily plan with AI or add manually.",
+    "go_to_planner": "Go to Planner",
     "assistant_hint": "Karsa is ready to help you",
     "date_today": "Today",
     "date_format_full": "{day}, {month} {date}, {year}"

@@ -431,6 +431,14 @@
     "theme_dark": "Dark",
     "theme_system": "System",
     "save_success": "Preferences saved.",
-    "save_error": "Failed to save preferences."
+    "save_error": "Failed to save preferences.",
+    "preferences_title": "Preferences",
+    "preferences_subtitle": "Customize your experience",
+    "role_member": "Member",
+    "edit_profile": "Edit Profile",
+    "edit_profile_coming_soon": "Coming soon",
+    "footer_version": "Karsa v1.0.0",
+    "footer_privacy": "Privacy Policy",
+    "footer_terms": "Terms of Service"
   }
 }

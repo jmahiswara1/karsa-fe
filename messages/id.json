@@ -431,6 +431,14 @@
     "theme_dark": "Gelap",
     "theme_system": "Sistem",
     "save_success": "Preferensi disimpan.",
-    "save_error": "Gagal menyimpan preferensi."
+    "save_error": "Gagal menyimpan preferensi.",
+    "preferences_title": "Preferensi",
+    "preferences_subtitle": "Sesuaikan pengalaman Anda",
+    "role_member": "Anggota",
+    "edit_profile": "Ubah Profil",
+    "edit_profile_coming_soon": "Segera hadir",
+    "footer_version": "Karsa v1.0.0",
+    "footer_privacy": "Kebijakan Privasi",
+    "footer_terms": "Syarat dan Ketentuan"
   }
 }

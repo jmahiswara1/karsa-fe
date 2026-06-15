@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/auth.store';
-import { Loader2 } from 'lucide-react';
 
 import { GreetingBanner } from '@/components/dashboard/GreetingBanner';
 import { InsightCards } from '@/components/dashboard/TaskSummary';
@@ -14,19 +13,11 @@ import { ActiveProjects } from '@/components/dashboard/ActiveProjects';
 import { RecentNotes } from '@/components/dashboard/RecentNotes';
 
 export default function DashboardPage() {
-  const { user, isLoading, fetchProfile } = useAuthStore();
+  const { user, fetchProfile } = useAuthStore();
 
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="text-primary h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 pb-8">

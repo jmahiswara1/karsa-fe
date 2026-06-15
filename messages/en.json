@@ -201,7 +201,10 @@
     "go_to_planner": "Go to Planner",
     "assistant_hint": "Karsa is ready to help you",
     "date_today": "Today",
-    "date_format_full": "{day}, {month} {date}, {year}"
+    "date_format_full": "{day}, {month} {date}, {year}",
+    "quick_chat_placeholder": "Ask Karsa AI anything...",
+    "quick_chat_typing": "Karsa AI is thinking...",
+    "quick_chat_error": "Sorry, something went wrong."
   },
   "Pages": {
     "tasks_title": "Tasks",

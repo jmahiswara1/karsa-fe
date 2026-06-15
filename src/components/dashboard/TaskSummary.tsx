@@ -2,24 +2,10 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion } from 'framer-motion';
 import { AlertTriangle, CheckCircle2, Flame, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useDashboardSummary } from '@/hooks/use-dashboard';
 import { Skeleton } from '@/components/ui/skeleton';
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: 0.15 + i * 0.07,
-      duration: 0.35,
-      ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
-    },
-  }),
-};
 
 export function InsightCards() {
   const t = useTranslations('Dashboard');
@@ -90,15 +76,11 @@ export function InsightCards() {
               </div>
             </div>
           ))
-        : cards.map((card, i) => {
+        : cards.map((card) => {
             const Icon = card.icon;
             return (
-              <motion.div
+              <div
                 key={card.key}
-                custom={i}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
                 className={cn(
                   'relative rounded-2xl border p-4 transition-all duration-200',
                   card.bg,
@@ -122,7 +104,7 @@ export function InsightCards() {
                   <p className="text-foreground text-sm font-bold">{t(card.labelKey as any)}</p>
                   <p className="text-muted-foreground text-[11px]">{t(card.unitKey as any)}</p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
     </div>

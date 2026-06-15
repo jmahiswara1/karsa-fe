@@ -201,7 +201,10 @@
     "go_to_planner": "Ke Planner",
     "assistant_hint": "Karsa siap membantu Anda",
     "date_today": "Hari ini",
-    "date_format_full": "{day}, {date} {month} {year}"
+    "date_format_full": "{day}, {date} {month} {year}",
+    "quick_chat_placeholder": "Tanya Karsa AI apa saja...",
+    "quick_chat_typing": "Karsa AI sedang berpikir...",
+    "quick_chat_error": "Maaf, terjadi kesalahan."
   },
   "Pages": {
     "tasks_title": "Tugas",

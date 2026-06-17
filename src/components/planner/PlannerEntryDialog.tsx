@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useTranslations } from 'next-intl';
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -248,103 +249,105 @@ export function PlannerEntryDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">{t('entry_title')}</Label>
-            <Input id="title" {...register('title')} placeholder={t('entry_title_placeholder')} />
-            {form.formState.errors.title && (
-              <p className="text-xs text-red-500">{form.formState.errors.title.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">{t('entry_description')}</Label>
-            <Textarea
-              id="description"
-              {...register('description')}
-              placeholder={t('entry_desc_placeholder')}
-              rows={2}
-            />
-          </div>
-
-          {/* Time picker */}
-          <div className="grid grid-cols-2 gap-3">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col gap-4">
+          <DialogBody className="space-y-4">
             <div className="space-y-2">
-              <Label>{t('start_time')}</Label>
-              <div className="flex gap-1">
-                <Select
-                  value={startParts.hour}
-                  onValueChange={(v) => v && handleTimeChange('startTime', 'hour', v)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {HOURS.map((h) => (
-                      <SelectItem key={h} value={h}>
-                        {h}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <span className="text-muted-foreground flex items-center">:</span>
-                <Select
-                  value={startParts.minute}
-                  onValueChange={(v) => v && handleTimeChange('startTime', 'minute', v)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MINUTES.map((m) => (
-                      <SelectItem key={m} value={m}>
-                        {m}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>{t('end_time')}</Label>
-              <div className="flex gap-1">
-                <Select
-                  value={endParts.hour}
-                  onValueChange={(v) => v && handleTimeChange('endTime', 'hour', v)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {HOURS.map((h) => (
-                      <SelectItem key={h} value={h}>
-                        {h}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <span className="text-muted-foreground flex items-center">:</span>
-                <Select
-                  value={endParts.minute}
-                  onValueChange={(v) => v && handleTimeChange('endTime', 'minute', v)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MINUTES.map((m) => (
-                      <SelectItem key={m} value={m}>
-                        {m}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              {form.formState.errors.endTime && (
-                <p className="text-xs text-red-500">{form.formState.errors.endTime.message}</p>
+              <Label htmlFor="title">{t('entry_title')}</Label>
+              <Input id="title" {...register('title')} placeholder={t('entry_title_placeholder')} />
+              {form.formState.errors.title && (
+                <p className="text-xs text-red-500">{form.formState.errors.title.message}</p>
               )}
             </div>
-          </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">{t('entry_description')}</Label>
+              <Textarea
+                id="description"
+                {...register('description')}
+                placeholder={t('entry_desc_placeholder')}
+                rows={2}
+              />
+            </div>
+
+            {/* Time picker */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>{t('start_time')}</Label>
+                <div className="flex gap-1">
+                  <Select
+                    value={startParts.hour}
+                    onValueChange={(v) => v && handleTimeChange('startTime', 'hour', v)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {HOURS.map((h) => (
+                        <SelectItem key={h} value={h}>
+                          {h}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-muted-foreground flex items-center">:</span>
+                  <Select
+                    value={startParts.minute}
+                    onValueChange={(v) => v && handleTimeChange('startTime', 'minute', v)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MINUTES.map((m) => (
+                        <SelectItem key={m} value={m}>
+                          {m}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>{t('end_time')}</Label>
+                <div className="flex gap-1">
+                  <Select
+                    value={endParts.hour}
+                    onValueChange={(v) => v && handleTimeChange('endTime', 'hour', v)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {HOURS.map((h) => (
+                        <SelectItem key={h} value={h}>
+                          {h}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-muted-foreground flex items-center">:</span>
+                  <Select
+                    value={endParts.minute}
+                    onValueChange={(v) => v && handleTimeChange('endTime', 'minute', v)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MINUTES.map((m) => (
+                        <SelectItem key={m} value={m}>
+                          {m}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {form.formState.errors.endTime && (
+                  <p className="text-xs text-red-500">{form.formState.errors.endTime.message}</p>
+                )}
+              </div>
+            </div>
+          </DialogBody>
 
           <DialogFooter className="gap-2 sm:gap-0">
             {entry && onDelete && mode === 'edit' && (

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -114,7 +115,8 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
         toast.success(t('create_success') || 'Project created successfully');
       }
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } }; message?: string };
       toast.error(error?.response?.data?.message || error?.message || 'Failed to save project');
     }
   };
@@ -132,81 +134,98 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mt-2">
-          {/* Title */}
-          <div className="space-y-2">
-            <Label htmlFor="title" className="text-sm font-semibold">{t('field_title')}</Label>
-            <Input
-              id="title"
-              placeholder={t('field_title_placeholder')}
-              className={cn("text-lg px-4 py-6 font-medium", errors.title ? 'border-red-500' : '')}
-              {...register('title', { required: true })}
-            />
-          </div>
-
-          {/* Metadata row */}
-          <div className="grid grid-cols-2 gap-4 bg-muted/20 p-4 rounded-xl border border-border/50">
-            <div className="space-y-1.5">
-              <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">{t('field_status')}</Label>
-              <Select
-                value={selectedStatus}
-                onValueChange={(val) => setValue('status', (val || 'PLANNING') as ProjectStatus)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t('field_status_placeholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUS_OPTIONS.map((s) => (
-                    <SelectItem key={s.value} value={s.value}>
-                      {t(`status_${s.value.toLowerCase()}`)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col gap-4">
+          <DialogBody className="mt-2 flex flex-col gap-5">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-sm font-semibold">
+                {t('field_title')}
+              </Label>
+              <Input
+                id="title"
+                placeholder={t('field_title_placeholder')}
+                className={cn(
+                  'px-4 py-6 text-lg font-medium',
+                  errors.title ? 'border-red-500' : '',
+                )}
+                {...register('title', { required: true })}
+              />
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">{t('field_priority')}</Label>
-              <Select
-                value={selectedPriority}
-                onValueChange={(val) => setValue('priority', (val || 'MEDIUM') as Priority)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t('field_priority_placeholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {PRIORITY_OPTIONS.map((p) => (
-                    <SelectItem key={p} value={p}>
-                      <div className="flex items-center gap-2">
-                        {p === 'LOW' && <SignalLow className="h-3.5 w-3.5 text-blue-500" />}
-                        {p === 'MEDIUM' && <SignalMedium className="h-3.5 w-3.5 text-yellow-500" />}
-                        {p === 'HIGH' && <SignalHigh className="h-3.5 w-3.5 text-orange-500" />}
-                        {p === 'URGENT' && <AlertCircle className="h-3.5 w-3.5 text-red-500" />}
-                        <span>{t(`priority_${p.toLowerCase()}`)}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5 col-span-2">
-              <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">{t('field_deadline')}</Label>
-              <Input id="deadline" type="date" className="h-9" {...register('deadline')} />
-            </div>
-          </div>
 
-          {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-semibold">{t('field_description')}</Label>
-            <Textarea
-              id="description"
-              placeholder={t('field_description_placeholder')}
-              rows={4}
-              className="resize-none"
-              {...register('description')}
-            />
-          </div>
+            {/* Metadata row */}
+            <div className="bg-muted/20 border-border/50 grid grid-cols-2 gap-4 rounded-xl border p-4">
+              <div className="space-y-1.5">
+                <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                  {t('field_status')}
+                </Label>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={(val) => setValue('status', (val || 'PLANNING') as ProjectStatus)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('field_status_placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>
+                        {t(`status_${s.value.toLowerCase()}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                  {t('field_priority')}
+                </Label>
+                <Select
+                  value={selectedPriority}
+                  onValueChange={(val) => setValue('priority', (val || 'MEDIUM') as Priority)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('field_priority_placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRIORITY_OPTIONS.map((p) => (
+                      <SelectItem key={p} value={p}>
+                        <div className="flex items-center gap-2">
+                          {p === 'LOW' && <SignalLow className="h-3.5 w-3.5 text-blue-500" />}
+                          {p === 'MEDIUM' && (
+                            <SignalMedium className="h-3.5 w-3.5 text-yellow-500" />
+                          )}
+                          {p === 'HIGH' && <SignalHigh className="h-3.5 w-3.5 text-orange-500" />}
+                          {p === 'URGENT' && <AlertCircle className="h-3.5 w-3.5 text-red-500" />}
+                          <span>{t(`priority_${p.toLowerCase()}`)}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="col-span-2 space-y-1.5">
+                <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                  {t('field_deadline')}
+                </Label>
+                <Input id="deadline" type="date" className="h-9" {...register('deadline')} />
+              </div>
+            </div>
 
-          <DialogFooter className="pt-2 border-t border-border/40">
+            {/* Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-sm font-semibold">
+                {t('field_description')}
+              </Label>
+              <Textarea
+                id="description"
+                placeholder={t('field_description_placeholder')}
+                rows={4}
+                className="resize-none"
+                {...register('description')}
+              />
+            </div>
+          </DialogBody>
+
+          <DialogFooter className="border-border/40 border-t pt-2">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
               {t('cancel')}
             </Button>

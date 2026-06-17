@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -130,69 +131,76 @@ export function NoteDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-2 flex flex-col gap-5">
-          {/* Title */}
-          <div className="space-y-2">
-            <Label htmlFor="title" className="text-sm font-semibold">
-              {t('field_title')}
-            </Label>
-            <Input
-              id="title"
-              placeholder={t('field_title_placeholder')}
-              className={cn('px-4 py-5 text-lg font-medium', errors.title ? 'border-red-500' : '')}
-              {...register('title', { required: true })}
-            />
-          </div>
-
-          {/* Project Selection */}
-          <div className="bg-muted/20 border-border/50 space-y-2 rounded-xl border p-4">
-            <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
-              {t('field_project')}
-            </Label>
-            <Select
-              value={selectedProject || 'none'}
-              onValueChange={(val) => setValue('projectId', val === 'none' ? '' : (val as string))}
-            >
-              <SelectTrigger>
-                {selectedProject && selectedProject !== 'none' ? (
-                  <span className="truncate">
-                    {projects.find((p) => p.id === selectedProject)?.title || selectedProject}
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground truncate">
-                    {t('field_project_placeholder')}
-                  </span>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col gap-4">
+          <DialogBody className="mt-2 flex flex-col gap-5">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-sm font-semibold">
+                {t('field_title')}
+              </Label>
+              <Input
+                id="title"
+                placeholder={t('field_title_placeholder')}
+                className={cn(
+                  'px-4 py-5 text-lg font-medium',
+                  errors.title ? 'border-red-500' : '',
                 )}
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none" className="text-muted-foreground italic">
-                  {t('field_no_project')}
-                </SelectItem>
-                {projects.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+                {...register('title', { required: true })}
+              />
+            </div>
 
-          {/* Content */}
-          <div className="flex-1 space-y-2">
-            <Label htmlFor="content" className="text-sm font-semibold">
-              {t('field_content')}
-            </Label>
-            <Textarea
-              id="content"
-              placeholder={t('field_content_placeholder')}
-              rows={8}
-              className={cn(
-                'resize-none p-4 leading-relaxed',
-                errors.content ? 'border-red-500' : '',
-              )}
-              {...register('content', { required: true })}
-            />
-          </div>
+            {/* Project Selection */}
+            <div className="bg-muted/20 border-border/50 space-y-2 rounded-xl border p-4">
+              <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                {t('field_project')}
+              </Label>
+              <Select
+                value={selectedProject || 'none'}
+                onValueChange={(val) =>
+                  setValue('projectId', val === 'none' ? '' : (val as string))
+                }
+              >
+                <SelectTrigger>
+                  {selectedProject && selectedProject !== 'none' ? (
+                    <span className="truncate">
+                      {projects.find((p) => p.id === selectedProject)?.title || selectedProject}
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground truncate">
+                      {t('field_project_placeholder')}
+                    </span>
+                  )}
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none" className="text-muted-foreground italic">
+                    {t('field_no_project')}
+                  </SelectItem>
+                  {projects.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 space-y-2">
+              <Label htmlFor="content" className="text-sm font-semibold">
+                {t('field_content')}
+              </Label>
+              <Textarea
+                id="content"
+                placeholder={t('field_content_placeholder')}
+                rows={8}
+                className={cn(
+                  'resize-none p-4 leading-relaxed',
+                  errors.content ? 'border-red-500' : '',
+                )}
+                {...register('content', { required: true })}
+              />
+            </div>
+          </DialogBody>
 
           <DialogFooter className="border-border/40 border-t pt-2">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>

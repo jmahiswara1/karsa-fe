@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -173,7 +174,7 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
       >
         {isEditing && task ? (
           /* EDIT MODE: Premium Two-Column Layout */
-          <div className="bg-background flex h-[80vh] max-h-[800px]">
+          <div className="bg-background flex h-[80vh]">
             {/* Left Column: Main Content (70%) */}
             <div className="flex flex-1 flex-col overflow-y-auto">
               {/* Header Breadcrumb & Status */}
@@ -518,124 +519,130 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
               <DialogDescription>{t('create_task_desc')}</DialogDescription>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit(onSubmitCreate)} className="mt-2 flex flex-col gap-5">
-              {/* Title */}
-              <div className="space-y-2">
-                <Input
-                  id="title"
-                  placeholder="Task Title..."
-                  className={cn(
-                    'px-4 py-6 text-lg font-medium',
-                    errors.title ? 'border-red-500' : '',
-                  )}
-                  {...register('title', { required: true })}
-                />
-              </div>
+            <form
+              onSubmit={handleSubmit(onSubmitCreate)}
+              className="flex min-h-0 flex-1 flex-col gap-4"
+            >
+              <DialogBody className="mt-2 flex flex-col gap-5">
+                {/* Title */}
+                <div className="space-y-2">
+                  <Input
+                    id="title"
+                    placeholder="Task Title..."
+                    className={cn(
+                      'px-4 py-6 text-lg font-medium',
+                      errors.title ? 'border-red-500' : '',
+                    )}
+                    {...register('title', { required: true })}
+                  />
+                </div>
 
-              {/* Metadata row */}
-              <div className="bg-muted/20 border-border/50 grid grid-cols-2 gap-4 rounded-xl border p-4">
-                <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
-                    Board Column
-                  </Label>
-                  <Select
-                    value={selectedColumnId || undefined}
-                    onValueChange={(val) => setValue('columnId', val || '')}
-                  >
-                    <SelectTrigger>
-                      {selectedColumnId && columns ? (
-                        <span className="truncate">
-                          {columns.find((c) => c.id === selectedColumnId)?.name || 'Select column'}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground truncate">Select column</span>
-                      )}
-                    </SelectTrigger>
-                    <SelectContent>
-                      {columns?.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                {/* Metadata row */}
+                <div className="bg-muted/20 border-border/50 grid grid-cols-2 gap-4 rounded-xl border p-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                      Board Column
+                    </Label>
+                    <Select
+                      value={selectedColumnId || undefined}
+                      onValueChange={(val) => setValue('columnId', val || '')}
+                    >
+                      <SelectTrigger>
+                        {selectedColumnId && columns ? (
+                          <span className="truncate">
+                            {columns.find((c) => c.id === selectedColumnId)?.name ||
+                              'Select column'}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground truncate">Select column</span>
+                        )}
+                      </SelectTrigger>
+                      <SelectContent>
+                        {columns?.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                      {t('field_priority')}
+                    </Label>
+                    <Select
+                      value={selectedPriority}
+                      onValueChange={(val) => setValue('priority', (val || 'MEDIUM') as Priority)}
+                    >
+                      <SelectTrigger>
+                        {selectedPriority ? (
+                          <span className="truncate capitalize">
+                            {t(`priority_${selectedPriority.toLowerCase()}`)}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground truncate">Select priority</span>
+                        )}
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PRIORITY_OPTIONS.map((p) => (
+                          <SelectItem key={p} value={p}>
+                            {t(`priority_${p.toLowerCase()}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                      {t('field_project')}
+                    </Label>
+                    <Select
+                      value={selectedProjectId || 'unassigned'}
+                      onValueChange={(val) =>
+                        setValue('projectId', val === 'unassigned' || !val ? '' : val)
+                      }
+                    >
+                      <SelectTrigger>
+                        {selectedProjectId && selectedProjectId !== 'unassigned' && projects ? (
+                          <span className="truncate">
+                            {projects.find((p) => p.id === selectedProjectId)?.title || 'Unknown'}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground truncate">No Project</span>
+                        )}
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unassigned">{t('no_project')}</SelectItem>
+                        {projects?.map((p) => (
+                          <SelectItem key={p.id} value={p.id}>
+                            {p.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                      {t('field_deadline')}
+                    </Label>
+                    <Input id="deadline" type="date" className="h-9" {...register('deadline')} />
+                  </div>
                 </div>
-                <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
-                    {t('field_priority')}
-                  </Label>
-                  <Select
-                    value={selectedPriority}
-                    onValueChange={(val) => setValue('priority', (val || 'MEDIUM') as Priority)}
-                  >
-                    <SelectTrigger>
-                      {selectedPriority ? (
-                        <span className="truncate capitalize">
-                          {t(`priority_${selectedPriority.toLowerCase()}`)}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground truncate">Select priority</span>
-                      )}
-                    </SelectTrigger>
-                    <SelectContent>
-                      {PRIORITY_OPTIONS.map((p) => (
-                        <SelectItem key={p} value={p}>
-                          {t(`priority_${p.toLowerCase()}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
-                    {t('field_project')}
-                  </Label>
-                  <Select
-                    value={selectedProjectId || 'unassigned'}
-                    onValueChange={(val) =>
-                      setValue('projectId', val === 'unassigned' || !val ? '' : val)
-                    }
-                  >
-                    <SelectTrigger>
-                      {selectedProjectId && selectedProjectId !== 'unassigned' && projects ? (
-                        <span className="truncate">
-                          {projects.find((p) => p.id === selectedProjectId)?.title || 'Unknown'}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground truncate">No Project</span>
-                      )}
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unassigned">{t('no_project')}</SelectItem>
-                      {projects?.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>
-                          {p.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
-                    {t('field_deadline')}
-                  </Label>
-                  <Input id="deadline" type="date" className="h-9" {...register('deadline')} />
-                </div>
-              </div>
 
-              {/* Description */}
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-semibold">
-                  {t('field_description')}
-                </Label>
-                <Textarea
-                  id="description"
-                  placeholder={t('field_description_placeholder')}
-                  rows={4}
-                  className="resize-none"
-                  {...register('description')}
-                />
-              </div>
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm font-semibold">
+                    {t('field_description')}
+                  </Label>
+                  <Textarea
+                    id="description"
+                    placeholder={t('field_description_placeholder')}
+                    rows={4}
+                    className="resize-none"
+                    {...register('description')}
+                  />
+                </div>
+              </DialogBody>
 
               <DialogFooter className="border-border/40 border-t pt-2">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>

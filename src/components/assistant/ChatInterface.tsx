@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Send, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Message, MessageBubble } from './MessageBubble';
+import { MessageBubble } from './MessageBubble';
 import { useAssistant } from '@/hooks/use-assistant';
+import { useChatStore } from '@/store/chat.store';
 
 interface ChatInterfaceProps {
   userAvatar?: string;
@@ -14,11 +15,19 @@ interface ChatInterfaceProps {
 
 export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps) {
   const t = useTranslations('Assistant');
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { sendMessage, isPending, error } = useAssistant();
+  const allMessages = useChatStore((s) => s.allMessages);
+  const activeConversationId = useChatStore((s) => s.activeConversationId);
+  const messages = useMemo(
+    () => (allMessages ?? []).filter((m) => m.conversationId === activeConversationId),
+    [allMessages, activeConversationId],
+  );
+  const createConversation = useChatStore((s) => s.createConversation);
+  const addUserMessage = useChatStore((s) => s.addUserMessage);
+  const addAssistantMessage = useChatStore((s) => s.addAssistantMessage);
 
   // Handle external prompt injection
   useEffect(() => {
@@ -38,36 +47,24 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
   const handleSend = async () => {
     if (!input.trim() || isPending) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input.trim(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    const content = input.trim();
     setInput('');
     setIsTyping(true);
 
+    // Create conversation if needed
+    if (!activeConversationId) {
+      await createConversation('ASSISTANT');
+    }
+
     try {
-      const response = await sendMessage(userMessage.content);
-
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response.data?.reply || response.message,
-        isStructured: !!response.data?.action,
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
+      await addUserMessage(content);
+      const response = await sendMessage(content);
+      const aiContent = response.data?.reply || response.message;
+      const isStructured = !!response.data?.action;
+      await addAssistantMessage(aiContent, isStructured);
     } catch (err: unknown) {
       console.error(err);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: error || t('msg_error'),
-        isStructured: false,
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      await addAssistantMessage(error || t('msg_error'), false);
     } finally {
       setIsTyping(false);
     }

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/lib/api';
+import { useChatStore } from '@/store/chat.store';
 
 interface User {
   id: string;
@@ -53,6 +54,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       document.cookie =
         'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax';
     }
+    // Clear chat store on logout
+    useChatStore.getState().clearStore();
     set({ user: null, isAuthenticated: false });
   },
 }));

@@ -6,16 +6,39 @@ import { MobileSidebar } from '@/components/layout/mobile-sidebar';
 import { DashboardHeader } from '@/components/layout/dashboard-header';
 import { ReactNode } from 'react';
 import { useAuthStore } from '@/store/auth.store';
+import { useChatStore } from '@/store/chat.store';
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { fetchProfile, user, isLoggingOut } = useAuthStore();
+  const { loadFromLocalStorage, syncFromBackend } = useChatStore();
 
   useEffect(() => {
     if (!user && !isLoggingOut) {
       fetchProfile();
     }
   }, [fetchProfile, user, isLoggingOut]);
+
+  const saveToLocalStorage = useChatStore((s) => s.saveToLocalStorage);
+
+  // Initialize chat persistence when user is available
+  useEffect(() => {
+    if (user?.id) {
+      loadFromLocalStorage(user.id);
+      syncFromBackend();
+    }
+  }, [user?.id, loadFromLocalStorage, syncFromBackend]);
+
+  // Auto-save chat state to localStorage on changes
+  useEffect(() => {
+    if (!user?.id) return;
+    const unsubscribe = useChatStore.subscribe((state) => {
+      if (state.conversations.length > 0 || state.allMessages.length > 0) {
+        saveToLocalStorage(user.id);
+      }
+    });
+    return unsubscribe;
+  }, [user?.id, saveToLocalStorage]);
 
   return (
     <div className="bg-background flex h-screen overflow-hidden">

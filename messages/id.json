@@ -281,7 +281,15 @@
     "context_overdue": "Tugas Terlambat",
     "context_projects": "Proyek Berjalan",
     "msg_error": "Maaf, terjadi kesalahan saat menghubungi AI. Silakan coba lagi.",
-    "typing": "Karsa sedang berpikir..."
+    "typing": "Karsa sedang berpikir...",
+    "chat_history": "Riwayat Chat",
+    "no_conversations": "Belum ada percakapan",
+    "delete_confirm": "Hapus percakapan ini?",
+    "rename": "Ubah nama",
+    "delete": "Hapus",
+    "sync_status_pending": "Menyinkronkan...",
+    "sync_status_synced": "Tersinkron",
+    "sync_status_error": "Sinkronisasi gagal"
   },
   "Tasks": {
     "create_task": "Tugas Baru",

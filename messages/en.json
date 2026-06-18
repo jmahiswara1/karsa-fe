@@ -281,7 +281,15 @@
     "context_overdue": "Overdue Tasks",
     "context_projects": "Running Projects",
     "msg_error": "Sorry, an error occurred while contacting AI. Please try again.",
-    "typing": "Karsa is thinking..."
+    "typing": "Karsa is thinking...",
+    "chat_history": "Chat History",
+    "no_conversations": "No conversations yet",
+    "delete_confirm": "Delete this conversation?",
+    "rename": "Rename",
+    "delete": "Delete",
+    "sync_status_pending": "Syncing...",
+    "sync_status_synced": "Synced",
+    "sync_status_error": "Sync failed"
   },
   "Tasks": {
     "create_task": "New Task",

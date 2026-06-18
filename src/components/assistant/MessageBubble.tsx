@@ -2,16 +2,20 @@
 
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { Sparkles, User } from 'lucide-react';
+import { AlertTriangle, Check, Loader2, Sparkles, User } from 'lucide-react';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useTranslations } from 'next-intl';
 
 export interface Message {
   id: string;
+  conversationId?: string;
   role: 'user' | 'assistant';
   content: string;
   isStructured?: boolean;
+  createdAt?: string;
+  syncStatus?: 'pending' | 'synced' | 'error';
 }
 
 interface MessageBubbleProps {
@@ -20,6 +24,7 @@ interface MessageBubbleProps {
 }
 
 export function MessageBubble({ message, userAvatar }: MessageBubbleProps) {
+  const t = useTranslations('Assistant');
   const isUser = message.role === 'user';
 
   return (
@@ -94,6 +99,35 @@ export function MessageBubble({ message, userAvatar }: MessageBubbleProps) {
             )}
           >
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+          </div>
+        )}
+
+        {/* Sync Status Badge */}
+        {isUser && message.syncStatus && (
+          <div
+            className={cn(
+              'mt-2 flex items-center gap-1 text-xs',
+              isUser ? 'justify-end' : 'justify-start',
+            )}
+          >
+            {message.syncStatus === 'pending' && (
+              <>
+                <Loader2 className="h-3 w-3 animate-spin text-white/60" />
+                <span className="text-white/60">{t('sync_status_pending')}</span>
+              </>
+            )}
+            {message.syncStatus === 'synced' && (
+              <>
+                <Check className="h-3 w-3 text-white/60" />
+                <span className="text-white/60">{t('sync_status_synced')}</span>
+              </>
+            )}
+            {message.syncStatus === 'error' && (
+              <>
+                <AlertTriangle className="h-3 w-3 text-white/80" />
+                <span className="text-white/80">{t('sync_status_error')}</span>
+              </>
+            )}
           </div>
         )}
       </div>

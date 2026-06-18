@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { CheckCircle2, ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useDashboardSummary } from '@/hooks/use-dashboard';
 import { cn } from '@/lib/utils';
 import { MiniChat } from './MiniChat';
@@ -24,6 +24,22 @@ export function GreetingBanner({ user }: GreetingBannerProps) {
   const t = useTranslations('Dashboard');
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Read from localStorage after mount to avoid hydration mismatch
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('minichat-expanded');
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (stored === 'true') setIsExpanded(true);
+    }
+  }, []);
+
+  // Save to localStorage when state changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('minichat-expanded', String(isExpanded));
+    }
+  }, [isExpanded]);
+
   const getGreeting = () => {
     const h = new Date().getHours();
     if (h >= 5 && h < 12) return t('greeting_morning');
@@ -41,10 +57,7 @@ export function GreetingBanner({ user }: GreetingBannerProps) {
 
   return (
     <div className="space-y-0">
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+      <div
         className={cn(
           'relative overflow-hidden px-6 py-5 shadow-lg transition-all duration-300',
           isExpanded ? 'rounded-t-2xl' : 'rounded-2xl',
@@ -94,25 +107,23 @@ export function GreetingBanner({ user }: GreetingBannerProps) {
             </button>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <AnimatePresence initial={false}>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="overflow-hidden rounded-b-2xl shadow-lg"
-            style={{
-              background:
-                'linear-gradient(135deg, oklch(0.64 0.19 255) 0%, oklch(0.58 0.20 265) 50%, oklch(0.54 0.18 278) 100%)',
-            }}
-          >
-            <MiniChat userAvatar={user?.avatarUrl} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <motion.div
+        initial={false}
+        animate={{
+          height: isExpanded ? 'auto' : 0,
+          opacity: isExpanded ? 1 : 0,
+        }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+        className="overflow-hidden rounded-b-2xl shadow-lg"
+        style={{
+          background:
+            'linear-gradient(135deg, oklch(0.64 0.19 255) 0%, oklch(0.58 0.20 265) 50%, oklch(0.54 0.18 278) 100%)',
+        }}
+      >
+        <MiniChat userAvatar={user?.avatarUrl} />
+      </motion.div>
     </div>
   );
 }

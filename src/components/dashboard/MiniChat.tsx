@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { Send, Sparkles, User } from 'lucide-react';
+import { Send, Sparkles, User, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
@@ -10,6 +10,8 @@ import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
 import { Message } from '@/components/assistant/MessageBubble';
 import { useAssistant } from '@/hooks/use-assistant';
+import { useChatStore } from '@/store/chat.store';
+import { useDialogStore } from '@/store/dialog.store';
 
 interface MiniChatProps {
   userAvatar?: string;
@@ -85,12 +87,34 @@ function MiniMessageBubble({ message, userAvatar }: { message: Message; userAvat
 
 export function MiniChat({ userAvatar }: MiniChatProps) {
   const t = useTranslations('Dashboard');
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, isPending, error } = useAssistant();
+
+  const storeAllMessages = useChatStore((s) => s.allMessages);
+  const activeConversationId = useChatStore((s) => s.activeConversationId);
+  const messages = useMemo(
+    () => (storeAllMessages ?? []).filter((m) => m.conversationId === activeConversationId),
+    [storeAllMessages, activeConversationId],
+  );
+  const createConversation = useChatStore((s) => s.createConversation);
+  const addUserMessage = useChatStore((s) => s.addUserMessage);
+  const addAssistantMessage = useChatStore((s) => s.addAssistantMessage);
+  const clearChat = useChatStore((s) => s.clearChat);
+  const { showConfirm } = useDialogStore();
+
+  const handleClear = () => {
+    showConfirm({
+      title: 'Clear chat',
+      description: 'Are you sure you want to clear this chat? This cannot be undone.',
+      confirmText: 'Clear',
+      cancelText: 'Cancel',
+      isDestructive: true,
+      onConfirm: () => clearChat(),
+    });
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -105,36 +129,24 @@ export function MiniChat({ userAvatar }: MiniChatProps) {
   const handleSend = async () => {
     if (!input.trim() || isPending) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input.trim(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    const content = input.trim();
     setInput('');
     setIsTyping(true);
 
+    // Create conversation if needed
+    if (!activeConversationId) {
+      await createConversation('MINI');
+    }
+
     try {
-      const response = await sendMessage(userMessage.content);
-
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response.data?.reply || response.message,
-        isStructured: !!response.data?.action,
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
+      await addUserMessage(content);
+      const response = await sendMessage(content);
+      const aiContent = response.data?.reply || response.message;
+      const isStructured = !!response.data?.action;
+      await addAssistantMessage(aiContent, isStructured);
     } catch (err: unknown) {
       console.error(err);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: error || t('quick_chat_error'),
-        isStructured: false,
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      await addAssistantMessage(error || 'An error occurred', false);
     } finally {
       setIsTyping(false);
     }
@@ -142,6 +154,18 @@ export function MiniChat({ userAvatar }: MiniChatProps) {
 
   return (
     <div className="flex flex-col px-6 pb-5">
+      {/* Clear button */}
+      {messages.length > 0 && (
+        <div className="mb-2 flex justify-end">
+          <button
+            onClick={handleClear}
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-medium text-white/60 transition-all hover:bg-white/10 hover:text-white/90"
+          >
+            <Trash2 className="h-3 w-3" />
+            Clear chat
+          </button>
+        </div>
+      )}
       {/* Messages Area */}
       <div ref={scrollRef} className="overflow-y-auto scroll-smooth" style={{ maxHeight: '260px' }}>
         {messages.length === 0 ? (

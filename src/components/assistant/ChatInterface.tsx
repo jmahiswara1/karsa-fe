@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { Send, Sparkles } from 'lucide-react';
+import { Send, Sparkles, Check, Loader2, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageBubble } from './MessageBubble';
 import { useAssistant } from '@/hooks/use-assistant';
@@ -20,13 +20,21 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { sendMessage, isPending, error } = useAssistant();
-  const { createEntities, isCreating, error: createError } = useAiCreate();
+  const { createEntities, error: createError } = useAiCreate();
   const allMessages = useChatStore((s) => s.allMessages);
   const activeConversationId = useChatStore((s) => s.activeConversationId);
   const messages = useMemo(
     () => (allMessages ?? []).filter((m) => m.conversationId === activeConversationId),
     [allMessages, activeConversationId],
   );
+  const lastUserSyncStatus = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === 'user' && messages[i].syncStatus) {
+        return messages[i].syncStatus;
+      }
+    }
+    return null;
+  }, [messages]);
   const createConversation = useChatStore((s) => s.createConversation);
   const addUserMessage = useChatStore((s) => s.addUserMessage);
   const addAssistantMessage = useChatStore((s) => s.addAssistantMessage);
@@ -53,12 +61,15 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
     setInput('');
     setIsTyping(true);
 
-    // Create conversation if needed
-    if (!activeConversationId) {
-      await createConversation('ASSISTANT');
-    }
-
     try {
+      // Create conversation if needed
+      if (!activeConversationId) {
+        const convId = await createConversation('ASSISTANT');
+        if (!convId || convId.startsWith('temp-')) {
+          throw new Error(t('msg_error'));
+        }
+      }
+
       await addUserMessage(content);
 
       // Detect if user wants to create entity (heuristic: contains keywords)
@@ -70,7 +81,7 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
       } else {
         const response = await sendMessage(content);
         // Backend returns { reply, action, action_data } directly (unwrapped from AI service)
-        const aiContent = response.reply || 'Maaf, saya tidak bisa memproses permintaan Anda.';
+        const aiContent = response.reply || t('msg_error');
         const isStructured = !!response.action;
         await addAssistantMessage(aiContent, isStructured);
       }
@@ -164,6 +175,47 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
           >
             <Send className="h-4 w-4" />
           </button>
+        </div>
+        {/* Quick Suggestion Chips + Sync Status */}
+        <div className="mt-2 flex items-center justify-between px-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {[t('prompt_prioritize'), t('prompt_plan'), t('prompt_summary')].map((prompt) => (
+              <button
+                key={prompt}
+                onClick={() => {
+                  setInput(prompt);
+                }}
+                className="text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+          {/* Sync Status Indicator */}
+          {lastUserSyncStatus && (
+            <div className="flex shrink-0 items-center gap-1 text-[11px]">
+              {lastUserSyncStatus === 'pending' && (
+                <>
+                  <Loader2 className="text-muted-foreground h-3 w-3 animate-spin" />
+                  <span className="text-muted-foreground">{t('sync_status_pending')}</span>
+                </>
+              )}
+              {lastUserSyncStatus === 'synced' && (
+                <>
+                  <Check className="h-3 w-3 text-emerald-500" />
+                  <span className="text-muted-foreground">{t('sync_status_synced')}</span>
+                </>
+              )}
+              {lastUserSyncStatus === 'error' && (
+                <>
+                  <AlertTriangle className="h-3 w-3 text-amber-500" />
+                  <span className="text-amber-600 dark:text-amber-400">
+                    {t('sync_status_error')}
+                  </span>
+                </>
+              )}
+            </div>
+          )}
         </div>
         <p className="text-muted-foreground/70 mt-2 text-center text-[10px] font-medium">
           Karsa AI can make mistakes. Consider verifying important information.

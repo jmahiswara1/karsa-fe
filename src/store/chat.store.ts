@@ -16,6 +16,7 @@ interface ChatState {
   conversations: Conversation[];
   allMessages: MessageWithEntities[]; // ALL messages across ALL conversations
   activeConversationId: string | null;
+  deletedConversationIds: string[]; // IDs of deleted conversations to filter from backend sync
   syncStatus: 'idle' | 'syncing' | 'error';
 
   // Getters
@@ -23,6 +24,7 @@ interface ChatState {
   getMessagesByConversation: (conversationId: string) => MessageWithEntities[];
 
   // Actions
+  startNewChat: () => void;
   createConversation: (type: 'ASSISTANT' | 'MINI') => Promise<string | null>;
   setActiveConversation: (id: string | null) => Promise<void>;
   renameConversation: (id: string, title: string) => Promise<void>;
@@ -50,6 +52,7 @@ interface StorageData {
   conversations: Conversation[];
   allMessages: Message[];
   activeConversationId: string | null;
+  deletedConversationIds: string[];
 }
 
 function loadFromStorage(userId: string): StorageData | null {
@@ -133,6 +136,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   conversations: [],
   allMessages: [],
   activeConversationId: null,
+  deletedConversationIds: [],
   syncStatus: 'idle',
 
   getActiveMessages: () => {
@@ -143,6 +147,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   getMessagesByConversation: (conversationId: string) => {
     return get().allMessages.filter((m) => m.conversationId === conversationId);
+  },
+
+  startNewChat: () => {
+    set({ activeConversationId: null });
   },
 
   createConversation: async (type) => {
@@ -207,9 +215,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
 
   deleteConversation: async (id) => {
-    const { conversations, activeConversationId } = get();
+    const { conversations, activeConversationId, deletedConversationIds } = get();
     const filtered = conversations.filter((c) => c.id !== id);
 
+    // Track deleted ID to prevent backend sync from resurrecting it
     set({
       conversations: filtered,
       allMessages: get().allMessages.filter((m) => m.conversationId !== id),
@@ -219,6 +228,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             ? filtered[0].id
             : null
           : activeConversationId,
+      deletedConversationIds: [...deletedConversationIds, id],
     });
 
     await ConversationService.deleteConversation(id);
@@ -381,14 +391,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({ syncStatus: 'syncing' });
 
     try {
+      const { deletedConversationIds } = get();
+      const deletedSet = new Set(deletedConversationIds);
+
       const backendConversations = await ConversationService.listConversations();
       const localConversations = get().conversations;
 
-      const mergedConversations = mergeConversations(localConversations, backendConversations);
+      // Filter out deleted conversations from backend before merging
+      const filteredBackendConversations = backendConversations.filter(
+        (c) => !deletedSet.has(c.id),
+      );
 
-      // Fetch messages for all backend conversations
+      const mergedConversations = mergeConversations(
+        localConversations,
+        filteredBackendConversations,
+      );
+
+      // Fetch messages for all non-deleted backend conversations
       const allBackendMessages: Message[] = [];
-      for (const conv of backendConversations) {
+      for (const conv of filteredBackendConversations) {
         const result = await ConversationService.getConversation(conv.id);
         if (result) {
           allBackendMessages.push(...result.messages);
@@ -416,16 +437,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
         conversations: data.conversations ?? [],
         allMessages: data.allMessages ?? [],
         activeConversationId: data.activeConversationId ?? null,
+        deletedConversationIds: data.deletedConversationIds ?? [],
       });
     }
   },
 
   saveToLocalStorage: (userId) => {
-    const { conversations, allMessages, activeConversationId } = get();
+    const { conversations, allMessages, activeConversationId, deletedConversationIds } = get();
     saveToStorage(userId, {
       conversations,
       allMessages,
       activeConversationId,
+      deletedConversationIds,
     });
   },
 
@@ -434,6 +457,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       conversations: [],
       allMessages: [],
       activeConversationId: null,
+      deletedConversationIds: [],
       syncStatus: 'idle',
     });
   },

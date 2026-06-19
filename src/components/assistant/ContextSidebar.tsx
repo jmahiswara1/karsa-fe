@@ -2,15 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import {
-  AlertTriangle,
-  Clock,
-  FolderOpen,
-  ChevronRight,
-  MoreVertical,
-  Pencil,
-  Trash2,
-} from 'lucide-react';
+import { AlertTriangle, Clock, FolderOpen, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useChatStore } from '@/store/chat.store';
@@ -25,11 +17,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-interface ContextSidebarProps {
-  onPromptSelect: (prompt: string) => void;
-}
-
-export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
+export function ContextSidebar() {
   const t = useTranslations('Assistant');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
@@ -43,11 +31,10 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
     setActiveConversation,
     renameConversation,
     deleteConversation,
+    startNewChat,
   } = useChatStore();
 
   const assistantConversations = conversations.filter((c) => c.type === 'ASSISTANT');
-
-  const quickPrompts = [t('prompt_prioritize'), t('prompt_plan'), t('prompt_summary')];
 
   const contextItems = [
     {
@@ -103,8 +90,24 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
     <div className="flex w-full shrink-0 flex-col gap-6 lg:w-[320px]">
       {/* Conversation History */}
       <div className="border-border/50 bg-card rounded-2xl border p-5 shadow-sm">
-        <h3 className="text-foreground mb-4 text-sm font-bold">{t('chat_history')}</h3>
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-foreground text-sm font-bold">{t('chat_history')}</h3>
+          <button
+            onClick={startNewChat}
+            className="text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-all"
+            title={t('new_chat')}
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{t('new_chat')}</span>
+          </button>
+        </div>
         <div className="flex max-h-[300px] flex-col gap-2 overflow-visible">
+          {/* Active empty state (new chat) */}
+          {activeConversationId === null && (
+            <div className="border-primary/50 bg-primary/5 rounded-xl border px-4 py-3">
+              <span className="text-muted-foreground text-sm font-medium">{t('new_chat')}</span>
+            </div>
+          )}
           {assistantConversations.length === 0 ? (
             <p className="text-muted-foreground py-4 text-center text-sm">
               {t('no_conversations')}
@@ -191,27 +194,6 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
           )}
         </div>
       </div>
-      {/* Quick Prompts */}
-      <div className="border-border/50 bg-card rounded-2xl border p-5 shadow-sm">
-        <h3 className="text-foreground mb-4 text-sm font-bold">{t('quick_prompts_title')}</h3>
-        <div className="flex flex-col gap-2">
-          {quickPrompts.map((prompt, i) => (
-            <motion.button
-              key={i}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              onClick={() => onPromptSelect(prompt)}
-              className="group border-border/40 bg-background hover:border-primary/30 flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition-all hover:shadow-sm"
-            >
-              <span className="text-muted-foreground group-hover:text-foreground font-medium transition-colors">
-                {prompt}
-              </span>
-              <ChevronRight className="text-muted-foreground/50 group-hover:text-primary h-4 w-4 transition-colors" />
-            </motion.button>
-          ))}
-        </div>
-      </div>
 
       {/* Context Awareness */}
       <div className="border-border/50 bg-card rounded-2xl border p-5 shadow-sm">
@@ -256,7 +238,7 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
-              className="h-auto rounded-lg bg-red-600 px-5 py-2.5 font-medium text-white shadow-sm transition-all hover:bg-red-700"
+              className="h-auto rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white shadow-sm transition-all hover:bg-blue-700"
             >
               {t('delete')}
             </AlertDialogAction>

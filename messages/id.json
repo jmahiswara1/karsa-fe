@@ -204,7 +204,11 @@
     "date_format_full": "{day}, {date} {month} {year}",
     "quick_chat_placeholder": "Tanya Karsa AI apa saja...",
     "quick_chat_typing": "Karsa AI sedang berpikir...",
-    "quick_chat_error": "Maaf, terjadi kesalahan."
+    "quick_chat_error": "Maaf, terjadi kesalahan.",
+    "mini_chat_clear_title": "Bersihkan Chat",
+    "mini_chat_clear_desc": "Apakah Anda yakin ingin membersihkan chat ini? Tindakan ini tidak dapat dibatalkan.",
+    "mini_chat_clear_btn": "Bersihkan",
+    "mini_chat_cancel_btn": "Batal"
   },
   "Pages": {
     "tasks_title": "Tugas",
@@ -283,6 +287,7 @@
     "msg_error": "Maaf, terjadi kesalahan saat menghubungi AI. Silakan coba lagi.",
     "typing": "Karsa sedang berpikir...",
     "chat_history": "Riwayat Chat",
+    "new_chat": "Chat Baru",
     "no_conversations": "Belum ada percakapan",
     "delete_confirm": "Hapus percakapan ini?",
     "delete_confirm_title": "Hapus percakapan",

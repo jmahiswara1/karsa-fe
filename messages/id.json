@@ -285,11 +285,35 @@
     "chat_history": "Riwayat Chat",
     "no_conversations": "Belum ada percakapan",
     "delete_confirm": "Hapus percakapan ini?",
+    "delete_confirm_title": "Hapus percakapan",
+    "delete_confirm_message": "Apakah Anda yakin ingin menghapus percakapan ini? Tindakan ini tidak dapat dibatalkan.",
+    "cancel": "Batal",
     "rename": "Ubah nama",
     "delete": "Hapus",
     "sync_status_pending": "Menyinkronkan...",
     "sync_status_synced": "Tersinkron",
-    "sync_status_error": "Sinkronisasi gagal"
+    "sync_status_error": "Sinkronisasi gagal",
+    "entity_card": {
+      "type": {
+        "task": "Tugas",
+        "project": "Proyek",
+        "note": "Catatan",
+        "planner_entry": "Entri Perencana"
+      },
+      "status": {
+        "pending": "Menunggu konfirmasi",
+        "created": "Dibuat",
+        "failed": "Gagal"
+      },
+      "priority": "Prioritas",
+      "deadline": "Tenggat Waktu",
+      "linked_to_project": "Terhubung ke proyek",
+      "actions": {
+        "confirm": "Konfirmasi",
+        "cancel": "Batal",
+        "view": "Lihat"
+      }
+    }
   },
   "Tasks": {
     "create_task": "Tugas Baru",

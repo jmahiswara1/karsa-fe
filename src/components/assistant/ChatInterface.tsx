@@ -6,6 +6,7 @@ import { Send, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageBubble } from './MessageBubble';
 import { useAssistant } from '@/hooks/use-assistant';
+import { useAiCreate } from '@/hooks/use-ai-create';
 import { useChatStore } from '@/store/chat.store';
 
 interface ChatInterfaceProps {
@@ -19,6 +20,7 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { sendMessage, isPending, error } = useAssistant();
+  const { createEntities, isCreating, error: createError } = useAiCreate();
   const allMessages = useChatStore((s) => s.allMessages);
   const activeConversationId = useChatStore((s) => s.activeConversationId);
   const messages = useMemo(
@@ -58,13 +60,24 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
 
     try {
       await addUserMessage(content);
-      const response = await sendMessage(content);
-      const aiContent = response.data?.reply || response.message;
-      const isStructured = !!response.data?.action;
-      await addAssistantMessage(aiContent, isStructured);
+
+      // Detect if user wants to create entity (heuristic: contains keywords)
+      const wantsCreation = /\b(buat|tambah|create|add|buatkan|bikin)\b/i.test(content);
+
+      if (wantsCreation) {
+        const result = await createEntities(content);
+        await addAssistantMessage(result.reply || '', true, result.entities);
+      } else {
+        const response = await sendMessage(content);
+        // Backend returns { reply, action, action_data } directly (unwrapped from AI service)
+        const aiContent = response.reply || 'Maaf, saya tidak bisa memproses permintaan Anda.';
+        const isStructured = !!response.action;
+        await addAssistantMessage(aiContent, isStructured);
+      }
     } catch (err: unknown) {
       console.error(err);
-      await addAssistantMessage(error || t('msg_error'), false);
+      const errorMsg = error || (createError?.message ?? null) || t('msg_error');
+      await addAssistantMessage(errorMsg, false);
     } finally {
       setIsTyping(false);
     }

@@ -1,12 +1,9 @@
 import { api } from '@/lib/api';
 
 export interface ChatResponse {
-  message: string;
-  data: {
-    reply: string;
-    action: string | null;
-    action_data: unknown;
-  };
+  reply: string;
+  action: string | null;
+  action_data: unknown;
 }
 
 export type EntityType = 'task' | 'project' | 'note' | 'planner_entry';

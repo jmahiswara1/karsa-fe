@@ -14,6 +14,16 @@ import {
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useChatStore } from '@/store/chat.store';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface ContextSidebarProps {
   onPromptSelect: (prompt: string) => void;
@@ -24,6 +34,8 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteConversationId, setDeleteConversationId] = useState<string | null>(null);
 
   const {
     conversations,
@@ -69,10 +81,21 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm(t('delete_confirm'))) {
-      await deleteConversation(id);
-      setMenuOpenId(null);
+  const openDeleteModal = (id: string) => {
+    setDeleteConversationId(id);
+    setDeleteModalOpen(true);
+    setMenuOpenId(null);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setDeleteConversationId(null);
+  };
+
+  const handleDelete = async () => {
+    if (deleteConversationId) {
+      await deleteConversation(deleteConversationId);
+      closeDeleteModal();
     }
   };
 
@@ -81,7 +104,7 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
       {/* Conversation History */}
       <div className="border-border/50 bg-card rounded-2xl border p-5 shadow-sm">
         <h3 className="text-foreground mb-4 text-sm font-bold">{t('chat_history')}</h3>
-        <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto">
+        <div className="flex max-h-[300px] flex-col gap-2 overflow-visible">
           {assistantConversations.length === 0 ? (
             <p className="text-muted-foreground py-4 text-center text-sm">
               {t('no_conversations')}
@@ -138,7 +161,10 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
                   </button>
 
                   {menuOpenId === conversation.id && (
-                    <div className="border-border/50 bg-card absolute top-full right-0 z-10 mt-1 w-32 rounded-lg border shadow-lg">
+                    <div
+                      className="border-border/50 bg-card absolute right-0 z-50 mt-1 w-32 rounded-lg border shadow-lg"
+                      style={{ top: '100%' }}
+                    >
                       <button
                         onClick={() => {
                           setEditingId(conversation.id);
@@ -151,7 +177,7 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
                         {t('rename')}
                       </button>
                       <button
-                        onClick={() => handleDelete(conversation.id)}
+                        onClick={() => openDeleteModal(conversation.id)}
                         className="flex w-full items-center gap-2 rounded-b-lg px-3 py-2 text-sm text-rose-500 transition-colors hover:bg-rose-50 dark:hover:bg-rose-900/20"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -209,6 +235,34 @@ export function ContextSidebar({ onPromptSelect }: ContextSidebarProps) {
           })}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AlertDialog open={deleteModalOpen} onOpenChange={closeDeleteModal}>
+        <AlertDialogContent className="border-gray-100 p-6 shadow-xl sm:rounded-xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-semibold text-gray-900">
+              {t('delete_confirm_title')}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="mt-1 text-[15px] leading-relaxed text-gray-600">
+              {t('delete_confirm_message')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-6 gap-2 sm:gap-3">
+            <AlertDialogCancel
+              onClick={closeDeleteModal}
+              className="h-auto rounded-lg border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-700 transition-all hover:bg-gray-50"
+            >
+              {t('cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="h-auto rounded-lg bg-red-600 px-5 py-2.5 font-medium text-white shadow-sm transition-all hover:bg-red-700"
+            >
+              {t('delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

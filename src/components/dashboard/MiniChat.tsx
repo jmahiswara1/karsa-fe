@@ -141,8 +141,8 @@ export function MiniChat({ userAvatar }: MiniChatProps) {
     try {
       await addUserMessage(content);
       const response = await sendMessage(content);
-      const aiContent = response.data?.reply || response.message;
-      const isStructured = !!response.data?.action;
+      const aiContent = response.reply || 'Maaf, saya tidak bisa memproses permintaan Anda.';
+      const isStructured = !!response.action;
       await addAssistantMessage(aiContent, isStructured);
     } catch (err: unknown) {
       console.error(err);

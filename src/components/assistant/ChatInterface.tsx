@@ -69,8 +69,9 @@ export function ChatInterface({ userAvatar, initialPrompt }: ChatInterfaceProps)
         await addAssistantMessage(result.reply || '', true, result.entities);
       } else {
         const response = await sendMessage(content);
-        const aiContent = response.data?.reply || response.message;
-        const isStructured = !!response.data?.action;
+        // Backend returns { reply, action, action_data } directly (unwrapped from AI service)
+        const aiContent = response.reply || 'Maaf, saya tidak bisa memproses permintaan Anda.';
+        const isStructured = !!response.action;
         await addAssistantMessage(aiContent, isStructured);
       }
     } catch (err: unknown) {

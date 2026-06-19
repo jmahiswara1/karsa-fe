@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Send, Sparkles, User, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,16 +8,21 @@ import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
-import { Message } from '@/components/assistant/MessageBubble';
 import { useAssistant } from '@/hooks/use-assistant';
-import { useChatStore } from '@/store/chat.store';
+import { useMiniChatStore, type MiniChatMessage } from '@/store/mini-chat.store';
 import { useDialogStore } from '@/store/dialog.store';
 
 interface MiniChatProps {
   userAvatar?: string;
 }
 
-function MiniMessageBubble({ message, userAvatar }: { message: Message; userAvatar?: string }) {
+function MiniMessageBubble({
+  message,
+  userAvatar,
+}: {
+  message: MiniChatMessage;
+  userAvatar?: string;
+}) {
   const isUser = message.role === 'user';
 
   return (
@@ -93,26 +98,20 @@ export function MiniChat({ userAvatar }: MiniChatProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, isPending, error } = useAssistant();
 
-  const storeAllMessages = useChatStore((s) => s.allMessages);
-  const activeConversationId = useChatStore((s) => s.activeConversationId);
-  const messages = useMemo(
-    () => (storeAllMessages ?? []).filter((m) => m.conversationId === activeConversationId),
-    [storeAllMessages, activeConversationId],
-  );
-  const createConversation = useChatStore((s) => s.createConversation);
-  const addUserMessage = useChatStore((s) => s.addUserMessage);
-  const addAssistantMessage = useChatStore((s) => s.addAssistantMessage);
-  const clearChat = useChatStore((s) => s.clearChat);
+  const messages = useMiniChatStore((s) => s.messages);
+  const addUserMessage = useMiniChatStore((s) => s.addUserMessage);
+  const addAssistantMessage = useMiniChatStore((s) => s.addAssistantMessage);
+  const clearMessages = useMiniChatStore((s) => s.clearMessages);
   const { showConfirm } = useDialogStore();
 
   const handleClear = () => {
     showConfirm({
-      title: 'Clear chat',
-      description: 'Are you sure you want to clear this chat? This cannot be undone.',
-      confirmText: 'Clear',
-      cancelText: 'Cancel',
+      title: t('mini_chat_clear_title'),
+      description: t('mini_chat_clear_desc'),
+      confirmText: t('mini_chat_clear_btn'),
+      cancelText: t('mini_chat_cancel_btn'),
       isDestructive: true,
-      onConfirm: () => clearChat(),
+      onConfirm: () => clearMessages(),
     });
   };
 
@@ -133,20 +132,15 @@ export function MiniChat({ userAvatar }: MiniChatProps) {
     setInput('');
     setIsTyping(true);
 
-    // Create conversation if needed
-    if (!activeConversationId) {
-      await createConversation('MINI');
-    }
-
     try {
-      await addUserMessage(content);
+      addUserMessage(content);
       const response = await sendMessage(content);
-      const aiContent = response.reply || 'Maaf, saya tidak bisa memproses permintaan Anda.';
+      const aiContent = response.reply || t('quick_chat_error');
       const isStructured = !!response.action;
-      await addAssistantMessage(aiContent, isStructured);
+      addAssistantMessage(aiContent, isStructured);
     } catch (err: unknown) {
       console.error(err);
-      await addAssistantMessage(error || 'An error occurred', false);
+      addAssistantMessage(error || t('quick_chat_error'));
     } finally {
       setIsTyping(false);
     }

@@ -30,10 +30,10 @@ export interface CreateEntitiesResponse {
 
 export const AssistantService = {
   chat: async (prompt: string): Promise<ChatResponse> => {
-    const response = await api.post<ChatResponse>('/api/assistant/chat', {
+    const response = await api.post<{ data: ChatResponse }>('/api/assistant/chat', {
       prompt,
     });
-    return response.data;
+    return response.data.data;
   },
 
   createEntities: async (prompt: string): Promise<CreateEntitiesResponse> => {

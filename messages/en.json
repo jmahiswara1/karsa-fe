@@ -204,7 +204,11 @@
     "date_format_full": "{day}, {month} {date}, {year}",
     "quick_chat_placeholder": "Ask Karsa AI anything...",
     "quick_chat_typing": "Karsa AI is thinking...",
-    "quick_chat_error": "Sorry, something went wrong."
+    "quick_chat_error": "Sorry, something went wrong.",
+    "mini_chat_clear_title": "Clear Chat",
+    "mini_chat_clear_desc": "Are you sure you want to clear this chat? This cannot be undone.",
+    "mini_chat_clear_btn": "Clear",
+    "mini_chat_cancel_btn": "Cancel"
   },
   "Pages": {
     "tasks_title": "Tasks",
@@ -283,6 +287,7 @@
     "msg_error": "Sorry, an error occurred while contacting AI. Please try again.",
     "typing": "Karsa is thinking...",
     "chat_history": "Chat History",
+    "new_chat": "New Chat",
     "no_conversations": "No conversations yet",
     "delete_confirm": "Delete this conversation?",
     "delete_confirm_title": "Delete Conversation",

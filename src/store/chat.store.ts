@@ -4,18 +4,23 @@ import {
   type Conversation,
   type Message,
 } from '@/services/conversation.service';
+import type { EntityCreation } from '@/services/assistant.service';
 
 // ── Store Types ────────────────────────────────────────────────────
 
+export interface MessageWithEntities extends Message {
+  entities?: EntityCreation[];
+}
+
 interface ChatState {
   conversations: Conversation[];
-  allMessages: Message[]; // ALL messages across ALL conversations
+  allMessages: MessageWithEntities[]; // ALL messages across ALL conversations
   activeConversationId: string | null;
   syncStatus: 'idle' | 'syncing' | 'error';
 
   // Getters
-  getActiveMessages: () => Message[];
-  getMessagesByConversation: (conversationId: string) => Message[];
+  getActiveMessages: () => MessageWithEntities[];
+  getMessagesByConversation: (conversationId: string) => MessageWithEntities[];
 
   // Actions
   createConversation: (type: 'ASSISTANT' | 'MINI') => Promise<string | null>;
@@ -23,7 +28,13 @@ interface ChatState {
   renameConversation: (id: string, title: string) => Promise<void>;
   deleteConversation: (id: string) => Promise<void>;
   addUserMessage: (content: string) => Promise<void>;
-  addAssistantMessage: (content: string, isStructured?: boolean) => Promise<void>;
+  addAssistantMessage: (
+    content: string,
+    isStructured?: boolean,
+    entities?: EntityCreation[],
+  ) => Promise<void>;
+  confirmEntity: (messageId: string, entityIndex: number) => void;
+  cancelEntity: (messageId: string, entityIndex: number) => void;
   clearChat: () => Promise<void>; // Clear active conversation
   syncFromBackend: () => Promise<void>;
   loadFromLocalStorage: (userId: string) => void;
@@ -274,7 +285,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
 
-  addAssistantMessage: async (content, isStructured = false) => {
+  addAssistantMessage: async (content, isStructured = false, entities = []) => {
     const { activeConversationId } = get();
 
     if (!activeConversationId) {
@@ -282,12 +293,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
       return;
     }
 
-    const newMessage: Message = {
+    const newMessage: MessageWithEntities = {
       id: `temp-${Date.now() + 1}`,
       conversationId: activeConversationId,
       role: 'assistant',
       content,
       isStructured,
+      entities,
       createdAt: new Date().toISOString(),
       syncStatus: 'pending',
     };
@@ -316,6 +328,38 @@ export const useChatStore = create<ChatState>((set, get) => ({
         ),
       }));
     }
+  },
+
+  confirmEntity: (messageId, entityIndex) => {
+    set((state) => ({
+      allMessages: state.allMessages.map((m) => {
+        if (m.id !== messageId || !m.entities) return m;
+        const updatedEntities = [...m.entities];
+        if (updatedEntities[entityIndex]) {
+          updatedEntities[entityIndex] = {
+            ...updatedEntities[entityIndex],
+            status: 'created',
+          };
+        }
+        return { ...m, entities: updatedEntities };
+      }),
+    }));
+  },
+
+  cancelEntity: (messageId, entityIndex) => {
+    set((state) => ({
+      allMessages: state.allMessages.map((m) => {
+        if (m.id !== messageId || !m.entities) return m;
+        const updatedEntities = [...m.entities];
+        if (updatedEntities[entityIndex]) {
+          updatedEntities[entityIndex] = {
+            ...updatedEntities[entityIndex],
+            status: 'cancelled',
+          };
+        }
+        return { ...m, entities: updatedEntities };
+      }),
+    }));
   },
 
   clearChat: async () => {

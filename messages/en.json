@@ -289,7 +289,28 @@
     "delete": "Delete",
     "sync_status_pending": "Syncing...",
     "sync_status_synced": "Synced",
-    "sync_status_error": "Sync failed"
+    "sync_status_error": "Sync failed",
+    "entity_card": {
+      "type": {
+        "task": "Task",
+        "project": "Project",
+        "note": "Note",
+        "planner_entry": "Planner Entry"
+      },
+      "status": {
+        "pending": "Pending confirmation",
+        "created": "Created",
+        "failed": "Failed"
+      },
+      "priority": "Priority",
+      "deadline": "Deadline",
+      "linked_to_project": "Linked to project",
+      "actions": {
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "view": "View"
+      }
+    }
   },
   "Tasks": {
     "create_task": "New Task",

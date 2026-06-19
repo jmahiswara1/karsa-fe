@@ -7,6 +7,9 @@ import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTranslations } from 'next-intl';
+import { useChatStore } from '@/store/chat.store';
+import { EntityCreationCard } from './EntityCreationCard';
+import type { MessageWithEntities } from '@/store/chat.store';
 
 export interface Message {
   id: string;
@@ -19,13 +22,15 @@ export interface Message {
 }
 
 interface MessageBubbleProps {
-  message: Message;
+  message: MessageWithEntities;
   userAvatar?: string;
 }
 
 export function MessageBubble({ message, userAvatar }: MessageBubbleProps) {
   const t = useTranslations('Assistant');
   const isUser = message.role === 'user';
+  const confirmEntity = useChatStore((s) => s.confirmEntity);
+  const cancelEntity = useChatStore((s) => s.cancelEntity);
 
   return (
     <motion.div
@@ -99,6 +104,20 @@ export function MessageBubble({ message, userAvatar }: MessageBubbleProps) {
             )}
           >
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+          </div>
+        )}
+
+        {/* Entity Creation Cards */}
+        {message.entities && message.entities.length > 0 && (
+          <div className="mt-4 flex flex-col gap-2">
+            {message.entities.map((entity, idx) => (
+              <EntityCreationCard
+                key={`${message.id}-entity-${idx}`}
+                entity={entity}
+                onConfirm={() => confirmEntity(message.id, idx)}
+                onCancel={() => cancelEntity(message.id, idx)}
+              />
+            ))}
           </div>
         )}
 

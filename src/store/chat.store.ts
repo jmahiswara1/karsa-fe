@@ -397,13 +397,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const backendConversations = await ConversationService.listConversations();
       const localConversations = get().conversations;
 
-      // Filter out deleted conversations from backend before merging
+      // Filter out deleted conversations from BOTH backend AND local before merging
       const filteredBackendConversations = backendConversations.filter(
         (c) => !deletedSet.has(c.id),
       );
+      const filteredLocalConversations = localConversations.filter((c) => !deletedSet.has(c.id));
 
       const mergedConversations = mergeConversations(
-        localConversations,
+        filteredLocalConversations,
         filteredBackendConversations,
       );
 

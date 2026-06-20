@@ -28,8 +28,22 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (user?.id) {
       loadFromLocalStorage(user.id);
-      syncFromBackend();
       loadMiniChat(user.id);
+
+      // Check if this is a new session (logout or close browser)
+      const isNewSession = !sessionStorage.getItem('karsa.aiSession');
+
+      if (isNewSession) {
+        // New session - start fresh AI conversation
+        sessionStorage.setItem('karsa.aiSession', 'active');
+        // Sync from backend to load history list, but don't activate old conversation
+        syncFromBackend();
+        // Force start new conversation (UI shows empty chat)
+        useChatStore.getState().setActiveConversation(null);
+      } else {
+        // Existing session - sync normally
+        syncFromBackend();
+      }
     }
   }, [user?.id, loadFromLocalStorage, syncFromBackend, loadMiniChat]);
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { api } from '@/lib/api';
 import { useChatStore } from '@/store/chat.store';
+import { useMiniChatStore } from '@/store/mini-chat.store';
 
 interface User {
   id: string;
@@ -47,6 +48,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
+    const currentUser = useAuthStore.getState().user;
     set({ isLoggingOut: true });
     if (typeof window !== 'undefined') {
       document.cookie =
@@ -54,8 +56,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       document.cookie =
         'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax';
     }
-    // Clear chat store on logout
+    // Clear chat store and mini chat store on logout
     useChatStore.getState().clearStore();
+    useMiniChatStore.getState().clearStore(currentUser?.id);
     set({ user: null, isAuthenticated: false });
   },
 }));

@@ -19,7 +19,7 @@ interface MiniChatState {
 
   loadFromLocalStorage: (userId: string) => void;
   saveToLocalStorage: (userId: string) => void;
-  clearStore: () => void;
+  clearStore: (userId?: string) => void;
 }
 
 // ── Storage Helpers ──────────────────────────────────────────────
@@ -91,7 +91,13 @@ export const useMiniChatStore = create<MiniChatState>((set, get) => ({
     saveToStorage(userId, messages);
   },
 
-  clearStore: () => {
+  clearStore: (userId?: string) => {
+    // Clear in-memory state
     set({ messages: [] });
+    // Clear localStorage if userId is provided
+    if (userId && typeof window !== 'undefined') {
+      const storageKey = `${STORAGE_KEY_PREFIX}${userId}`;
+      localStorage.removeItem(storageKey);
+    }
   },
 }));

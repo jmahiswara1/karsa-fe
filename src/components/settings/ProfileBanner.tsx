@@ -2,10 +2,52 @@
 
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Shield, Pencil } from 'lucide-react';
+import { Crown, User as UserIcon, ShieldCheck, Pencil } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuthStore } from '@/store/auth.store';
+import { useAuthStore, type UserRole } from '@/store/auth.store';
 import { toast } from 'sonner';
+
+type RoleConfig = {
+  icon: LucideIcon;
+  labelKey: 'role_free' | 'role_pro' | 'role_admin';
+  className: string;
+};
+
+const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
+  FREE: {
+    icon: UserIcon,
+    labelKey: 'role_free',
+    className: 'border border-white/10 bg-white/10 text-white/80 backdrop-blur-sm',
+  },
+  PRO: {
+    icon: Crown,
+    labelKey: 'role_pro',
+    className:
+      'border border-rose-300/30 bg-gradient-to-r from-rose-400/80 to-pink-500/80 text-white shadow-[0_0_18px_-2px_rgba(251,113,133,0.5)] backdrop-blur-sm',
+  },
+  ADMIN: {
+    icon: ShieldCheck,
+    labelKey: 'role_admin',
+    className:
+      'border border-yellow-300/30 bg-gradient-to-r from-yellow-400/80 to-amber-500/80 text-white shadow-[0_0_18px_-2px_rgba(250,204,21,0.5)] backdrop-blur-sm',
+  },
+};
+
+function RoleBadge({ role }: { role?: UserRole }) {
+  const tSettings = useTranslations('Settings');
+  const effectiveRole: UserRole = role ?? 'FREE';
+  const config = ROLE_CONFIG[effectiveRole];
+  const Icon = config.icon;
+  return (
+    <div
+      className={`flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium ${config.className}`}
+    >
+      <Icon className="h-4 w-4" />
+      {tSettings(config.labelKey)}
+    </div>
+  );
+}
 
 export function ProfileBanner() {
   const tSettings = useTranslations('Settings');
@@ -59,10 +101,7 @@ export function ProfileBanner() {
             <Pencil className="h-3 w-3" />
             {tSettings('edit_profile')}
           </button>
-          <div className="flex h-9 items-center gap-2 rounded-full border border-white/10 bg-white/15 px-4 text-sm font-medium text-white/90 backdrop-blur-sm">
-            <Shield className="h-4 w-4" />
-            {tSettings('role_member')}
-          </div>
+          <RoleBadge role={user?.role} />
         </div>
       </div>
     </motion.div>

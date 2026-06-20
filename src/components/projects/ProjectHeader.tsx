@@ -66,7 +66,7 @@ export function ProjectHeader({ project, onBack, onEdit, onDelete }: ProjectHead
           variant="outline"
           size="sm"
           onClick={onDelete}
-          className="gap-1.5 text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10"
+          className="gap-1.5 text-foreground hover:bg-muted"
         >
           <Trash2 className="h-3.5 w-3.5" />
           {t('delete')}

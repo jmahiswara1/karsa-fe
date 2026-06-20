@@ -71,7 +71,7 @@ export function FolderCard({ folder, onClick, onEdit, onDelete }: FolderCardProp
               className="rounded-lg px-2.5 py-2 cursor-pointer focus:bg-blue-50/80 dark:focus:bg-slate-800/80 mt-1"
             >
               <Trash className="mr-3 h-4 w-4 text-foreground/70" />
-              <span className="font-medium text-red-500 dark:text-red-400">Hapus</span>
+              <span className="font-medium text-foreground">Hapus</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

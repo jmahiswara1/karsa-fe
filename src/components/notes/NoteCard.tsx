@@ -106,7 +106,7 @@ export function NoteCard({ note, index, onEdit, onDelete, onConvertToTask, onCli
               <ArrowRightLeft className="h-3.5 w-3.5 mr-2" />
               {t('convert_to_task')}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(note); }} className="text-red-500 focus:text-red-500">
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(note); }} className="text-foreground focus:text-foreground">
               <Trash2 className="h-3.5 w-3.5 mr-2" />
               {t('delete')}
             </DropdownMenuItem>

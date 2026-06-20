@@ -10,6 +10,7 @@ export interface TaskColumn {
   id: string;
   name: string;
   order: number;
+  isSystem: boolean;
 }
 
 export interface Task {
@@ -90,6 +91,32 @@ export const useCreateTaskColumn = () => {
   });
 };
 
+export const useUpdateTaskColumn = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, name }: { id: string; name: string }) => {
+      const { data } = await api.patch(`/api/task-columns/${id}`, { name });
+      return data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['task-columns'] });
+    },
+  });
+};
+
+export const useDeleteTaskColumn = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/api/task-columns/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['task-columns'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+};
+
 export const useTasksQuery = (params: TasksQueryParams = {}) => {
   return useQuery({
     queryKey: ['tasks', params],
@@ -145,7 +172,7 @@ export const useReorderTasks = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (
-      tasks: { id: string; order: number; columnId?: string; status?: TaskStatus }[],
+      tasks: { id: string; order: number; columnId?: string | null; status?: TaskStatus }[],
     ) => {
       await api.post('/api/tasks/reorder', { tasks });
     },
@@ -179,4 +206,19 @@ export const useProjectsList = () => {
       return data.data as { id: string; title: string }[];
     },
   });
+};
+
+export const columnIdForStatus = (status: TaskStatus, columns: TaskColumn[]): string | null => {
+  const keywordMap: Record<TaskStatus, string[]> = {
+    TODO: ['todo', 'to do', 'to-do'],
+    IN_PROGRESS: ['progress', 'doing', 'active'],
+    DONE: ['done', 'complete', 'finish'],
+    CANCELLED: ['cancel'],
+  };
+
+  const keywords = keywordMap[status] || [];
+  const col = columns.find(
+    (c) => c.isSystem && keywords.some((kw) => c.name.toLowerCase().includes(kw)),
+  );
+  return col?.id ?? null;
 };

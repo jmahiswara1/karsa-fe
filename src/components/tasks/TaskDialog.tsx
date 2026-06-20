@@ -207,7 +207,7 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumnId }: TaskDi
                   <button
                     onClick={handleDeleteTask}
                     disabled={deleteTask.isPending}
-                    className="flex items-center gap-1.5 text-xs font-medium text-red-500/80 transition-colors hover:text-red-500"
+                    className="flex items-center gap-1.5 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground"
                   >
                     {deleteTask.isPending ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />

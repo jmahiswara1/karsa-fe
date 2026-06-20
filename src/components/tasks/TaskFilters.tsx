@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Search, X, ChevronDown } from 'lucide-react';
+import { Search, X, ChevronDown, ArrowUpDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import type { TaskStatus, Priority } from '@/hooks/use-tasks';
+import type { SortOption } from './TaskList';
 
 interface TaskFiltersProps {
   search: string;
@@ -22,6 +23,8 @@ interface TaskFiltersProps {
   priority: Priority | '';
   onPriorityChange: (value: Priority | '') => void;
   onClear: () => void;
+  sort?: SortOption;
+  onSortChange?: (value: SortOption) => void;
 }
 
 const STATUS_OPTIONS: { value: TaskStatus; label: string; key: string }[] = [
@@ -38,6 +41,16 @@ const PRIORITY_OPTIONS: { value: Priority; label: string; key: string }[] = [
   { value: 'URGENT', label: 'Urgent', key: 'priority_urgent' },
 ];
 
+const SORT_OPTIONS: { value: SortOption; key: string }[] = [
+  { value: 'newest', key: 'sort_newest' },
+  { value: 'oldest', key: 'sort_oldest' },
+  { value: 'priority_desc', key: 'sort_priority_desc' },
+  { value: 'priority_asc', key: 'sort_priority_asc' },
+  { value: 'deadline_asc', key: 'sort_deadline_asc' },
+  { value: 'deadline_desc', key: 'sort_deadline_desc' },
+  { value: 'title_asc', key: 'sort_title_asc' },
+];
+
 export function TaskFilters({
   search,
   onSearchChange,
@@ -46,6 +59,8 @@ export function TaskFilters({
   priority,
   onPriorityChange,
   onClear,
+  sort,
+  onSortChange,
 }: TaskFiltersProps) {
   const t = useTranslations('Tasks');
   const hasActiveFilters = status !== '' || priority !== '' || search !== '';
@@ -68,7 +83,7 @@ export function TaskFilters({
         {/* Status Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'outline' }), "h-9 w-[160px] justify-between font-normal text-muted-foreground hover:text-foreground")}>
-            {status ? t(STATUS_OPTIONS.find(s => s.value === status)?.key as any) : t('all_status')}
+            {status ? t(STATUS_OPTIONS.find(s => s.value === status)?.key as 'status_todo') : t('all_status')}
             <ChevronDown className="h-4 w-4 opacity-50" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[160px]">
@@ -79,7 +94,7 @@ export function TaskFilters({
               <DropdownMenuRadioItem value="ALL">{t('all_status')}</DropdownMenuRadioItem>
               {STATUS_OPTIONS.map((s) => (
                 <DropdownMenuRadioItem key={s.value} value={s.value}>
-                  {t(s.key as any)}
+                  {t(s.key as 'status_todo')}
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
@@ -89,7 +104,7 @@ export function TaskFilters({
         {/* Priority Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'outline' }), "h-9 w-[160px] justify-between font-normal text-muted-foreground hover:text-foreground")}>
-            {priority ? t(PRIORITY_OPTIONS.find(p => p.value === priority)?.key as any) : t('all_priority')}
+            {priority ? t(PRIORITY_OPTIONS.find(p => p.value === priority)?.key as 'priority_low') : t('all_priority')}
             <ChevronDown className="h-4 w-4 opacity-50" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[160px]">
@@ -100,12 +115,37 @@ export function TaskFilters({
               <DropdownMenuRadioItem value="ALL">{t('all_priority')}</DropdownMenuRadioItem>
               {PRIORITY_OPTIONS.map((p) => (
                 <DropdownMenuRadioItem key={p.value} value={p.value}>
-                  {t(p.key as any)}
+                  {t(p.key as 'priority_low')}
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Sort Filter */}
+        {sort !== undefined && onSortChange && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'outline' }), "h-9 w-[160px] justify-between font-normal text-muted-foreground hover:text-foreground")}>
+              <div className="flex items-center gap-1.5">
+                <ArrowUpDown className="h-3.5 w-3.5" />
+                {t(SORT_OPTIONS.find((s) => s.value === sort)?.key as 'sort_newest')}
+              </div>
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuRadioGroup
+                value={sort}
+                onValueChange={(val) => onSortChange(val as SortOption)}
+              >
+                {SORT_OPTIONS.map((s) => (
+                  <DropdownMenuRadioItem key={s.value} value={s.value}>
+                    {t(s.key as 'sort_newest')}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
         {/* Clear */}
         {hasActiveFilters && (

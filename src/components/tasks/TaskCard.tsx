@@ -16,7 +16,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useUpdateTask, useDeleteTask, type Task, type TaskStatus } from '@/hooks/use-tasks';
+import { useUpdateTask, useDeleteTask, useTaskColumns, columnIdForStatus, type Task, type TaskStatus } from '@/hooks/use-tasks';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,12 +50,14 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
   const t = useTranslations('Tasks');
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
+  const { data: columns } = useTaskColumns();
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
   const handleToggleStatus = () => {
     const nextStatus = statusCycle[task.status];
-    updateTask.mutate({ id: task.id, status: nextStatus });
+    const targetColumnId = columns ? columnIdForStatus(nextStatus, columns) ?? undefined : undefined;
+    updateTask.mutate({ id: task.id, status: nextStatus, columnId: targetColumnId });
   };
 
   const handleDelete = () => {
@@ -128,7 +130,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
                       setShowMenu(false);
                       setShowDeleteAlert(true);
                     }}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                     {t('delete')}
@@ -166,7 +168,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleDelete}>
               {t('delete')}
             </AlertDialogAction>
           </AlertDialogFooter>

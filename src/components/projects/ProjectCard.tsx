@@ -85,7 +85,7 @@ export function ProjectCard({ project, index, onEdit, onDelete, onClick }: Proje
                 <Pencil className="h-3.5 w-3.5 mr-2" />
                 {t('edit')}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(project); }} className="text-red-500 focus:text-red-500">
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(project); }} className="text-foreground focus:text-foreground">
                 <Trash2 className="h-3.5 w-3.5 mr-2" />
                 {t('delete')}
               </DropdownMenuItem>

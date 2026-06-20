@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, Link } from '@/i18n/routing';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { useAuthStore } from '@/store/auth.store';
+import { useAuthStore, type UserRole } from '@/store/auth.store';
 import { useDialogStore } from '@/store/dialog.store';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -29,6 +29,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+const ROLE_LABELS: Record<UserRole, string> = {
+  FREE: 'Free',
+  PRO: 'Pro',
+  ADMIN: 'Admin',
+};
 
 interface DashboardHeaderProps {
   onMenuClick: () => void;
@@ -167,7 +173,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                     {user.name ?? user.email}
                   </span>
                   <span className="text-muted-foreground mt-1.5 truncate text-xs leading-none">
-                    {user.email}
+                    {ROLE_LABELS[user.role ?? 'FREE']}
                   </span>
                 </div>
                 <ChevronDown className="text-muted-foreground ml-1 h-4 w-4 shrink-0 transition-transform" />
@@ -196,6 +202,9 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                       </p>
                       <p className="text-muted-foreground truncate text-xs leading-none">
                         {user.email}
+                      </p>
+                      <p className="text-muted-foreground mt-0.5 truncate text-[11px] leading-none">
+                        {ROLE_LABELS[user.role ?? 'FREE']}
                       </p>
                     </div>
                   </div>

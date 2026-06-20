@@ -3,11 +3,15 @@ import { api } from '@/lib/api';
 import { useChatStore } from '@/store/chat.store';
 import { useMiniChatStore } from '@/store/mini-chat.store';
 
+export type UserRole = 'FREE' | 'PRO' | 'ADMIN';
+
 interface User {
   id: string;
   email: string;
   name?: string;
   avatarUrl?: string;
+  role?: UserRole;
+  subscriptionExpiresAt?: string | null;
 }
 
 interface AuthState {

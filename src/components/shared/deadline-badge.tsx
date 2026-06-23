@@ -23,9 +23,11 @@ export function DeadlineBadge({ deadline, className }: DeadlineBadgeProps) {
   if (!deadline) {
     return (
       <span
-        className={cn('text-muted-foreground inline-flex items-center gap-1 text-xs', className)}
+        className={cn(
+          'text-muted-foreground inline-flex items-center rounded-md text-[11px] font-semibold',
+          className,
+        )}
       >
-        <CalendarClock className="h-3 w-3" />
         {t('no_deadline')}
       </span>
     );
@@ -39,15 +41,15 @@ export function DeadlineBadge({ deadline, className }: DeadlineBadgeProps) {
   if (days < 0) {
     label = t('overdue');
     className2 =
-      'bg-red-50 text-red-700 ring-red-200 animate-pulse ring-1 ring-inset rounded-full px-2.5 py-0.5';
+      'bg-red-200 text-red-800 dark:bg-red-800 dark:text-red-200 animate-pulse rounded-md px-2 py-0.5';
   } else if (days === 0) {
     label = t('due_today');
     className2 =
-      'bg-amber-50 text-amber-700 ring-amber-200 ring-1 ring-inset rounded-full px-2.5 py-0.5';
+      'bg-amber-200 text-amber-800 dark:bg-amber-800 dark:text-amber-200 rounded-md px-2 py-0.5';
   } else if (days === 1) {
     label = t('due_tomorrow');
     className2 =
-      'bg-orange-50 text-orange-700 ring-orange-200 ring-1 ring-inset rounded-full px-2.5 py-0.5';
+      'bg-orange-200 text-orange-800 dark:bg-orange-800 dark:text-orange-200 rounded-md px-2 py-0.5';
   } else {
     const dateStr = new Date(deadline).toLocaleDateString(undefined, {
       month: 'short',
@@ -55,12 +57,16 @@ export function DeadlineBadge({ deadline, className }: DeadlineBadgeProps) {
     });
     label = dateStr;
     className2 =
-      'bg-slate-50 text-slate-600 ring-slate-200 ring-1 ring-inset rounded-full px-2.5 py-0.5';
+      'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 rounded-md px-2 py-0.5';
   }
 
   return (
     <span
-      className={cn('inline-flex items-center gap-1 text-xs font-medium', className2, className)}
+      className={cn(
+        'inline-flex items-center gap-1 rounded-md text-[11px] font-semibold',
+        className2,
+        className,
+      )}
     >
       <CalendarClock className="h-3 w-3" />
       {label}

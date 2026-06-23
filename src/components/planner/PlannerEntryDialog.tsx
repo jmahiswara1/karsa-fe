@@ -18,18 +18,37 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Clock, Sparkles, Pencil, Trash2 } from 'lucide-react';
-import type { PlannerEntry } from '@/hooks/use-planner';
+import { Clock, Sparkles, Pencil, Trash2, Cloud } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { PlannerEntry, PlannerCategory } from '@/hooks/use-planner';
 
-const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
-const MINUTES = ['00', '15', '30', '45'];
+const CATEGORIES: { key: PlannerCategory; color: string; bg: string }[] = [
+  {
+    key: 'FOCUS',
+    color: 'text-sky-600 dark:text-sky-400',
+    bg: 'bg-sky-50 dark:bg-sky-900/20 ring-sky-200 dark:ring-sky-800/30',
+  },
+  {
+    key: 'BREAK',
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bg: 'bg-emerald-50 dark:bg-emerald-900/20 ring-emerald-200 dark:ring-emerald-800/30',
+  },
+  {
+    key: 'MEETING',
+    color: 'text-amber-600 dark:text-amber-400',
+    bg: 'bg-amber-50 dark:bg-amber-900/20 ring-amber-200 dark:ring-amber-800/30',
+  },
+  {
+    key: 'PERSONAL',
+    color: 'text-violet-600 dark:text-violet-400',
+    bg: 'bg-violet-50 dark:bg-violet-900/20 ring-violet-200 dark:ring-violet-800/30',
+  },
+  {
+    key: 'OTHER',
+    color: 'text-slate-600 dark:text-slate-400',
+    bg: 'bg-slate-50 dark:bg-slate-900/20 ring-slate-200 dark:ring-slate-800/30',
+  },
+];
 
 const schema = z
   .object({
@@ -37,6 +56,7 @@ const schema = z
     description: z.string().optional(),
     startTime: z.string().regex(/^\d{2}:\d{2}$/, 'Format HH:MM'),
     endTime: z.string().regex(/^\d{2}:\d{2}$/, 'Format HH:MM'),
+    category: z.string(),
   })
   .refine((data) => data.endTime > data.startTime, {
     message: 'End time must be after start time',
@@ -51,12 +71,22 @@ interface PlannerEntryDialogProps {
   entry?: PlannerEntry | null;
   defaultHour: number;
   defaultDate?: string;
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: FormData & { category: PlannerCategory }) => void;
   onDelete?: () => void;
   isSubmitting: boolean;
 }
 
 type DialogMode = 'view' | 'edit';
+
+function calcDuration(start: string, end: string): string {
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  const dur = eh * 60 + em - (sh * 60 + sm);
+  const h = Math.floor(dur / 60);
+  const m = dur % 60;
+  if (dur <= 0) return '';
+  return h > 0 ? `${h}h${m > 0 ? ` ${m}m` : ''}` : `${m}m`;
+}
 
 export function PlannerEntryDialog({
   open,
@@ -68,7 +98,7 @@ export function PlannerEntryDialog({
   onDelete,
   isSubmitting,
 }: PlannerEntryDialogProps) {
-  const t = useTranslations('Planner');
+  const t = useTranslations('Focus');
   const [mode, setMode] = useState<DialogMode>('edit');
 
   const form = useForm<FormData>({
@@ -78,6 +108,7 @@ export function PlannerEntryDialog({
       description: '',
       startTime: `${String(defaultHour).padStart(2, '0')}:00`,
       endTime: `${String(defaultHour + 1).padStart(2, '0')}:00`,
+      category: 'FOCUS',
     },
   });
 
@@ -92,6 +123,7 @@ export function PlannerEntryDialog({
           description: entry.description || '',
           startTime: entry.startTime,
           endTime: entry.endTime,
+          category: entry.category ?? 'FOCUS',
         });
       } else {
         setMode('edit');
@@ -100,6 +132,7 @@ export function PlannerEntryDialog({
           description: '',
           startTime: `${String(defaultHour).padStart(2, '0')}:00`,
           endTime: `${String(defaultHour + 1).padStart(2, '0')}:00`,
+          category: 'FOCUS',
         });
       }
     }
@@ -109,25 +142,18 @@ export function PlannerEntryDialog({
 
   const watchStartTime = watch('startTime');
   const watchEndTime = watch('endTime');
+  const watchCategory = watch('category');
+  const duration = calcDuration(watchStartTime, watchEndTime);
 
-  const getTimeParts = (time: string) => {
-    const [h = '08', m = '00'] = time.split(':');
-    return { hour: h, minute: m };
+  const handleSubmit = (data: FormData) => {
+    onSubmit({ ...data, category: (data.category as PlannerCategory) ?? 'FOCUS' });
   };
 
-  const handleTimeChange = (
-    field: 'startTime' | 'endTime',
-    part: 'hour' | 'minute',
-    value: string,
-  ) => {
-    const current = getTimeParts(field === 'startTime' ? watchStartTime : watchEndTime);
-    const newTime = part === 'hour' ? `${value}:${current.minute}` : `${current.hour}:${value}`;
-    setValue(field, newTime, { shouldValidate: true });
-  };
-
-  // View Mode
+  // ── View Mode ──
 
   if (mode === 'view' && entry) {
+    const cat = CATEGORIES.find((c) => c.key === (entry.category ?? 'FOCUS')) ?? CATEGORIES[0];
+
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-md">
@@ -145,7 +171,7 @@ export function PlannerEntryDialog({
           </DialogHeader>
 
           <div className="space-y-4">
-            {/* Time */}
+            {/* Time + Duration */}
             <div className="bg-muted/30 flex items-center gap-3 rounded-xl p-3">
               <Clock className="text-muted-foreground h-5 w-5" />
               <div>
@@ -153,25 +179,29 @@ export function PlannerEntryDialog({
                   {entry.startTime} - {entry.endTime}
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  {(() => {
-                    const [sh, sm] = entry.startTime.split(':').map(Number);
-                    const [eh, em] = entry.endTime.split(':').map(Number);
-                    const dur = eh * 60 + em - (sh * 60 + sm);
-                    const h = Math.floor(dur / 60);
-                    const m = dur % 60;
-                    return h > 0 ? `${h}h${m > 0 ? ` ${m}m` : ''}` : `${m}m`;
-                  })()}
+                  {calcDuration(entry.startTime, entry.endTime)}
                 </p>
               </div>
             </div>
 
-            {/* Color indicator */}
-            {entry.color && (
-              <div className="flex items-center gap-2">
-                <div className="h-4 w-4 rounded" style={{ backgroundColor: entry.color }} />
-                <span className="text-muted-foreground text-xs">Color</span>
-              </div>
-            )}
+            {/* Category + Sync badge */}
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  'rounded-lg px-2.5 py-1 text-xs font-medium ring-1',
+                  cat.bg,
+                  cat.color,
+                )}
+              >
+                {t(`category_${cat.key.toLowerCase()}`)}
+              </span>
+              {entry.googleEventId && (
+                <span className="flex items-center gap-1 rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600 ring-1 ring-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:ring-emerald-800/30">
+                  <Cloud className="h-3 w-3" />
+                  Synced
+                </span>
+              )}
+            </div>
 
             {/* Description */}
             {entry.description && (
@@ -228,10 +258,7 @@ export function PlannerEntryDialog({
     );
   }
 
-  // Edit Mode
-
-  const startParts = getTimeParts(watchStartTime);
-  const endParts = getTimeParts(watchEndTime);
+  // ── Edit Mode ──
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -249,7 +276,10 @@ export function PlannerEntryDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col gap-4">
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="flex min-h-0 flex-1 flex-col gap-4"
+        >
           <DialogBody className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="title">{t('entry_title')}</Label>
@@ -269,79 +299,52 @@ export function PlannerEntryDialog({
               />
             </div>
 
-            {/* Time picker */}
+            {/* Category chips */}
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <div className="flex flex-wrap gap-1.5">
+                {CATEGORIES.map((cat) => {
+                  const selected = watchCategory === cat.key;
+                  return (
+                    <button
+                      key={cat.key}
+                      type="button"
+                      onClick={() => setValue('category', cat.key, { shouldValidate: true })}
+                      className={cn(
+                        'rounded-lg px-2.5 py-1.5 text-xs font-medium ring-1 transition-all',
+                        selected
+                          ? `${cat.bg} ${cat.color}`
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted ring-transparent',
+                      )}
+                    >
+                      {t(`category_${cat.key.toLowerCase()}`)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Native time picker */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>{t('start_time')}</Label>
-                <div className="flex gap-1">
-                  <Select
-                    value={startParts.hour}
-                    onValueChange={(v) => v && handleTimeChange('startTime', 'hour', v)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {HOURS.map((h) => (
-                        <SelectItem key={h} value={h}>
-                          {h}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <span className="text-muted-foreground flex items-center">:</span>
-                  <Select
-                    value={startParts.minute}
-                    onValueChange={(v) => v && handleTimeChange('startTime', 'minute', v)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MINUTES.map((m) => (
-                        <SelectItem key={m} value={m}>
-                          {m}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Label htmlFor="startTime">{t('start_time')}</Label>
+                <Input
+                  id="startTime"
+                  type="time"
+                  {...register('startTime')}
+                  className="tabular-nums"
+                />
               </div>
               <div className="space-y-2">
-                <Label>{t('end_time')}</Label>
-                <div className="flex gap-1">
-                  <Select
-                    value={endParts.hour}
-                    onValueChange={(v) => v && handleTimeChange('endTime', 'hour', v)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {HOURS.map((h) => (
-                        <SelectItem key={h} value={h}>
-                          {h}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <span className="text-muted-foreground flex items-center">:</span>
-                  <Select
-                    value={endParts.minute}
-                    onValueChange={(v) => v && handleTimeChange('endTime', 'minute', v)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MINUTES.map((m) => (
-                        <SelectItem key={m} value={m}>
-                          {m}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Label htmlFor="endTime">
+                  {t('end_time')}
+                  {duration && (
+                    <span className="text-muted-foreground ml-2 text-xs font-normal">
+                      ({duration})
+                    </span>
+                  )}
+                </Label>
+                <Input id="endTime" type="time" {...register('endTime')} className="tabular-nums" />
                 {form.formState.errors.endTime && (
                   <p className="text-xs text-red-500">{form.formState.errors.endTime.message}</p>
                 )}

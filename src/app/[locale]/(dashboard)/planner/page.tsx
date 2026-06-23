@@ -1,14 +1,14 @@
 'use client';
 
 import { formatLocalDate } from '@/lib/date-utils';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { PageHeader } from '@/components/shared/page-header';
+import { useQueryClient } from '@tanstack/react-query';
+import { PlannerGreetingCard } from '@/components/planner/PlannerGreetingCard';
 import { PlannerHeader } from '@/components/planner/PlannerHeader';
+import { FocusList } from '@/components/planner/FocusList';
+import { EmptyFocus } from '@/components/planner/EmptyFocus';
 import { GeneratePlanDialog } from '@/components/planner/GeneratePlanDialog';
-import { DayView } from '@/components/planner/DayView';
-import { WeekView } from '@/components/planner/WeekView';
-import { MonthView } from '@/components/planner/MonthView';
 import { PlannerEntryDialog } from '@/components/planner/PlannerEntryDialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -18,34 +18,18 @@ import {
   useDeleteEntry,
   useGeneratePlan,
   type PlannerEntry,
+  type PlannerCategory,
 } from '@/hooks/use-planner';
-
-type ViewMode = 'day' | 'week' | 'month';
 
 function formatDate(date: Date): string {
   return formatLocalDate(date);
 }
 
-function getWeekRange(date: Date): { startDate: string; endDate: string } {
-  const start = new Date(date);
-  const day = start.getDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  start.setDate(start.getDate() + diff);
-
-  const end = new Date(start);
-  end.setDate(end.getDate() + 6);
-
-  return {
-    startDate: formatDate(start),
-    endDate: formatDate(end),
-  };
-}
-
-export default function PlannerPage() {
-  const tPages = useTranslations('Pages');
+export default function FocusPage() {
+  const tFocus = useTranslations('Focus');
+  const queryClient = useQueryClient();
 
   const [date, setDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<ViewMode>('week');
 
   // Dialog state
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
@@ -54,16 +38,11 @@ export default function PlannerPage() {
   const [defaultHour, setDefaultHour] = useState(8);
   const [clickedDate, setClickedDate] = useState(formatDate(date));
 
+  // Track last AI focus message
+  const [lastFocusMessage, setLastFocusMessage] = useState<string | null>(null);
+
   // Queries
-  const queryParams =
-    viewMode === 'day'
-      ? { date: formatDate(date) }
-      : viewMode === 'week'
-        ? getWeekRange(date)
-        : {
-            startDate: formatDate(new Date(date.getFullYear(), date.getMonth(), 1)),
-            endDate: formatDate(new Date(date.getFullYear(), date.getMonth() + 1, 0)),
-          };
+  const queryParams = useMemo(() => ({ date: formatDate(date) }), [date]);
 
   const { data: entries = [], isLoading } = usePlannerEntries(queryParams);
   const createEntry = useCreateEntry();
@@ -72,12 +51,12 @@ export default function PlannerPage() {
   const generatePlan = useGeneratePlan();
 
   // Handlers
-  const handleSlotClick = useCallback((dateStr: string, hour: number) => {
+  const handleAddClick = useCallback(() => {
     setEditingEntry(null);
-    setDefaultHour(hour);
-    setClickedDate(dateStr);
+    setDefaultHour(8);
+    setClickedDate(formatDate(date));
     setDialogOpen(true);
-  }, []);
+  }, [date]);
 
   const handleEntryClick = useCallback((entry: PlannerEntry) => {
     setEditingEntry(entry);
@@ -85,7 +64,13 @@ export default function PlannerPage() {
   }, []);
 
   const handleDialogSubmit = useCallback(
-    (data: { title: string; description?: string; startTime: string; endTime: string }) => {
+    (data: {
+      title: string;
+      description?: string;
+      startTime: string;
+      endTime: string;
+      category: PlannerCategory;
+    }) => {
       if (editingEntry) {
         updateEntry.mutate(
           { id: editingEntry.id, ...data },
@@ -93,10 +78,7 @@ export default function PlannerPage() {
         );
       } else {
         createEntry.mutate(
-          {
-            ...data,
-            date: clickedDate,
-          },
+          { ...data, date: clickedDate },
           { onSuccess: () => setDialogOpen(false) },
         );
       }
@@ -112,27 +94,6 @@ export default function PlannerPage() {
     }
   }, [editingEntry, deleteEntry]);
 
-  const handleEntryDrop = useCallback(
-    (entryId: string, newDate: string, newHour: number) => {
-      const entry = entries.find((e) => e.id === entryId);
-      const startTime = `${String(newHour).padStart(2, '0')}:00`;
-      let endTime = `${String(newHour + 1).padStart(2, '0')}:00`;
-
-      if (entry) {
-        const [sh, sm] = entry.startTime.split(':').map(Number);
-        const [eh, em] = entry.endTime.split(':').map(Number);
-        const durationMin = eh * 60 + em - (sh * 60 + sm);
-        const endMinutes = newHour * 60 + durationMin;
-        const endH = Math.floor(endMinutes / 60);
-        const endM = endMinutes % 60;
-        endTime = `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
-      }
-
-      updateEntry.mutate({ id: entryId, date: newDate, startTime, endTime });
-    },
-    [updateEntry, entries],
-  );
-
   const handleGenerate = useCallback(
     (data: { startDate: string; endDate: string; energy: string; mood: string }) => {
       generatePlan.mutate(
@@ -143,59 +104,69 @@ export default function PlannerPage() {
           endDate: data.endDate,
         },
         {
-          onSuccess: () => setGenerateDialogOpen(false),
+          onSuccess: (result) => {
+            setGenerateDialogOpen(false);
+            if (result?.focusMessage) {
+              setLastFocusMessage(result.focusMessage);
+            }
+          },
         },
       );
     },
     [generatePlan],
   );
 
-  return (
-    <div className="space-y-6 pb-8">
-      <PageHeader title={tPages('planner_title')} description={tPages('planner_desc')} />
+  const handleReorder = useCallback(
+    (reordered: PlannerEntry[]) => {
+      // Optimistically update local state via query cache
+      queryClient.setQueryData(['planner', 'entries', queryParams], reordered);
+      // Persist order changes
+      reordered.forEach((entry, index) => {
+        if (entry.order !== index) {
+          updateEntry.mutate({ id: entry.id, order: index });
+        }
+      });
+    },
+    [queryClient, queryParams, updateEntry],
+  );
 
-      <PlannerHeader
+  return (
+    <div className="space-y-4 pb-24 sm:pb-8">
+      {/* Greeting Card */}
+      <PlannerGreetingCard
+        entryCount={entries.length}
         date={date}
-        viewMode={viewMode}
-        onDateChange={setDate}
-        onViewModeChange={setViewMode}
-        onGenerate={() => setGenerateDialogOpen(true)}
-        isGenerating={generatePlan.isPending}
+        focusMessage={lastFocusMessage}
       />
 
-      {/* Calendar */}
+      {/* Header */}
+      <PlannerHeader
+        date={date}
+        viewMode="day"
+        onDateChange={setDate}
+        onGenerate={() => setGenerateDialogOpen(true)}
+        isGenerating={generatePlan.isPending}
+        onAdd={handleAddClick}
+      />
+
+      {/* Focus List */}
       {isLoading ? (
-        <div className="space-y-3">
-          <Skeleton className="h-12 w-full rounded-2xl" />
-          <Skeleton className="h-96 w-full rounded-2xl" />
+        <div className="space-y-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-xl" />
+          ))}
         </div>
-      ) : viewMode === 'day' ? (
-        <DayView
-          date={date}
-          entries={entries}
-          onEntryClick={handleEntryClick}
-          onSlotClick={handleSlotClick}
-          onEntryDrop={handleEntryDrop}
-        />
-      ) : viewMode === 'week' ? (
-        <WeekView
-          date={date}
-          entries={entries}
-          onEntryClick={handleEntryClick}
-          onSlotClick={handleSlotClick}
-          onEntryDrop={handleEntryDrop}
+      ) : entries.length === 0 ? (
+        <EmptyFocus
+          onSuggest={() => setGenerateDialogOpen(true)}
+          onAdd={handleAddClick}
+          isGenerating={generatePlan.isPending}
         />
       ) : (
-        <MonthView
-          date={date}
-          entries={entries}
-          onDayClick={(d) => {
-            setDate(d);
-            setViewMode('day');
-          }}
-        />
+        <FocusList entries={entries} onItemClick={handleEntryClick} onReorder={handleReorder} />
       )}
 
+      {/* Dialogs */}
       <PlannerEntryDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
@@ -207,7 +178,6 @@ export default function PlannerPage() {
         isSubmitting={createEntry.isPending || updateEntry.isPending}
       />
 
-      {/* Generate Plan Dialog */}
       <GeneratePlanDialog
         open={generateDialogOpen}
         onOpenChange={setGenerateDialogOpen}

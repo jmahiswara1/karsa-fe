@@ -548,7 +548,14 @@
     "edit_profile_coming_soon": "Coming soon",
     "footer_version": "Karsa v1.0.0",
     "footer_privacy": "Privacy Policy",
-    "footer_terms": "Terms of Service"
+    "footer_terms": "Terms of Service",
+    "subscription_title": "Subscription",
+    "subscription_desc": "Your current plan and billing details.",
+    "subscription_plan": "Current Plan",
+    "subscription_price": "Plan Price",
+    "subscription_cycle": "Billing Cycle",
+    "subscription_next_billing": "Next Billing",
+    "subscription_member_since": "Member Since"
   },
   "Focus": {
     "energy_label": "Energy",

@@ -4,7 +4,8 @@ import { useState, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { Plus, FolderOpen } from 'lucide-react';
-import { PageHeader } from '@/components/shared/page-header';
+import { useAuthStore } from '@/store/auth.store';
+import { PageBanner } from '@/components/shared/PageBanner';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
@@ -23,6 +24,7 @@ import { useDialogStore } from '@/store/dialog.store';
 export default function ProjectsPage() {
   const t = useTranslations('Projects');
   const tPages = useTranslations('Pages');
+  const { user } = useAuthStore();
   const router = useRouter();
   const { showConfirm } = useDialogStore();
   const deleteProject = useDeleteProject();
@@ -93,17 +95,21 @@ export default function ProjectsPage() {
 
   return (
     <div className="flex h-full flex-col space-y-6 pb-2">
-      {/* Header */}
-      <PageHeader
-        title={tPages('projects_title')}
-        description={tPages('projects_desc')}
-        actions={
-          <Button onClick={handleCreateProject} className="gap-2">
-            <Plus className="h-4 w-4" />
-            {t('create_project')}
-          </Button>
-        }
-      />
+      {/* Page Title */}
+      <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+        {tPages('projects_title')}
+      </h1>
+
+      {/* Greeting Banner */}
+      <PageBanner user={user} subtitle={tPages('projects_desc')} />
+
+      {/* Actions */}
+      <div className="flex items-center justify-end gap-3">
+        <Button onClick={handleCreateProject} className="gap-2">
+          <Plus className="h-4 w-4" />
+          {t('create_project')}
+        </Button>
+      </div>
 
       {/* Filters */}
       <ProjectFilters

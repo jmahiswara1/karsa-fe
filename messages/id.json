@@ -548,7 +548,14 @@
     "edit_profile_coming_soon": "Segera hadir",
     "footer_version": "Karsa v1.0.0",
     "footer_privacy": "Kebijakan Privasi",
-    "footer_terms": "Syarat dan Ketentuan"
+    "footer_terms": "Syarat dan Ketentuan",
+    "subscription_title": "Langganan",
+    "subscription_desc": "Paket dan detail penagihan Anda saat ini.",
+    "subscription_plan": "Paket Saat Ini",
+    "subscription_price": "Harga Paket",
+    "subscription_cycle": "Siklus Penagihan",
+    "subscription_next_billing": "Penagihan Berikutnya",
+    "subscription_member_since": "Anggota Sejak"
   },
   "Focus": {
     "energy_label": "Energi",

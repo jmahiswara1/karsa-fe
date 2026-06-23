@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { Plus, FolderOpen } from 'lucide-react';
-import { useAuthStore } from '@/store/auth.store';
 import { PageIntro } from '@/components/shared/page-header';
 import { Button } from '@/components/ui/button';
 import { SkeletonGrid } from '@/components/shared/SkeletonGrid';
@@ -25,7 +24,6 @@ import { useDeleteConfirm } from '@/hooks/use-delete-confirm';
 export default function ProjectsPage() {
   const t = useTranslations('Projects');
   const tPages = useTranslations('Pages');
-  const { user } = useAuthStore();
   const router = useRouter();
   const { confirmDelete } = useDeleteConfirm();
   const deleteProject = useDeleteProject();
@@ -68,17 +66,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="flex h-full flex-col space-y-6 pb-2">
-      <PageIntro
-        title={tPages('projects_title')}
-        bannerSubtitle={tPages('projects_desc')}
-        user={user}
-        actions={
-          <Button onClick={handleCreateProject} className="gap-2">
-            <Plus className="h-4 w-4" />
-            {t('create_project')}
-          </Button>
-        }
-      />
+      <PageIntro title={tPages('projects_title')} subtitle={tPages('projects_desc')} />
 
       <ProjectFilters
         search={filters.search}
@@ -88,6 +76,12 @@ export default function ProjectsPage() {
         priority={filters.priority}
         onPriorityChange={filters.setPriority}
         onClear={filters.clear}
+        action={
+          <Button onClick={handleCreateProject} size="sm" className="h-9 gap-1.5">
+            <Plus className="h-3.5 w-3.5" />
+            {t('create_project')}
+          </Button>
+        }
       />
 
       {isLoading ? (
@@ -99,8 +93,8 @@ export default function ProjectsPage() {
           description={filters.hasFilters ? t('no_results_desc') : t('no_projects_desc')}
           action={
             !filters.hasFilters ? (
-              <Button onClick={handleCreateProject} className="mt-4 gap-2">
-                <Plus className="h-4 w-4" />
+              <Button onClick={handleCreateProject} size="sm" className="mt-4 gap-1.5">
+                <Plus className="h-3.5 w-3.5" />
                 {t('create_project')}
               </Button>
             ) : undefined

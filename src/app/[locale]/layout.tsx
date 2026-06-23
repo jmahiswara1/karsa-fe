@@ -46,7 +46,7 @@ export default async function RootLayout(
       className={`${roboto.variable} ${poppins.variable} ${caveat.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>
             <GlobalDialogProvider>{children}</GlobalDialogProvider>

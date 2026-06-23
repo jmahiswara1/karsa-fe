@@ -13,7 +13,7 @@ interface SearchInputProps {
 
 export function SearchInput({ value, onChange, placeholder, className }: SearchInputProps) {
   return (
-    <div className={cn('relative w-full max-w-xs', className)}>
+    <div className={cn('relative w-full max-w-xs flex-1 sm:flex-none', className)}>
       <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
       <Input
         value={value}

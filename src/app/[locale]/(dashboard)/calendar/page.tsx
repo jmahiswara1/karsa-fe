@@ -1,9 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useAuthStore } from '@/store/auth.store';
+import { useTranslations } from 'next-intl';
 import { PageBanner } from '@/components/shared/PageBanner';
-import { CalendarDesktopTabs } from '@/components/calendar/CalendarDesktopTabs';
 import { CalendarViewTab, EntriesCountChip } from '@/components/calendar/CalendarViewTab';
 import { CalendarSettings } from '@/components/calendar/CalendarSettings';
 import { MobileTabBar } from '@/components/calendar/MobileTabBar';
@@ -16,7 +15,7 @@ import { useCalendarSyncActions, useCalendarSyncRange } from '@/hooks/use-calend
 import { useCalendarStatus, useCalendarEvents } from '@/hooks/use-calendar-google-sync';
 
 export default function CalendarPage() {
-  const { user } = useAuthStore();
+  const tPages = useTranslations('Pages');
   const state = useCalendarPageState();
 
   const { data: isCalendarConnected = false } = useCalendarStatus();
@@ -52,17 +51,17 @@ export default function CalendarPage() {
   return (
     <div className="space-y-4 pb-24 sm:pb-8">
       <PageBanner
-        user={user}
+        title={tPages('calendar_title')}
         subtitle={subtitle}
         rightSlot={<EntriesCountChip count={state.entries.length} />}
       />
-
-      <CalendarDesktopTabs activeTab={state.activeTab} onTabChange={state.setActiveTab} />
 
       {state.activeTab === 'view' ? (
         <CalendarViewTab
           date={state.date}
           viewMode={state.viewMode}
+          activeTab={state.activeTab}
+          onTabChange={state.setActiveTab}
           onDateChange={state.setDate}
           onViewModeChange={state.setViewMode}
           onDayClick={(d) => {

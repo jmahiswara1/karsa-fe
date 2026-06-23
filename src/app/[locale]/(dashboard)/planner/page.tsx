@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Sparkles } from 'lucide-react';
-import { useAuthStore } from '@/store/auth.store';
+import { useTranslations } from 'next-intl';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { PlannerHeader } from '@/components/planner/PlannerHeader';
 import { FocusList } from '@/components/planner/FocusList';
@@ -14,7 +14,7 @@ import { EntriesCountChip } from '@/components/calendar/CalendarViewTab';
 import { usePlannerPageState } from '@/hooks/use-planner-page-state';
 
 export default function FocusPage() {
-  const { user } = useAuthStore();
+  const tPages = useTranslations('Pages');
   const state = usePlannerPageState();
 
   const subtitle = useMemo(
@@ -30,7 +30,7 @@ export default function FocusPage() {
   return (
     <div className="space-y-4 pb-24 sm:pb-8">
       <PageBanner
-        user={user}
+        title={tPages('focus_title')}
         subtitle={subtitle}
         rightSlot={<EntriesCountChip count={state.entries.length} />}
         bottomSlot={

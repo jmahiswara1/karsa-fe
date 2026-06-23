@@ -1,9 +1,10 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import { Search, X, ChevronDown } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { X, ChevronDown } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { SearchInput } from '@/components/shared/SearchInput';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +23,7 @@ interface ProjectFiltersProps {
   priority: Priority | '';
   onPriorityChange: (value: Priority | '') => void;
   onClear: () => void;
+  action?: ReactNode;
 }
 
 const STATUS_OPTIONS: { value: ProjectStatus; key: string }[] = [
@@ -47,91 +49,103 @@ export function ProjectFilters({
   priority,
   onPriorityChange,
   onClear,
+  action,
 }: ProjectFiltersProps) {
   const t = useTranslations('Projects');
   const hasActiveFilters = status !== '' || priority !== '' || search !== '';
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      {/* Search */}
-      <div className="relative max-w-xs flex-1">
-        <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-        <Input
-          placeholder={t('search_placeholder')}
+      {/* Search + Filters */}
+      <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+        {/* Search */}
+        <SearchInput
           value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="h-9 pl-9"
+          onChange={onSearchChange}
+          placeholder={t('search_placeholder')}
         />
+
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Status Filter */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                buttonVariants({ variant: 'outline' }),
+                'h-9 gap-2 text-sm font-medium',
+              )}
+            >
+              {status
+                ? t(
+                    (STATUS_OPTIONS.find((s) => s.value === status)?.key ||
+                      'filter_status') as never,
+                  )
+                : t('filter_status')}
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuRadioGroup
+                value={status || 'ALL'}
+                onValueChange={(val) => onStatusChange(val === 'ALL' ? '' : (val as ProjectStatus))}
+              >
+                <DropdownMenuRadioItem value="ALL">{t('filter_status')}</DropdownMenuRadioItem>
+                {STATUS_OPTIONS.map((s) => (
+                  <DropdownMenuRadioItem key={s.value} value={s.value}>
+                    {t(s.key as never)}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Priority Filter */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                buttonVariants({ variant: 'outline' }),
+                'h-9 gap-2 text-sm font-medium',
+              )}
+            >
+              {priority
+                ? t(
+                    (PRIORITY_OPTIONS.find((p) => p.value === priority)?.key ||
+                      'filter_priority') as never,
+                  )
+                : t('filter_priority')}
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuRadioGroup
+                value={priority || 'ALL'}
+                onValueChange={(val) => onPriorityChange(val === 'ALL' ? '' : (val as Priority))}
+              >
+                <DropdownMenuRadioItem value="ALL">{t('filter_priority')}</DropdownMenuRadioItem>
+                {PRIORITY_OPTIONS.map((p) => (
+                  <DropdownMenuRadioItem key={p.value} value={p.value}>
+                    {t(p.key as never)}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Clear */}
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClear}
+              className="text-muted-foreground gap-1.5"
+            >
+              <X className="h-3.5 w-3.5" />
+              {t('clear_filters')}
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-2">
-        {/* Status Filter */}
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={cn(buttonVariants({ variant: 'outline' }), 'h-9 gap-2 text-sm font-medium')}
-          >
-            {status
-              ? t((STATUS_OPTIONS.find((s) => s.value === status)?.key || 'filter_status') as never)
-              : t('filter_status')}
-            <ChevronDown className="h-4 w-4 opacity-50" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuRadioGroup
-              value={status || 'ALL'}
-              onValueChange={(val) => onStatusChange(val === 'ALL' ? '' : (val as ProjectStatus))}
-            >
-              <DropdownMenuRadioItem value="ALL">{t('filter_status')}</DropdownMenuRadioItem>
-              {STATUS_OPTIONS.map((s) => (
-                <DropdownMenuRadioItem key={s.value} value={s.value}>
-                  {t(s.key as never)}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Priority Filter */}
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={cn(buttonVariants({ variant: 'outline' }), 'h-9 gap-2 text-sm font-medium')}
-          >
-            {priority
-              ? t(
-                  (PRIORITY_OPTIONS.find((p) => p.value === priority)?.key ||
-                    'filter_priority') as never,
-                )
-              : t('filter_priority')}
-            <ChevronDown className="h-4 w-4 opacity-50" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuRadioGroup
-              value={priority || 'ALL'}
-              onValueChange={(val) => onPriorityChange(val === 'ALL' ? '' : (val as Priority))}
-            >
-              <DropdownMenuRadioItem value="ALL">{t('filter_priority')}</DropdownMenuRadioItem>
-              {PRIORITY_OPTIONS.map((p) => (
-                <DropdownMenuRadioItem key={p.value} value={p.value}>
-                  {t(p.key as never)}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Clear */}
-        {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClear}
-            className="text-muted-foreground gap-1.5"
-          >
-            <X className="h-3.5 w-3.5" />
-            {t('clear_filters')}
-          </Button>
-        )}
-      </div>
+      {/* Action */}
+      {action && <div className="flex shrink-0 items-center">{action}</div>}
     </div>
   );
 }

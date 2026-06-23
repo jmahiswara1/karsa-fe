@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useAuthStore } from '@/store/auth.store';
 import { PageIntro } from '@/components/shared/page-header';
 import { NotesToolbar } from '@/components/notes/NotesToolbar';
 import { NotesBreadcrumbs } from '@/components/notes/NotesBreadcrumbs';
@@ -14,7 +13,6 @@ import { DndContext, closestCenter } from '@dnd-kit/core';
 
 export default function NotesPage() {
   const tPages = useTranslations('Pages');
-  const { user } = useAuthStore();
   const state = useNotePageState();
 
   const { sensors, handleDragEnd, optimisticNotes } = useNoteDragDrop({
@@ -26,7 +24,7 @@ export default function NotesPage() {
 
   return (
     <div className="flex w-full flex-col space-y-6 pb-2">
-      <PageIntro title={tPages('notes_title')} bannerSubtitle={tPages('notes_desc')} user={user} />
+      <PageIntro title={tPages('notes_title')} subtitle={tPages('notes_desc')} />
 
       <NotesToolbar
         search={state.search}

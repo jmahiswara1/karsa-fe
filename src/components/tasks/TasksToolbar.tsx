@@ -40,15 +40,11 @@ export function TasksToolbar({
   const t = useTranslations('Tasks');
 
   return (
-    <>
-      <div className="flex items-center justify-end gap-3">
-        <ViewToggle value={view} onChange={onViewChange} />
-        <Button onClick={onCreateTask} className="gap-2">
-          <Plus className="h-4 w-4" />
-          {t('create_task')}
-        </Button>
-      </div>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      {/* View Toggle */}
+      <ViewToggle value={view} onChange={onViewChange} />
 
+      {/* Search + Filters */}
       <TaskFilters
         search={search}
         onSearchChange={onSearchChange}
@@ -60,6 +56,14 @@ export function TasksToolbar({
         sort={sort}
         onSortChange={onSortChange}
       />
-    </>
+
+      {/* Create Button */}
+      <div className="flex shrink-0 items-center">
+        <Button onClick={onCreateTask} size="sm" className="h-9 gap-1.5">
+          <Plus className="h-3.5 w-3.5" />
+          {t('create_task')}
+        </Button>
+      </div>
+    </div>
   );
 }

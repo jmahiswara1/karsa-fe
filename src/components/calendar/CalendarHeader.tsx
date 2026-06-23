@@ -1,5 +1,6 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   ChevronLeft,
@@ -38,6 +39,8 @@ interface CalendarHeaderProps {
   isSyncing: boolean;
   isImporting: boolean;
   isCalendarConnected: boolean;
+  leftSlot?: ReactNode;
+  rightSlot?: ReactNode;
 }
 
 function navigatePrev(date: Date, mode: ViewMode): Date {
@@ -70,46 +73,53 @@ export function CalendarHeader({
   isSyncing = false,
   isImporting = false,
   isCalendarConnected = false,
+  leftSlot,
+  rightSlot,
 }: CalendarHeaderProps) {
   const t = useTranslations('Calendar');
 
   return (
-    <div className="flex items-center justify-between gap-2">
-      {/* Nav: prev / date picker / next */}
-      <div className="flex items-center gap-1">
-        <button
-          type="button"
-          onClick={() => onDateChange(navigatePrev(date, viewMode))}
-          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      {/* Left: Tabs + Nav */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        {leftSlot}
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onDateChange(navigatePrev(date, viewMode))}
+            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
 
-        <DatePickerTrigger date={date} onSelect={onDateChange} />
+          <DatePickerTrigger date={date} onSelect={onDateChange} />
 
-        <button
-          type="button"
-          onClick={() => onDateChange(navigateNext(date, viewMode))}
-          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
+          <button
+            type="button"
+            onClick={() => onDateChange(navigateNext(date, viewMode))}
+            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
 
-        <button
-          type="button"
-          onClick={() => onDateChange(new Date())}
-          className="text-muted-foreground hover:bg-muted hover:text-foreground ml-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors"
-        >
-          {t('date_picker_today')}
-        </button>
+          <button
+            type="button"
+            onClick={() => onDateChange(new Date())}
+            className="text-muted-foreground hover:bg-muted hover:text-foreground ml-1 flex h-9 items-center rounded-lg px-3 text-xs font-medium transition-colors"
+          >
+            {t('date_picker_today')}
+          </button>
+        </div>
       </div>
 
-      {/* Actions */}
+      {/* Right: ViewSwitcher + Actions */}
       <div className="flex items-center gap-2">
+        {rightSlot}
+
         {isCalendarConnected && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'gap-1.5')}
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'h-9 gap-1.5')}
             >
               <Calendar className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">{t('sync')}</span>
@@ -163,7 +173,7 @@ export function CalendarHeader({
           </DropdownMenu>
         )}
 
-        <Button onClick={onGenerate} disabled={isGenerating} size="sm" className="gap-1.5">
+        <Button onClick={onGenerate} disabled={isGenerating} size="sm" className="h-9 gap-1.5">
           {isGenerating ? (
             <>
               <Loader2 className="h-3.5 w-3.5 animate-spin" />

@@ -12,6 +12,7 @@ interface User {
 }
 
 interface PageBannerProps {
+  title?: string;
   user?: User | null;
   subtitle?: string;
   rightSlot?: ReactNode;
@@ -38,7 +39,7 @@ function getGreetingKey(): string {
   return 'greeting_night';
 }
 
-export function PageBanner({ user, subtitle, rightSlot, bottomSlot }: PageBannerProps) {
+export function PageBanner({ title, user, subtitle, rightSlot, bottomSlot }: PageBannerProps) {
   const t = useTranslations('Dashboard');
   const greetingKey = getGreetingKey();
   const firstName = getFirstName(user);
@@ -60,7 +61,7 @@ export function PageBanner({ user, subtitle, rightSlot, bottomSlot }: PageBanner
         <div className="pointer-events-none absolute -right-4 -bottom-10 h-32 w-32 rounded-full bg-white/5" />
 
         <div className="relative flex items-center justify-between">
-          {/* Left: Avatar + Greeting */}
+          {/* Left: Content */}
           <div className="flex items-center gap-3.5">
             {user && (
               <Image
@@ -75,9 +76,20 @@ export function PageBanner({ user, subtitle, rightSlot, bottomSlot }: PageBanner
               />
             )}
             <div>
-              <h1 className="text-lg font-bold tracking-tight text-white">
-                {t(greetingKey)}, {firstName}.
-              </h1>
+              {user ? (
+                <>
+                  {title && (
+                    <p className="text-[11px] font-semibold tracking-widest text-white/45 uppercase">
+                      {title}
+                    </p>
+                  )}
+                  <h1 className="text-lg font-bold tracking-tight text-white">
+                    {t(greetingKey)}, {firstName}.
+                  </h1>
+                </>
+              ) : (
+                title && <h1 className="text-lg font-bold tracking-tight text-white">{title}</h1>
+              )}
               {subtitle && <p className="text-sm font-medium text-white/60">{subtitle}</p>}
             </div>
           </div>

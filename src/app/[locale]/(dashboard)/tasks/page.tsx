@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useAuthStore } from '@/store/auth.store';
 import { PageIntro } from '@/components/shared/page-header';
 import { TasksToolbar } from '@/components/tasks/TasksToolbar';
 import { TasksBoard } from '@/components/tasks/TasksBoard';
@@ -12,7 +11,6 @@ import { useTaskDragDrop } from '@/hooks/use-task-drag-drop';
 
 export default function TasksPage() {
   const tPages = useTranslations('Pages');
-  const { user } = useAuthStore();
   const state = useTaskPageState();
 
   const { onDragEnd } = useTaskDragDrop({
@@ -23,7 +21,7 @@ export default function TasksPage() {
 
   return (
     <div className="flex h-full flex-col space-y-6 pb-2">
-      <PageIntro title={tPages('tasks_title')} bannerSubtitle={tPages('tasks_desc')} user={user} />
+      <PageIntro title={tPages('tasks_title')} subtitle={tPages('tasks_desc')} />
 
       <TasksToolbar
         view={state.view}

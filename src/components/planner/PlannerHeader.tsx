@@ -43,13 +43,13 @@ export function PlannerHeader({
   const t = useTranslations('Focus');
 
   return (
-    <div className="flex items-center justify-between gap-2">
+    <div className="flex items-center justify-between gap-3">
       {/* Nav: prev / date picker / next */}
       <div className="flex items-center gap-1">
         <button
           type="button"
           onClick={() => onDateChange(navigatePrev(date, viewMode))}
-          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
+          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -59,7 +59,7 @@ export function PlannerHeader({
         <button
           type="button"
           onClick={() => onDateChange(navigateNext(date, viewMode))}
-          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
+          className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -67,7 +67,7 @@ export function PlannerHeader({
         <button
           type="button"
           onClick={() => onDateChange(new Date())}
-          className="text-muted-foreground hover:bg-muted hover:text-foreground ml-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors"
+          className="text-muted-foreground hover:bg-muted hover:text-foreground ml-1 flex h-9 items-center rounded-lg px-3 text-xs font-medium transition-colors"
         >
           {t('date_picker_today')}
         </button>
@@ -76,13 +76,13 @@ export function PlannerHeader({
       {/* Actions */}
       <div className="flex items-center gap-2">
         {onAdd && (
-          <Button variant="outline" onClick={onAdd} size="sm" className="gap-1.5">
+          <Button variant="outline" onClick={onAdd} size="sm" className="h-9 gap-1.5">
             <Plus className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">{t('action_add_focus')}</span>
           </Button>
         )}
 
-        <Button onClick={onGenerate} disabled={isGenerating} size="sm" className="gap-1.5">
+        <Button onClick={onGenerate} disabled={isGenerating} size="sm" className="h-9 gap-1.5">
           {isGenerating ? (
             <>
               <Loader2 className="h-3.5 w-3.5 animate-spin" />

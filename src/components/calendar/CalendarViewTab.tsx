@@ -3,15 +3,19 @@
 import { ListChecks } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CalendarHeader } from './CalendarHeader';
+import { CalendarDesktopTabs } from './CalendarDesktopTabs';
 import { ViewSwitcher, type ViewMode } from './ViewSwitcher';
 import { CalendarStats } from './CalendarStats';
 import { UnifiedCalendarView } from './UnifiedCalendarView';
 import type { PlannerEntry } from '@/hooks/use-planner';
 import type { CalendarEvent } from '@/hooks/use-calendar-google-sync';
+import type { CalendarTab } from '@/hooks/use-calendar-page-state';
 
 interface CalendarViewTabProps {
   date: Date;
   viewMode: ViewMode;
+  activeTab: CalendarTab;
+  onTabChange: (t: CalendarTab) => void;
   onDateChange: (d: Date) => void;
   onViewModeChange: (v: ViewMode) => void;
   onDayClick: (d: Date) => void;
@@ -39,6 +43,8 @@ interface CalendarViewTabProps {
 export function CalendarViewTab({
   date,
   viewMode,
+  activeTab,
+  onTabChange,
   onDateChange,
   onViewModeChange,
   onDayClick,
@@ -63,24 +69,23 @@ export function CalendarViewTab({
     <>
       <CalendarStats entries={entries} googleEventCount={googleEvents.length} />
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <CalendarHeader
-          date={date}
-          viewMode={viewMode}
-          onDateChange={onDateChange}
-          onGenerate={onGenerate}
-          isGenerating={isGenerating}
-          onSyncPlannerPreview={onSyncPlannerPreview}
-          onSyncTasksPreview={onSyncTasksPreview}
-          onSyncAllPreview={onSyncAllPreview}
-          onImportFromCalendar={onImportFromCalendar}
-          onForceReset={onForceReset}
-          isSyncing={isSyncing}
-          isImporting={isImporting}
-          isCalendarConnected={isCalendarConnected}
-        />
-        <ViewSwitcher viewMode={viewMode} onViewModeChange={onViewModeChange} />
-      </div>
+      <CalendarHeader
+        date={date}
+        viewMode={viewMode}
+        onDateChange={onDateChange}
+        onGenerate={onGenerate}
+        isGenerating={isGenerating}
+        onSyncPlannerPreview={onSyncPlannerPreview}
+        onSyncTasksPreview={onSyncTasksPreview}
+        onSyncAllPreview={onSyncAllPreview}
+        onImportFromCalendar={onImportFromCalendar}
+        onForceReset={onForceReset}
+        isSyncing={isSyncing}
+        isImporting={isImporting}
+        isCalendarConnected={isCalendarConnected}
+        leftSlot={<CalendarDesktopTabs activeTab={activeTab} onTabChange={onTabChange} />}
+        rightSlot={<ViewSwitcher viewMode={viewMode} onViewModeChange={onViewModeChange} />}
+      />
 
       {isLoading ? (
         <div className="space-y-3">

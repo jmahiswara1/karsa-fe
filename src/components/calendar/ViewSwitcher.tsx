@@ -32,7 +32,7 @@ export function ViewSwitcher({ viewMode, onViewModeChange }: ViewSwitcherProps) 
             type="button"
             onClick={() => onViewModeChange(view.key)}
             className={cn(
-              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
+              'flex h-9 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold transition-all',
               active
                 ? 'text-foreground ring-border bg-white shadow-sm ring-1 dark:bg-slate-800'
                 : 'text-muted-foreground hover:text-foreground',

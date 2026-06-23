@@ -29,7 +29,7 @@ export function CalendarDesktopTabs({ activeTab, onTabChange }: CalendarDesktopT
             type="button"
             onClick={() => onTabChange(tab.key)}
             className={cn(
-              'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all',
+              'flex h-9 items-center gap-2 rounded-xl px-4 text-sm font-medium transition-all',
               active
                 ? 'bg-primary text-primary-foreground shadow-sm'
                 : 'text-muted-foreground hover:bg-muted hover:text-foreground',

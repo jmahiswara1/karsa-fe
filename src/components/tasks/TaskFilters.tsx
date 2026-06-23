@@ -1,9 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Search, X, ChevronDown, ArrowUpDown } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { X, ChevronDown, ArrowUpDown } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { SearchInput } from '@/components/shared/SearchInput';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,27 +66,23 @@ export function TaskFilters({
   const hasActiveFilters = status !== '' || priority !== '' || search !== '';
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
       {/* Search */}
-      <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder={t('search_placeholder')}
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-9"
-        />
-      </div>
+      <SearchInput value={search} onChange={onSearchChange} placeholder={t('search_placeholder')} />
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2">
         {/* Status Filter */}
         <DropdownMenu>
-          <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'outline' }), "h-9 w-[160px] justify-between font-normal text-muted-foreground hover:text-foreground")}>
-            {status ? t(STATUS_OPTIONS.find(s => s.value === status)?.key as 'status_todo') : t('all_status')}
+          <DropdownMenuTrigger
+            className={cn(buttonVariants({ variant: 'outline' }), 'h-9 gap-2 text-sm font-medium')}
+          >
+            {status
+              ? t(STATUS_OPTIONS.find((s) => s.value === status)?.key as 'status_todo')
+              : t('all_status')}
             <ChevronDown className="h-4 w-4 opacity-50" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuContent align="start">
             <DropdownMenuRadioGroup
               value={status || 'ALL'}
               onValueChange={(val) => onStatusChange(val === 'ALL' ? '' : (val as TaskStatus))}
@@ -103,11 +99,15 @@ export function TaskFilters({
 
         {/* Priority Filter */}
         <DropdownMenu>
-          <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'outline' }), "h-9 w-[160px] justify-between font-normal text-muted-foreground hover:text-foreground")}>
-            {priority ? t(PRIORITY_OPTIONS.find(p => p.value === priority)?.key as 'priority_low') : t('all_priority')}
+          <DropdownMenuTrigger
+            className={cn(buttonVariants({ variant: 'outline' }), 'h-9 gap-2 text-sm font-medium')}
+          >
+            {priority
+              ? t(PRIORITY_OPTIONS.find((p) => p.value === priority)?.key as 'priority_low')
+              : t('all_priority')}
             <ChevronDown className="h-4 w-4 opacity-50" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuContent align="start">
             <DropdownMenuRadioGroup
               value={priority || 'ALL'}
               onValueChange={(val) => onPriorityChange(val === 'ALL' ? '' : (val as Priority))}
@@ -125,14 +125,17 @@ export function TaskFilters({
         {/* Sort Filter */}
         {sort !== undefined && onSortChange && (
           <DropdownMenu>
-            <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'outline' }), "h-9 w-[160px] justify-between font-normal text-muted-foreground hover:text-foreground")}>
-              <div className="flex items-center gap-1.5">
-                <ArrowUpDown className="h-3.5 w-3.5" />
-                {t(SORT_OPTIONS.find((s) => s.value === sort)?.key as 'sort_newest')}
-              </div>
+            <DropdownMenuTrigger
+              className={cn(
+                buttonVariants({ variant: 'outline' }),
+                'h-9 gap-2 text-sm font-medium',
+              )}
+            >
+              <ArrowUpDown className="h-3.5 w-3.5" />
+              {t(SORT_OPTIONS.find((s) => s.value === sort)?.key as 'sort_newest')}
               <ChevronDown className="h-4 w-4 opacity-50" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[200px]">
+            <DropdownMenuContent align="start">
               <DropdownMenuRadioGroup
                 value={sort}
                 onValueChange={(val) => onSortChange(val as SortOption)}
@@ -149,7 +152,12 @@ export function TaskFilters({
 
         {/* Clear */}
         {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={onClear} className="gap-1.5 text-muted-foreground">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClear}
+            className="text-muted-foreground gap-1.5"
+          >
             <X className="h-3.5 w-3.5" />
             {t('clear_filters')}
           </Button>

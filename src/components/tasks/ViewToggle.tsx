@@ -20,7 +20,7 @@ export function ViewToggle({ value, onChange }: ViewToggleProps) {
   ];
 
   return (
-    <div className="inline-flex items-center gap-1 rounded-lg border border-border/50 bg-muted/40 p-1">
+    <div className="border-border/50 bg-muted/30 flex rounded-xl border p-1">
       {options.map((option) => {
         const Icon = option.icon;
         const isActive = value === option.value;
@@ -29,9 +29,9 @@ export function ViewToggle({ value, onChange }: ViewToggleProps) {
             key={option.value}
             onClick={() => onChange(option.value)}
             className={cn(
-              'flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all',
+              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
               isActive
-                ? 'bg-background text-foreground shadow-sm'
+                ? 'text-foreground ring-border bg-white shadow-sm ring-1 dark:bg-slate-800'
                 : 'text-muted-foreground hover:text-foreground',
             )}
           >

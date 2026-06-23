@@ -3,7 +3,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Plus, FileText, Search, X, ChevronRight } from 'lucide-react';
-import { PageHeader } from '@/components/shared/page-header';
+import { useAuthStore } from '@/store/auth.store';
+import { PageBanner } from '@/components/shared/PageBanner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -60,6 +61,7 @@ import {
 export default function NotesPage() {
   const t = useTranslations('Notes');
   const tPages = useTranslations('Pages');
+  const { user } = useAuthStore();
   const { showConfirm } = useDialogStore();
 
   const deleteNote = useDeleteNote();
@@ -320,27 +322,29 @@ export default function NotesPage() {
 
   return (
     <div className="flex w-full flex-col space-y-6 pb-2">
-      {/* Header */}
-      <PageHeader
-        title={tPages('notes_title')}
-        description={tPages('notes_desc')}
-        actions={
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => handleCreateFolderClick(currentFolderId)}
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              New Folder
-            </Button>
-            <Button onClick={handleCreateNote} className="gap-2">
-              <Plus className="h-4 w-4" />
-              {t('create_note')}
-            </Button>
-          </div>
-        }
-      />
+      {/* Page Title */}
+      <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+        {tPages('notes_title')}
+      </h1>
+
+      {/* Greeting Banner */}
+      <PageBanner user={user} subtitle={tPages('notes_desc')} />
+
+      {/* Actions */}
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={() => handleCreateFolderClick(currentFolderId)}
+          className="gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          New Folder
+        </Button>
+        <Button onClick={handleCreateNote} className="gap-2">
+          <Plus className="h-4 w-4" />
+          {t('create_note')}
+        </Button>
+      </div>
 
       {/* Breadcrumbs */}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

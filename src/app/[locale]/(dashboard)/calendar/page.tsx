@@ -5,8 +5,9 @@ import { useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Calendar as CalendarIcon, Settings } from 'lucide-react';
-import { PlannerGreetingCard } from '@/components/planner/PlannerGreetingCard';
+import { Calendar as CalendarIcon, Settings, ListChecks } from 'lucide-react';
+import { useAuthStore } from '@/store/auth.store';
+import { PageBanner } from '@/components/shared/PageBanner';
 import { CalendarHeader } from '@/components/calendar/CalendarHeader';
 import { ViewSwitcher, type ViewMode } from '@/components/calendar/ViewSwitcher';
 import { MobileTabBar } from '@/components/calendar/MobileTabBar';
@@ -62,6 +63,7 @@ const tabs: { key: Tab; icon: typeof CalendarIcon; labelKey: string }[] = [
 
 export default function CalendarPage() {
   const tCal = useTranslations('Calendar');
+  const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
   const [date, setDate] = useState(new Date());
@@ -270,8 +272,21 @@ export default function CalendarPage() {
 
   return (
     <div className="space-y-4 pb-24 sm:pb-8">
-      {/* Greeting Card */}
-      <PlannerGreetingCard entryCount={entries.length} date={date} />
+      {/* Greeting Banner */}
+      <PageBanner
+        user={user}
+        subtitle={date.toLocaleDateString('id-ID', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+        })}
+        rightSlot={
+          <div className="flex h-9 items-center gap-2 rounded-full border border-white/10 bg-white/15 px-4 text-sm font-medium text-white/90 backdrop-blur-sm">
+            <ListChecks className="h-4 w-4" />
+            {entries.length}
+          </div>
+        }
+      />
 
       {/* Tab Navigation */}
       <div className="flex gap-1">

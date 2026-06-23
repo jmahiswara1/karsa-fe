@@ -4,7 +4,9 @@ import { formatLocalDate } from '@/lib/date-utils';
 import { useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
-import { PlannerGreetingCard } from '@/components/planner/PlannerGreetingCard';
+import { ListChecks, Sparkles } from 'lucide-react';
+import { useAuthStore } from '@/store/auth.store';
+import { PageBanner } from '@/components/shared/PageBanner';
 import { PlannerHeader } from '@/components/planner/PlannerHeader';
 import { FocusList } from '@/components/planner/FocusList';
 import { EmptyFocus } from '@/components/planner/EmptyFocus';
@@ -27,6 +29,7 @@ function formatDate(date: Date): string {
 
 export default function FocusPage() {
   const tFocus = useTranslations('Focus');
+  const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
   const [date, setDate] = useState(new Date());
@@ -132,11 +135,28 @@ export default function FocusPage() {
 
   return (
     <div className="space-y-4 pb-24 sm:pb-8">
-      {/* Greeting Card */}
-      <PlannerGreetingCard
-        entryCount={entries.length}
-        date={date}
-        focusMessage={lastFocusMessage}
+      {/* Greeting Banner */}
+      <PageBanner
+        user={user}
+        subtitle={date.toLocaleDateString('id-ID', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+        })}
+        rightSlot={
+          <div className="flex h-9 items-center gap-2 rounded-full border border-white/10 bg-white/15 px-4 text-sm font-medium text-white/90 backdrop-blur-sm">
+            <ListChecks className="h-4 w-4" />
+            {entries.length}
+          </div>
+        }
+        bottomSlot={
+          lastFocusMessage ? (
+            <div className="flex items-start gap-2 px-6 py-4">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-white/80" />
+              <p className="text-sm font-medium text-white/90">{lastFocusMessage}</p>
+            </div>
+          ) : undefined
+        }
       />
 
       {/* Header */}

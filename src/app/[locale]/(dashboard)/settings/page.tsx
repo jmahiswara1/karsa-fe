@@ -15,8 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PageHeader } from '@/components/shared/page-header';
 import { ProfileBanner } from '@/components/settings/ProfileBanner';
+import { SubscriptionCard } from '@/components/settings/SubscriptionCard';
 import { PreferenceCard } from '@/components/settings/PreferenceCard';
 import { SettingsFooter } from '@/components/settings/SettingsFooter';
 import { useRouter, usePathname } from '@/i18n/routing';
@@ -25,7 +25,7 @@ import { toast } from 'sonner';
 export default function SettingsPage() {
   const tPages = useTranslations('Pages');
   const tSettings = useTranslations('Settings');
-  useAuthStore();
+  const { user } = useAuthStore();
   const { data: preferences, isLoading: isPrefLoading } = usePreferencesQuery();
   const updatePreferences = useUpdatePreferences();
   const { setTheme } = useTheme();
@@ -73,7 +73,9 @@ export default function SettingsPage() {
   if (!mounted) {
     return (
       <div className="space-y-6">
-        <PageHeader title={tPages('settings_title')} description={tPages('settings_desc')} />
+        <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+          {tPages('settings_title')}
+        </h1>
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-24 w-full" />
         <Skeleton className="h-24 w-full" />
@@ -83,9 +85,14 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={tPages('settings_title')} description={tPages('settings_desc')} />
+      {/* Page Title */}
+      <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+        {tPages('settings_title')}
+      </h1>
 
       <ProfileBanner />
+
+      <SubscriptionCard user={user} />
 
       <div className="mt-8 mb-4">
         <h2 className="text-lg font-semibold">{tSettings('preferences_title')}</h2>

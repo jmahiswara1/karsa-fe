@@ -12,7 +12,8 @@ import {
   CheckSquare,
   FolderOpen,
   FileText,
-  CalendarDays,
+  ListChecks,
+  CalendarRange,
   Sparkles,
   Settings,
   ChevronLeft,
@@ -26,7 +27,8 @@ const navItems = [
   { key: 'tasks', href: '/tasks', icon: CheckSquare },
   { key: 'projects', href: '/projects', icon: FolderOpen },
   { key: 'notes', href: '/notes', icon: FileText },
-  { key: 'planner', href: '/planner', icon: CalendarDays },
+  { key: 'planner', href: '/planner', icon: ListChecks },
+  { key: 'calendar', href: '/calendar', icon: CalendarRange },
   { key: 'assistant', href: '/assistant', icon: Sparkles },
 ] as const;
 

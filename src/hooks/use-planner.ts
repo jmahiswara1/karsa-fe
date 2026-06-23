@@ -10,6 +10,8 @@ export interface LinkedTask {
   status: string;
 }
 
+export type PlannerCategory = 'FOCUS' | 'BREAK' | 'MEETING' | 'PERSONAL' | 'OTHER';
+
 export interface PlannerEntry {
   id: string;
   title: string;
@@ -17,10 +19,13 @@ export interface PlannerEntry {
   date: string;
   startTime: string;
   endTime: string;
+  category: PlannerCategory;
   taskId: string | null;
   isAiGenerated: boolean;
   aiReason: string | null;
   color: string | null;
+  googleEventId: string | null;
+  order: number;
   createdAt: string;
   updatedAt: string;
   userId: string;
@@ -47,10 +52,12 @@ export interface CreateEntryInput {
   date: string;
   startTime: string;
   endTime: string;
+  category?: PlannerCategory;
   taskId?: string;
   isAiGenerated?: boolean;
   aiReason?: string;
   color?: string;
+  order?: number;
 }
 
 export type UpdateEntryInput = Partial<CreateEntryInput>;

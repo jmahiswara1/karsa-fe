@@ -2,7 +2,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Plus, FileText, CalendarRange, Sparkles } from 'lucide-react';
+import { Plus, FileText, ListChecks, Sparkles } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 
@@ -24,7 +24,7 @@ const actions = [
   {
     key: 'planner',
     href: '/planner',
-    icon: CalendarRange,
+    icon: ListChecks,
     iconColor: 'text-violet-500',
     bgColor: 'bg-violet-50 dark:bg-violet-900/30',
   },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { formatLocalDate } from '@/lib/date-utils';
 import {
@@ -29,7 +29,7 @@ export function GeneratePlanDialog({
   onGenerate,
   isGenerating,
 }: GeneratePlanDialogProps) {
-  const t = useTranslations('Planner');
+  const t = useTranslations('Focus');
 
   const [startDate, setStartDate] = useState(formatLocalDate(defaultDate));
   const [endDate, setEndDate] = useState(formatLocalDate(defaultDate));

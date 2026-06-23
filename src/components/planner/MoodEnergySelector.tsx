@@ -69,7 +69,7 @@ export function MoodEnergySelector({
   mood,
   onMoodChange,
 }: MoodEnergySelectorProps) {
-  const t = useTranslations('Planner');
+  const t = useTranslations('Focus');
 
   return (
     <motion.div

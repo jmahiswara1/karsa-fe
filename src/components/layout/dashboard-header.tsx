@@ -14,7 +14,7 @@ import {
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { usePathname, useRouter, Link } from '@/i18n/routing';
+import { usePathname, useRouter } from '@/i18n/routing';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useAuthStore, type UserRole } from '@/store/auth.store';
 import { useDialogStore } from '@/store/dialog.store';
@@ -49,7 +49,8 @@ function useDashboardTitle(
   if (pathname.startsWith('/tasks')) return tPages('tasks_title');
   if (pathname.startsWith('/projects')) return tPages('projects_title');
   if (pathname.startsWith('/notes')) return tPages('notes_title');
-  if (pathname.startsWith('/planner')) return tPages('planner_title');
+  if (pathname.startsWith('/planner')) return tPages('focus_title');
+  if (pathname.startsWith('/calendar')) return tPages('calendar_title');
   if (pathname.startsWith('/assistant')) return tPages('assistant_title');
   if (pathname.startsWith('/settings')) return tPages('settings_title');
   return 'Karsa';

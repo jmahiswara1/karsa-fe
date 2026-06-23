@@ -26,6 +26,7 @@ export interface Task {
   createdAt: string;
   updatedAt: string;
   project: { id: string; title: string } | null;
+  column: { id: string; name: string; isSystem: boolean } | null;
 }
 
 export interface TasksQueryParams {
@@ -107,8 +108,8 @@ export const useDeleteTaskColumn = () => {
       await api.delete(`/api/task-columns/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['task-columns'] });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.refetchQueries({ queryKey: ['task-columns'] });
+      queryClient.refetchQueries({ queryKey: ['tasks'] });
     },
   });
 };
@@ -134,6 +135,10 @@ export const useTasksQuery = (params: TasksQueryParams = {}) => {
   });
 };
 
+export const useTodayTasks = (status?: TaskStatus) => {
+  return useTasksQuery({ deadline: 'today', status, limit: 20 });
+};
+
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -142,9 +147,9 @@ export const useCreateTask = () => {
       return data.data as Task;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.refetchQueries({ queryKey: ['tasks'] });
+      queryClient.refetchQueries({ queryKey: ['dashboard'] });
+      queryClient.refetchQueries({ queryKey: ['projects'] });
     },
   });
 };
@@ -157,9 +162,9 @@ export const useUpdateTask = () => {
       return data.data as Task;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.refetchQueries({ queryKey: ['tasks'] });
+      queryClient.refetchQueries({ queryKey: ['dashboard'] });
+      queryClient.refetchQueries({ queryKey: ['projects'] });
     },
   });
 };
@@ -173,9 +178,9 @@ export const useReorderTasks = () => {
       await api.post('/api/tasks/reorder', { tasks });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.refetchQueries({ queryKey: ['tasks'] });
+      queryClient.refetchQueries({ queryKey: ['dashboard'] });
+      queryClient.refetchQueries({ queryKey: ['projects'] });
     },
   });
 };
@@ -187,9 +192,9 @@ export const useDeleteTask = () => {
       await api.delete(`/api/tasks/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.refetchQueries({ queryKey: ['tasks'] });
+      queryClient.refetchQueries({ queryKey: ['dashboard'] });
+      queryClient.refetchQueries({ queryKey: ['projects'] });
     },
   });
 };

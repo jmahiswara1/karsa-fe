@@ -6,17 +6,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PriorityBadge } from '@/components/shared/priority-badge';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { DeadlineBadge } from '@/components/shared/deadline-badge';
-import {
-  CheckCircle2,
-  Circle,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-  FolderOpen,
-  Loader2,
-} from 'lucide-react';
+import { CheckCircle2, Circle, MoreHorizontal, Pencil, Trash2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useUpdateTask, useDeleteTask, useTaskColumns, columnIdForStatus, type Task, type TaskStatus } from '@/hooks/use-tasks';
+import {
+  useUpdateTask,
+  useDeleteTask,
+  useTaskColumns,
+  columnIdForStatus,
+  type Task,
+  type TaskStatus,
+} from '@/hooks/use-tasks';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,7 +55,9 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
 
   const handleToggleStatus = () => {
     const nextStatus = statusCycle[task.status];
-    const targetColumnId = columns ? columnIdForStatus(nextStatus, columns) ?? undefined : undefined;
+    const targetColumnId = columns
+      ? (columnIdForStatus(nextStatus, columns) ?? undefined)
+      : undefined;
     updateTask.mutate({ id: task.id, status: nextStatus, columnId: targetColumnId });
   };
 
@@ -72,7 +73,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
       <motion.div
         variants={itemVariants}
         layout
-        className="group relative flex items-start gap-4 rounded-2xl border border-border/40 bg-card px-5 py-4 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)] transition-all hover:shadow-md hover:border-primary/20"
+        className="group border-border/40 bg-card hover:border-primary/20 relative flex items-start gap-4 rounded-2xl border px-5 py-4 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)] transition-all hover:shadow-md"
       >
         {/* Toggle Status Button */}
         <button
@@ -81,11 +82,11 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
           className="mt-0.5 shrink-0 transition-transform hover:scale-110 disabled:opacity-50"
         >
           {isToggling ? (
-            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            <Loader2 className="text-primary h-5 w-5 animate-spin" />
           ) : task.status === 'DONE' ? (
             <CheckCircle2 className="h-5 w-5 text-emerald-500" />
           ) : (
-            <Circle className="h-5 w-5 text-muted-foreground/30 group-hover:text-primary/50 transition-colors" />
+            <Circle className="text-muted-foreground/30 group-hover:text-primary/50 h-5 w-5 transition-colors" />
           )}
         </button>
 
@@ -95,9 +96,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
             <h3
               className={cn(
                 'text-sm font-semibold transition-colors',
-                task.status === 'DONE'
-                  ? 'text-muted-foreground line-through'
-                  : 'text-foreground',
+                task.status === 'DONE' ? 'text-muted-foreground line-through' : 'text-foreground',
               )}
             >
               {task.title}
@@ -106,13 +105,13 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
             <div className="relative shrink-0">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="opacity-0 group-hover:opacity-100 transition-opacity rounded-lg p-1 hover:bg-muted"
+                className="hover:bg-muted rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100"
               >
-                <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                <MoreHorizontal className="text-muted-foreground h-4 w-4" />
               </button>
               {showMenu && (
                 <div
-                  className="absolute right-0 top-8 z-50 w-36 rounded-xl border border-border bg-popover p-1 shadow-lg"
+                  className="border-border bg-popover absolute top-8 right-0 z-50 w-36 rounded-xl border p-1 shadow-lg"
                   onMouseLeave={() => setShowMenu(false)}
                 >
                   <button
@@ -120,7 +119,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
                       setShowMenu(false);
                       onEdit(task);
                     }}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+                    className="text-foreground hover:bg-muted flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors"
                   >
                     <Pencil className="h-3.5 w-3.5" />
                     {t('edit')}
@@ -130,7 +129,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
                       setShowMenu(false);
                       setShowDeleteAlert(true);
                     }}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+                    className="text-foreground hover:bg-muted flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                     {t('delete')}
@@ -141,18 +140,24 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
           </div>
 
           {task.description && (
-            <p className="mt-1 text-xs text-muted-foreground line-clamp-1">{task.description}</p>
+            <p className="text-muted-foreground mt-1 line-clamp-1 text-xs">{task.description}</p>
           )}
 
           {/* Badges */}
-          <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
             <StatusBadge status={task.status} />
             <PriorityBadge priority={task.priority} />
             <DeadlineBadge deadline={task.deadline ? new Date(task.deadline) : null} />
             {task.project && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 dark:bg-violet-950/20 px-2.5 py-0.5 text-xs font-medium text-violet-700 dark:text-violet-400 ring-1 ring-inset ring-violet-200 dark:ring-violet-900/30">
-                <FolderOpen className="h-3 w-3" />
+              <span className="inline-flex items-center rounded-md bg-violet-200 px-2 py-0.5 text-[11px] font-semibold text-violet-800 dark:bg-violet-800 dark:text-violet-200">
                 {task.project.title}
+              </span>
+            )}
+            {task.estimate && (
+              <span className="inline-flex items-center rounded-md bg-slate-200 px-2 py-0.5 text-[11px] font-semibold text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+                {task.estimate < 60
+                  ? `${task.estimate}m`
+                  : `${Math.floor(task.estimate / 60)}h${task.estimate % 60 > 0 ? ` ${task.estimate % 60}m` : ''}`}
               </span>
             )}
           </div>
@@ -168,9 +173,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              {t('delete')}
-            </AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete}>{t('delete')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

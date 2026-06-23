@@ -12,6 +12,7 @@ interface User {
   avatarUrl?: string;
   role?: UserRole;
   subscriptionExpiresAt?: string | null;
+  createdAt?: string;
 }
 
 interface AuthState {

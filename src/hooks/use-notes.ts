@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
-// ── Types ──────────────────────────────────────────────────────────
-
 export interface Note {
   id: string;
   title: string;
@@ -21,7 +19,7 @@ export interface Note {
     id: string;
     name: string;
   } | null;
-  tags?: any[];
+  tags?: unknown[];
 }
 
 export interface NotesQueryParams {
@@ -50,9 +48,7 @@ export interface CreateNoteInput {
   folderId?: string | null;
 }
 
-export interface UpdateNoteInput extends Partial<CreateNoteInput> {}
-
-// ── Hooks ──────────────────────────────────────────────────────────
+export type UpdateNoteInput = Partial<CreateNoteInput>;
 
 export const useNotesQuery = (params: NotesQueryParams = {}) => {
   return useQuery({
@@ -60,7 +56,8 @@ export const useNotesQuery = (params: NotesQueryParams = {}) => {
     queryFn: async () => {
       const searchParams = new URLSearchParams();
       if (params.projectId) searchParams.set('projectId', params.projectId);
-      if (params.folderId !== undefined) searchParams.set('folderId', params.folderId === null ? 'null' : params.folderId);
+      if (params.folderId !== undefined)
+        searchParams.set('folderId', params.folderId === null ? 'null' : params.folderId);
       if (params.search) searchParams.set('search', params.search);
       if (params.page) searchParams.set('page', String(params.page));
       if (params.limit) searchParams.set('limit', String(params.limit));

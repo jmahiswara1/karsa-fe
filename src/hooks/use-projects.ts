@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
-// ── Types ──────────────────────────────────────────────────────────
-
 export type ProjectStatus = 'PLANNING' | 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'ARCHIVED';
 export type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
 
@@ -20,8 +18,8 @@ export interface Project {
   _count?: {
     tasks: number;
   };
-  tasks?: any[];
-  notes?: any[];
+  tasks?: unknown[];
+  notes?: unknown[];
 }
 
 export interface ProjectsQueryParams {
@@ -51,9 +49,7 @@ export interface CreateProjectInput {
   deadline?: string;
 }
 
-export interface UpdateProjectInput extends Partial<CreateProjectInput> {}
-
-// ── Hooks ──────────────────────────────────────────────────────────
+export type UpdateProjectInput = Partial<CreateProjectInput>;
 
 export const useProjectsQuery = (params: ProjectsQueryParams = {}) => {
   return useQuery({

@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
-// ── Types ──────────────────────────────────────────────────────────
-
 export interface CalendarSyncResult {
   synced: number;
   updated: number;
@@ -58,8 +56,6 @@ export interface SyncLogEntry {
   rangeEnd: string | null;
   createdAt: string;
 }
-
-// ── Hooks ──────────────────────────────────────────────────────────
 
 export const useCalendarStatus = () => {
   return useQuery({

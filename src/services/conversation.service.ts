@@ -1,7 +1,5 @@
 import { api } from '@/lib/api';
 
-// ── Types ──────────────────────────────────────────────────────────
-
 export interface Conversation {
   id: string;
   title: string;
@@ -19,8 +17,6 @@ export interface Message {
   syncStatus?: 'pending' | 'synced' | 'error';
   createdAt: string;
 }
-
-// ── Service ────────────────────────────────────────────────────────
 
 export const ConversationService = {
   listConversations: async (): Promise<Conversation[]> => {

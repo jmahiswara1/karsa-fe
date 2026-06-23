@@ -149,8 +149,6 @@ export function PlannerEntryDialog({
     onSubmit({ ...data, category: (data.category as PlannerCategory) ?? 'FOCUS' });
   };
 
-  // ── View Mode ──
-
   if (mode === 'view' && entry) {
     const cat = CATEGORIES.find((c) => c.key === (entry.category ?? 'FOCUS')) ?? CATEGORIES[0];
 
@@ -257,8 +255,6 @@ export function PlannerEntryDialog({
       </Dialog>
     );
   }
-
-  // ── Edit Mode ──
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,12 +25,13 @@ interface FolderDialogProps {
 export function FolderDialog({ open, onOpenChange, folder, parentId }: FolderDialogProps) {
   const t = useTranslations('Notes'); // Add translations if needed, or use static text
   const [name, setName] = useState('');
-  
+
   const createFolder = useCreateNoteFolder();
   const updateFolder = useUpdateNoteFolder();
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setName(folder ? folder.name : '');
     }
   }, [open, folder]);
@@ -42,8 +49,12 @@ export function FolderDialog({ open, onOpenChange, folder, parentId }: FolderDia
         toast.success('Folder created successfully');
       }
       onOpenChange(false);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'An error occurred');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error && 'response' in error
+          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+          : 'An error occurred';
+      toast.error(message || 'An error occurred');
     }
   };
 
@@ -70,7 +81,10 @@ export function FolderDialog({ open, onOpenChange, folder, parentId }: FolderDia
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!name.trim() || createFolder.isPending || updateFolder.isPending}>
+            <Button
+              type="submit"
+              disabled={!name.trim() || createFolder.isPending || updateFolder.isPending}
+            >
               {folder ? 'Save Changes' : 'Create'}
             </Button>
           </DialogFooter>

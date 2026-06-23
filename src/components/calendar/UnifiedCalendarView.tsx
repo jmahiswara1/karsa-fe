@@ -9,7 +9,7 @@ import { WeekView } from '@/components/calendar/WeekView';
 import { MonthView } from '@/components/calendar/MonthView';
 import { AgendaView } from '@/components/calendar/AgendaView';
 import type { PlannerEntry } from '@/hooks/use-planner';
-import type { CalendarEvent } from '@/hooks/use-calendar-sync';
+import type { CalendarEvent } from '@/hooks/use-calendar-google-sync';
 import type { ViewMode } from '@/components/calendar/ViewSwitcher';
 
 type LayerMode = 'planner' | 'google' | 'both';

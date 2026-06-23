@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
-// ── Types ──────────────────────────────────────────────────────────
-
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED';
 export type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
 
@@ -65,8 +63,6 @@ export interface CreateTaskInput {
 }
 
 export type UpdateTaskInput = Partial<CreateTaskInput>;
-
-// ── Hooks ──────────────────────────────────────────────────────────
 
 export const useTaskColumns = () => {
   return useQuery({

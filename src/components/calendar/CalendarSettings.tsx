@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Cloud, RefreshCw, History, AlertTriangle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { useSyncHistory, type SyncLogEntry } from '@/hooks/use-calendar-sync';
+import { useSyncHistory, type SyncLogEntry } from '@/hooks/use-calendar-google-sync';
 import { cn } from '@/lib/utils';
 
 interface CalendarSettingsProps {

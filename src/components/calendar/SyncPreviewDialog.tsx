@@ -9,9 +9,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, Upload, ListChecks, Layers, Clock, Calendar, Inbox } from 'lucide-react';
-import { useSyncPreview } from '@/hooks/use-calendar-sync';
-import type { SyncPreviewEntry, SyncPreviewTask } from '@/hooks/use-calendar-sync';
+import { Loader2, Upload, ListChecks, Layers, Calendar, Inbox } from 'lucide-react';
+import { useSyncPreview } from '@/hooks/use-calendar-google-sync';
+import type { SyncPreviewEntry, SyncPreviewTask } from '@/hooks/use-calendar-google-sync';
 
 interface SyncPreviewDialogProps {
   open: boolean;

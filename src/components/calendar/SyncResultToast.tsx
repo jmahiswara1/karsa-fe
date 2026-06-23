@@ -3,7 +3,7 @@
 import { toast } from 'sonner';
 import { CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { CalendarSyncResult } from '@/hooks/use-calendar-sync';
+import type { CalendarSyncResult } from '@/hooks/use-calendar-google-sync';
 
 export function showSyncResultToast(result: CalendarSyncResult, onRetry?: () => void) {
   const total = result.synced + result.updated;

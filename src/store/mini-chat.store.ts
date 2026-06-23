@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 
-// ── Types ────────────────────────────────────────────────────────
-
 export interface MiniChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -21,8 +19,6 @@ interface MiniChatState {
   saveToLocalStorage: (userId: string) => void;
   clearStore: (userId?: string) => void;
 }
-
-// ── Storage Helpers ──────────────────────────────────────────────
 
 const STORAGE_KEY_PREFIX = 'mini-chat-store-';
 
@@ -48,8 +44,6 @@ function saveToStorage(userId: string, messages: MiniChatMessage[]): void {
     console.error('Failed to save mini-chat to localStorage:', error);
   }
 }
-
-// ── Store ────────────────────────────────────────────────────────
 
 export const useMiniChatStore = create<MiniChatState>((set, get) => ({
   messages: [],

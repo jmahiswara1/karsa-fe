@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
+import { PageBanner } from '@/components/shared/PageBanner';
 
 interface PageHeaderProps {
   title: string;
@@ -19,5 +20,41 @@ export function PageHeader({ title, description, actions, className }: PageHeade
       </div>
       {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
     </div>
+  );
+}
+
+interface PageIntroProps {
+  title: string;
+  subtitle?: string;
+  bannerSubtitle?: string;
+  user?: { name?: string; email: string; avatarUrl?: string } | null;
+  rightSlot?: ReactNode;
+  bottomSlot?: ReactNode;
+  actions?: ReactNode;
+}
+
+/**
+ * Standard page header for dashboard sub-pages:
+ * an `<h1>` title row followed by a `<PageBanner>`.
+ */
+export function PageIntro({
+  title,
+  subtitle,
+  bannerSubtitle,
+  user,
+  rightSlot,
+  bottomSlot,
+  actions,
+}: PageIntroProps) {
+  return (
+    <>
+      <PageHeader title={title} description={subtitle} actions={actions} />
+      <PageBanner
+        user={user}
+        subtitle={bannerSubtitle}
+        rightSlot={rightSlot}
+        bottomSlot={bottomSlot}
+      />
+    </>
   );
 }

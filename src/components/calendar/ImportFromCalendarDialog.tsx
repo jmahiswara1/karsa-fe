@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader2, Download, Inbox, Clock } from 'lucide-react';
-import { useCalendarEvents } from '@/hooks/use-calendar-sync';
+import { useCalendarEvents } from '@/hooks/use-calendar-google-sync';
 
 interface ImportFromCalendarDialogProps {
   open: boolean;

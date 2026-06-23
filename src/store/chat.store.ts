@@ -6,8 +6,6 @@ import {
 } from '@/services/conversation.service';
 import type { EntityCreation } from '@/services/assistant.service';
 
-// ── Store Types ────────────────────────────────────────────────────
-
 export interface MessageWithEntities extends Message {
   entities?: EntityCreation[];
 }
@@ -44,8 +42,6 @@ interface ChatState {
   clearStore: () => void; // Clear entire store (for logout)
 }
 
-// ── Storage Helpers ────────────────────────────────────────────────
-
 const STORAGE_KEY_PREFIX = 'chat-store-';
 
 interface StorageData {
@@ -77,8 +73,6 @@ function saveToStorage(userId: string, data: StorageData): void {
     console.error('Failed to save chat to localStorage:', error);
   }
 }
-
-// ── Merge Helpers ──────────────────────────────────────────────────
 
 function mergeMessages(local: Message[] | undefined, backend: Message[] | undefined): Message[] {
   const messageMap = new Map<string, Message>();
@@ -129,8 +123,6 @@ function mergeConversations(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
   );
 }
-
-// ── Store ──────────────────────────────────────────────────────────
 
 export const useChatStore = create<ChatState>((set, get) => ({
   conversations: [],

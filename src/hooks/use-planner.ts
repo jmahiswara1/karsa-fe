@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
-// ── Types ──────────────────────────────────────────────────────────
-
 export interface LinkedTask {
   id: string;
   title: string;
@@ -61,8 +59,6 @@ export interface CreateEntryInput {
 }
 
 export type UpdateEntryInput = Partial<CreateEntryInput>;
-
-// ── Hooks ──────────────────────────────────────────────────────────
 
 export const usePlannerEntries = (params: {
   date?: string;

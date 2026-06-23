@@ -44,12 +44,12 @@ export function RecentNotes() {
       {/* Section header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText className="h-4.5 w-4.5 text-primary" />
-          <h2 className="text-sm font-bold text-foreground">{t('section_notes')}</h2>
+          <FileText className="text-primary h-4.5 w-4.5" />
+          <h2 className="text-foreground text-sm font-bold">{t('section_notes')}</h2>
         </div>
         <Link
           href="/notes"
-          className="flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors"
+          className="text-muted-foreground hover:text-primary flex items-center gap-1 text-xs font-semibold transition-colors"
         >
           {t('view_all')}
           <ArrowRight className="h-3 w-3" />
@@ -65,8 +65,11 @@ export function RecentNotes() {
       >
         {isLoading ? (
           Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="flex h-16 items-start gap-4 rounded-2xl border border-border/40 bg-card p-4">
-              <Skeleton className="h-10 w-10 rounded-xl shrink-0" />
+            <div
+              key={i}
+              className="border-border/40 bg-card flex h-16 items-start gap-4 rounded-2xl border p-4"
+            >
+              <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
               <div className="flex-1 space-y-2 py-1">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-3 w-1/4" />
@@ -74,24 +77,24 @@ export function RecentNotes() {
             </div>
           ))
         ) : notes.length === 0 ? (
-          <div className="flex h-32 items-center justify-center rounded-2xl border border-border/40 bg-card text-sm text-muted-foreground">
+          <div className="border-border/40 bg-card text-muted-foreground flex h-32 items-center justify-center rounded-2xl border text-sm">
             No recent notes
           </div>
         ) : (
-          notes.map((note: any) => (
+          notes.map((note: { id: string; title: string; updatedAt: string }) => (
             <motion.div
               key={note.id}
               variants={itemVariants}
-              className="group flex items-start gap-4 rounded-2xl border border-border/40 bg-card p-4 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)] transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-primary/20 cursor-pointer"
+              className="group border-border/40 bg-card hover:border-primary/20 flex cursor-pointer items-start gap-4 rounded-2xl border p-4 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+              <div className="bg-muted/60 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors">
                 <FileText className="h-4.5 w-4.5" />
               </div>
-              <div className="flex-1 min-w-0 pt-0.5">
-                <p className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">
+              <div className="min-w-0 flex-1 pt-0.5">
+                <p className="text-foreground group-hover:text-primary truncate text-sm font-bold transition-colors">
                   {note.title}
                 </p>
-                <p className="mt-1 text-[11px] text-muted-foreground font-semibold">
+                <p className="text-muted-foreground mt-1 text-[11px] font-semibold">
                   {timeAgo(new Date(note.updatedAt))}
                 </p>
               </div>

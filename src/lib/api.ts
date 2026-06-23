@@ -40,7 +40,6 @@ api.interceptors.request.use(
   },
 );
 
-// ── Refresh Token Logic ────────────────────────────────────────────
 // Prevent multiple refresh calls at the same time
 let isRefreshing = false;
 let failedQueue: { resolve: (token: string) => void; reject: (error: unknown) => void }[] = [];

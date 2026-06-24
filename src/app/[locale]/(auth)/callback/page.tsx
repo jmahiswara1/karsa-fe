@@ -14,6 +14,7 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const pending = searchParams.get('pending');
     const rejected = searchParams.get('rejected');
+    const error = searchParams.get('error');
     const accessToken = searchParams.get('access_token');
     const refreshToken = searchParams.get('refresh_token');
 
@@ -24,6 +25,13 @@ export default function AuthCallbackPage() {
 
     if (rejected === 'true') {
       router.replace('/login?rejected=true');
+      return;
+    }
+
+    if (error) {
+      // Store error message and redirect to login
+      sessionStorage.setItem('auth_error', error);
+      router.replace('/login');
       return;
     }
 

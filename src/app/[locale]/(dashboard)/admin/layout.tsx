@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
-import { ShieldCheck, Users, UserCheck, Activity } from 'lucide-react';
+import { ShieldCheck, Users, UserCheck, Activity, Link2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PageIntro } from '@/components/shared/page-header';
 
@@ -12,6 +12,7 @@ const tabs = [
   { key: 'users', href: '/admin/users', icon: Users, exact: false },
   { key: 'pending', href: '/admin/pending', icon: UserCheck, exact: false },
   { key: 'audit', href: '/admin/audit', icon: Activity, exact: false },
+  { key: 'invites', href: '/admin/invites', icon: Link2, exact: false },
 ] as const;
 
 export default function AdminLayout({ children }: { children: ReactNode }) {

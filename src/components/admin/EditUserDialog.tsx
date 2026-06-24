@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import {
@@ -47,6 +47,18 @@ export function EditUserDialog({ user, open, onOpenChange, onSaved }: EditUserDi
     user.subscriptionExpiresAt ? user.subscriptionExpiresAt.split('T')[0] : '',
   );
   const [isSaving, setIsSaving] = useState(false);
+  const prevUserId = useRef(user.id);
+
+  useEffect(() => {
+    if (prevUserId.current !== user.id) {
+      prevUserId.current = user.id;
+      setRole(user.role);
+      setStatus(user.status);
+      setSubscriptionExpiresAt(
+        user.subscriptionExpiresAt ? user.subscriptionExpiresAt.split('T')[0] : '',
+      );
+    }
+  }, [user.id, user.role, user.status, user.subscriptionExpiresAt]);
 
   const handleSave = async () => {
     setIsSaving(true);

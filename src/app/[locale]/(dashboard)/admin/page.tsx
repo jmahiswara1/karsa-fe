@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Loader2, Users, UserCheck, UserX, Shield, Crown, User } from 'lucide-react';
 import { api } from '@/lib/api';
+import { EmptyState } from '@/components/shared/empty-state';
 
 interface Stats {
   total: number;
@@ -37,7 +38,7 @@ const roleCards = [
   {
     key: 'free',
     icon: User,
-    color: 'bg-gray-50 text-gray-600',
+    color: 'bg-gray-100 text-gray-600',
     getValue: (s: Stats) => s.byRole.free,
   },
   {
@@ -58,8 +59,11 @@ export default function AdminDashboardPage() {
   const t = useTranslations('Admin');
   const [stats, setStats] = useState<Stats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
     api
       .get('/api/admin/stats')
       .then((res) => setStats(res.data.data))
@@ -76,7 +80,13 @@ export default function AdminDashboardPage() {
   }
 
   if (!stats) {
-    return <p className="text-sm text-gray-500">Failed to load stats.</p>;
+    return (
+      <EmptyState
+        icon={Users}
+        title="Failed to load stats"
+        description="Could not load dashboard statistics. Please try again."
+      />
+    );
   }
 
   return (

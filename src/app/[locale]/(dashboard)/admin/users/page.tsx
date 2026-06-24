@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Loader2,
@@ -11,6 +11,7 @@ import {
   Eye,
   Pencil,
   Trash2,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
+import { EmptyState } from '@/components/shared/empty-state';
 import { EditUserDialog } from '@/components/admin/EditUserDialog';
 import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
 import { UserDetailDialog } from '@/components/admin/UserDetailDialog';
@@ -53,10 +55,9 @@ export default function AdminUsersPage() {
   const [editingUser, setEditingUser] = useState<UserItem | null>(null);
   const [deletingUser, setDeletingUser] = useState<UserItem | null>(null);
   const [viewingUserId, setViewingUserId] = useState<string | null>(null);
-
   const fetchRef = useRef(false);
 
-  useEffect(() => {
+  const fetchUsers = useCallback(async () => {
     const params = new URLSearchParams({
       skip: String(page * PAGE_SIZE),
       take: String(PAGE_SIZE),
@@ -65,21 +66,23 @@ export default function AdminUsersPage() {
     if (roleFilter) params.set('role', roleFilter);
     if (statusFilter) params.set('status', statusFilter);
 
-    if (fetchRef.current) {
-      setIsLoading(true);
+    if (fetchRef.current) setIsLoading(true);
+    try {
+      const res = await api.get(`/api/admin/users?${params.toString()}`);
+      setUsers(res.data.data);
+      setTotal(res.data.meta.total);
+    } catch {
+      toast.error('Failed to load users');
+    } finally {
+      setIsLoading(false);
+      fetchRef.current = true;
     }
-    api
-      .get(`/api/admin/users?${params.toString()}`)
-      .then((res) => {
-        setUsers(res.data.data);
-        setTotal(res.data.meta.total);
-      })
-      .catch(() => toast.error('Failed to load users'))
-      .finally(() => {
-        setIsLoading(false);
-        fetchRef.current = true;
-      });
   }, [page, search, roleFilter, statusFilter]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchUsers();
+  }, [fetchUsers]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -146,9 +149,11 @@ export default function AdminUsersPage() {
           <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
         </div>
       ) : users.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 py-16">
-          <p className="text-sm text-gray-500">{t('users_empty')}</p>
-        </div>
+        <EmptyState
+          icon={Users}
+          title={t('users_empty')}
+          description="No users match your current filters."
+        />
       ) : (
         <div className="overflow-hidden rounded-xl border border-gray-100 bg-white">
           <table className="min-w-full divide-y divide-gray-200">
@@ -196,7 +201,15 @@ export default function AdminUsersPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        user.role === 'ADMIN'
+                          ? 'bg-blue-50 text-blue-700'
+                          : user.role === 'PRO'
+                            ? 'bg-purple-50 text-purple-700'
+                            : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
                       {user.role}
                     </span>
                   </td>

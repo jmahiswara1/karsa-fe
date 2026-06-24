@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Loader2, Mail, Calendar, Shield, Clock, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -42,19 +42,17 @@ export function UserDetailDialog({ userId, open, onOpenChange, onRefresh }: User
   const [isLoading, setIsLoading] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const prevUserId = useRef<string | null>(null);
 
   useEffect(() => {
     if (!userId || !open) return;
-    if (prevUserId.current === userId && user) return;
-    prevUserId.current = userId;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
     api
       .get(`/api/admin/users/${userId}`)
       .then((res) => setUser(res.data.data))
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false));
-  }, [userId, open, user]);
+  }, [userId, open]);
 
   const statusColors: Record<string, string> = {
     ACTIVE: 'bg-emerald-50 text-emerald-700 border-emerald-200',

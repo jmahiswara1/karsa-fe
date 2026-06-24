@@ -57,6 +57,7 @@ export default function TasksPage() {
             isLoading={state.isLoading}
             onEditTask={state.handleEditTask}
             sort={state.sort}
+            systemColumns={state.systemColumns}
           />
         </div>
       )}

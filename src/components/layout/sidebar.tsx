@@ -16,6 +16,7 @@ import {
   CalendarRange,
   Sparkles,
   Settings,
+  ShieldCheck,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -33,6 +34,8 @@ const navItems = [
 ] as const;
 
 const bottomItems = [{ key: 'settings', href: '/settings', icon: Settings }] as const;
+
+const adminItems = [{ key: 'admin', href: '/admin', icon: ShieldCheck }] as const;
 
 export function Sidebar() {
   const t = useTranslations('Sidebar');
@@ -138,6 +141,46 @@ export function Sidebar() {
 
       {/* Bottom Section */}
       <div className="border-border/50 flex flex-col gap-0.5 border-t px-2 py-3">
+        {/* Admin */}
+        {user?.role === 'ADMIN' &&
+          adminItems.map(({ key, href, icon: Icon }) => {
+            const active = isActive(href);
+            return (
+              <Link
+                key={key}
+                href={href}
+                title={collapsed ? t(key as keyof typeof t) : undefined}
+                className={cn(
+                  'group flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-all duration-300',
+                  active
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                )}
+              >
+                <Icon
+                  className={cn(
+                    'shrink-0',
+                    active ? 'text-primary-foreground' : 'text-muted-foreground',
+                  )}
+                  style={{ width: '1.125rem', height: '1.125rem' }}
+                />
+                <AnimatePresence>
+                  {!collapsed && (
+                    <motion.span
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: 'auto' }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden whitespace-nowrap"
+                    >
+                      {t(key as keyof typeof t)}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Link>
+            );
+          })}
+
         {/* Settings */}
         {bottomItems.map(({ key, href, icon: Icon }) => {
           const active = isActive(href);

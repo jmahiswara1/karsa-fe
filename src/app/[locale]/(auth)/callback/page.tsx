@@ -12,21 +12,38 @@ export default function AuthCallbackPage() {
   const t = useTranslations('Auth');
 
   useEffect(() => {
+    const pending = searchParams.get('pending');
+    const rejected = searchParams.get('rejected');
+    const error = searchParams.get('error');
     const accessToken = searchParams.get('access_token');
     const refreshToken = searchParams.get('refresh_token');
 
-    if (accessToken && refreshToken) {
-      // Store tokens in cookies so Next.js server components and middleware can read them
-      document.cookie = `access_token=${accessToken}; path=/; max-age=${15 * 60}; SameSite=Lax`; // 15 mins
-      document.cookie = `refresh_token=${refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`; // 7 days
+    if (pending === 'true') {
+      router.replace('/pending');
+      return;
+    }
 
-      // Check if we need to redirect to a specific page
+    if (rejected === 'true') {
+      router.replace('/login?rejected=true');
+      return;
+    }
+
+    if (error) {
+      // Store error message and redirect to login
+      sessionStorage.setItem('auth_error', error);
+      router.replace('/login');
+      return;
+    }
+
+    if (accessToken && refreshToken) {
+      document.cookie = `access_token=${accessToken}; path=/; max-age=${15 * 60}; SameSite=Lax`;
+      document.cookie = `refresh_token=${refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+
       const returnTo = sessionStorage.getItem('returnTo') || '/dashboard';
       sessionStorage.removeItem('returnTo');
 
       router.replace(returnTo);
     } else {
-      // If no tokens, redirect back to login
       router.replace('/login');
     }
   }, [searchParams, router]);

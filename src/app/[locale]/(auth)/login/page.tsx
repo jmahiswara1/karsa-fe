@@ -1,12 +1,36 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { useSearchParams } from 'next/navigation';
+import { AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const t = useTranslations('Auth');
   const searchParams = useSearchParams();
+
+  const errorMessage = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+
+    const authError = sessionStorage.getItem('auth_error');
+    if (authError) {
+      sessionStorage.removeItem('auth_error');
+      if (authError.includes('Invite code is required')) {
+        return t('error_invite_required');
+      } else if (authError === 'authentication_failed') {
+        return t('error_auth_failed');
+      }
+      return authError;
+    }
+
+    const rejected = searchParams.get('rejected');
+    if (rejected === 'true') {
+      return t('error_account_rejected');
+    }
+
+    return null;
+  }, [searchParams, t]);
 
   const handleGoogleLogin = () => {
     const returnTo = searchParams.get('returnTo');
@@ -25,6 +49,13 @@ export default function LoginPage() {
         </h1>
         <p className="text-sm text-gray-500">{t('login_subtitle')}</p>
       </div>
+
+      {errorMessage && (
+        <div className="mb-6 flex w-full items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-left">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+          <p className="text-sm text-red-700">{errorMessage}</p>
+        </div>
+      )}
 
       <div className="w-full space-y-5">
         <Button

@@ -10,14 +10,14 @@ export function HeroSection() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 pt-12 pb-24" id="home">
-      <div className="grid min-h-[600px] grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:min-h-[600px] lg:grid-cols-2 lg:gap-8">
         {/* Left Column */}
         <div className="relative flex h-full flex-col">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-8 text-5xl leading-[1.05] font-extrabold tracking-tight text-gray-900 md:text-7xl"
+            className="mb-8 text-4xl leading-[1.05] font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-7xl"
           >
             {t('title_1')} <br className="hidden md:block" /> {t('title_2')}{' '}
             <br className="hidden md:block" />{' '}
@@ -114,6 +114,25 @@ export function HeroSection() {
             </div>
           </motion.div>
 
+          {/* Mobile-only: Subtitle + CTA (visible below stars on mobile) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="mb-10 lg:hidden"
+          >
+            <p className="mb-6 text-sm leading-relaxed font-medium text-gray-500">
+              Planning your day should never take more than a few seconds. AI suggestions are always
+              tailored for your unique workflow.
+            </p>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center rounded-xl bg-blue-600 px-7 py-3.5 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.3)] transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_12px_25px_rgba(37,99,235,0.4)]"
+            >
+              {t('button')}
+            </Link>
+          </motion.div>
+
           {/* Bottom Left Card (Large Blue) */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -125,7 +144,7 @@ export function HeroSection() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              className="absolute top-0 left-1/2 z-20 flex h-32 w-32 -translate-x-1/2 rotate-12 transform items-center justify-center rounded-full border-4 border-gray-50 bg-gradient-to-br from-gray-100 to-gray-300 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+              className="absolute top-0 left-1/2 z-20 hidden h-32 w-32 -translate-x-1/2 rotate-12 transform items-center justify-center rounded-full border-4 border-gray-50 bg-gradient-to-br from-gray-100 to-gray-300 shadow-[0_20px_40px_rgba(0,0,0,0.3)] lg:flex"
             >
               {/* Fake 3D inner edge */}
               <div className="absolute inset-2 rounded-full border-t-2 border-l-2 border-white/80 mix-blend-overlay"></div>
@@ -214,7 +233,7 @@ export function HeroSection() {
         {/* Right Column */}
         <div className="flex h-full flex-col">
           {/* Top Row Cards */}
-          <div className="grid h-[300px] grid-cols-2 gap-6">
+          <div className="grid h-[220px] grid-cols-2 gap-4 sm:h-[300px] sm:gap-6">
             {/* Phone Mockup Card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -275,12 +294,12 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Middle Text & CTA */}
+          {/* Middle Text & CTA (desktop only) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-12"
+            className="mt-12 hidden lg:block"
           >
             <p className="mb-8 max-w-[90%] text-sm leading-relaxed font-medium text-gray-500 md:text-base">
               Planning your day should never take more than a few seconds. AI suggestions are always
@@ -296,7 +315,7 @@ export function HeroSection() {
               </Link>
 
               {/* Small Bar Chart Icon */}
-              <div className="flex items-end gap-1.5 pr-4 opacity-90">
+              <div className="hidden items-end gap-1.5 pr-4 opacity-90 sm:flex">
                 <div className="h-4 w-3 rounded-sm bg-[#0f2e73]"></div>
                 <div className="h-6 w-3 rounded-sm bg-[#0f2e73]"></div>
                 <div className="h-12 w-3 rounded-sm bg-[#0f2e73]"></div>
@@ -310,9 +329,9 @@ export function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-auto flex items-center justify-between gap-4 pt-10 opacity-50 grayscale transition-all duration-500 hover:grayscale-0"
+            className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-10 opacity-50 grayscale transition-all duration-500 hover:grayscale-0"
           >
-            <div className="flex items-center gap-1.5 text-lg font-bold tracking-tight">
+            <div className="flex items-center gap-1.5 text-sm font-bold tracking-tight sm:text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -329,7 +348,7 @@ export function HeroSection() {
               </svg>
               Google
             </div>
-            <div className="flex items-center gap-1.5 text-lg font-bold tracking-tight">
+            <div className="hidden items-center gap-1.5 text-sm font-bold tracking-tight sm:flex sm:text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -346,7 +365,7 @@ export function HeroSection() {
               </svg>
               GitHub
             </div>
-            <div className="flex items-center gap-1.5 text-lg font-bold tracking-tight">
+            <div className="hidden items-center gap-1.5 text-sm font-bold tracking-tight sm:flex sm:text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -364,7 +383,7 @@ export function HeroSection() {
               </svg>
               Linear
             </div>
-            <div className="flex items-center gap-1.5 font-sans text-lg font-extrabold tracking-tight">
+            <div className="hidden items-center gap-1.5 font-sans text-sm font-extrabold tracking-tight sm:flex sm:text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"

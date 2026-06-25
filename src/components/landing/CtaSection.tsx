@@ -54,7 +54,7 @@ export function CtaSection() {
         </div>
 
         {/* Right Side: Phone Mockup */}
-        <div className="relative z-10 flex h-[220px] w-full flex-shrink-0 justify-center md:h-[240px] md:w-[260px] md:justify-end">
+        <div className="relative z-10 hidden h-[220px] w-full flex-shrink-0 justify-center sm:flex md:h-[240px] md:w-[260px] md:justify-end">
           {/* Phone Body */}
           <motion.div
             initial={{ y: 100 }}

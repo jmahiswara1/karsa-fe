@@ -117,7 +117,7 @@ export function Footer() {
         </div>
 
         {/* Right Side: Links */}
-        <div className="flex gap-12 md:gap-20">
+        <div className="flex flex-wrap gap-12 md:gap-20">
           <div>
             <h4 className="mb-5 text-sm font-bold text-gray-900">{t('product')}</h4>
             <ul className="flex flex-col gap-3.5">

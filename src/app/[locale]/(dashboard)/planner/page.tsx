@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Sparkles } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { PlannerHeader } from '@/components/planner/PlannerHeader';
 import { FocusList } from '@/components/planner/FocusList';
@@ -15,16 +15,17 @@ import { usePlannerPageState } from '@/hooks/use-planner-page-state';
 
 export default function FocusPage() {
   const tPages = useTranslations('Pages');
+  const locale = useLocale();
   const state = usePlannerPageState();
 
   const subtitle = useMemo(
     () =>
-      state.date.toLocaleDateString('id-ID', {
+      state.date.toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
       }),
-    [state.date],
+    [state.date, locale],
   );
 
   return (

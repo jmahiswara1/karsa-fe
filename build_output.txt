@@ -1,0 +1,36 @@
+Γû▓ Next.js 16.2.7 (Turbopack)
+- Environments: .env
+
+ΓÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./src/components/landing/Navbar.tsx:1:1
+You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+    Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+> 1 | import { cookies } from 'next/headers';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import { NavbarClient } from './NavbarClient';
+  3 |
+  4 | export async function Navbar() {
+
+Ecmascript file had an error
+
+Import traces:
+  Server Component:
+    ./src/components/landing/Navbar.tsx
+    ./src/app/[locale]/page.tsx
+
+  Client Component Browser:
+    ./src/components/landing/Navbar.tsx [Client Component Browser]
+    ./src/app/[locale]/terms/page.tsx [Client Component Browser]
+    ./src/app/[locale]/terms/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/landing/Navbar.tsx [Client Component SSR]
+    ./src/app/[locale]/terms/page.tsx [Client Component SSR]
+    ./src/app/[locale]/terms/page.tsx [Server Component]
+
+
+    at <unknown> (./src/components/landing/Navbar.tsx:1:1)

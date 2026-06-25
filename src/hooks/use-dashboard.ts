@@ -2,7 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
 export interface DashboardSummary {
-  todayTasks: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  todayTasks: {
+    id: string;
+    title: string;
+    status: string;
+    priority: string;
+    deadline: string | null;
+  }[];
   taskSummary: {
     total: number;
     inProgress: number;

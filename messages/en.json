@@ -182,7 +182,10 @@
     "pending_auto_redirect": "You will be redirected automatically once approved.",
     "rejected_title": "Account Rejected",
     "rejected_subtitle": "Your account request has been rejected by the admin. Please contact support for more information.",
-    "rejected_back": "Back to Login"
+    "rejected_back": "Back to Login",
+    "callback_waiting": "Please wait while we set up your secure session.",
+    "approved_title": "Approved",
+    "approved_redirecting": "Redirecting you to login..."
   },
   "Footer": {
     "description": "Your go-to platform for intelligent workspace tools and daily planning insights.",
@@ -300,7 +303,9 @@
     "mini_chat_clear_title": "Clear Chat",
     "mini_chat_clear_desc": "Are you sure you want to clear this chat? This cannot be undone.",
     "mini_chat_clear_btn": "Clear",
-    "mini_chat_cancel_btn": "Cancel"
+    "mini_chat_cancel_btn": "Cancel",
+    "settings": "Settings",
+    "log_out": "Log out"
   },
   "Pages": {
     "tasks_title": "Tasks",
@@ -766,7 +771,14 @@
     "confirm_reject_title": "Reject this user?",
     "confirm_reject_desc": "The user will not be able to access Karsa.",
     "confirm_yes": "Yes",
-    "confirm_no": "Cancel"
+    "confirm_no": "Cancel",
+    "error_load_stats_title": "Failed to load stats",
+    "error_load_stats_desc": "Could not load dashboard statistics. Please try again.",
+    "error_load_users": "Failed to load users",
+    "error_load_activities": "Failed to load activities",
+    "error_load_pending": "Failed to load pending users",
+    "error_load_invites": "Failed to load invites",
+    "error_load_audit_logs": "Failed to load audit logs"
   },
   "Focus": {
     "energy_label": "Energy",
@@ -874,5 +886,44 @@
     "stat3_value": "4.9",
     "stat3_suffix": "/5.0",
     "stat3_label": "User Rating"
+  },
+  "Priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "Status": {
+    "todo": "Todo",
+    "in_progress": "In Progress",
+    "done": "Done",
+    "cancelled": "Cancelled"
+  },
+  "Legal": {
+    "last_updated": "Last updated:",
+    "privacy_title": "Privacy Policy",
+    "privacy_s1_title": "1. Information We Collect",
+    "privacy_s1_body": "We collect information you provide directly, such as your name, email, and Google account data when you sign in. We also collect usage data including tasks, projects, notes, and interactions within the app.",
+    "privacy_s2_title": "2. How We Use Your Information",
+    "privacy_s2_body": "We use your data to provide, maintain, and improve Karsa. Your task and project data is processed by our AI to provide smart suggestions and planning assistance. We do not sell your personal data.",
+    "privacy_s3_title": "3. Data Security",
+    "privacy_s3_body": "We implement industry-standard security measures to protect your data, including encryption at rest and in transit. However, no method of electronic transmission or storage is 100% secure.",
+    "privacy_s4_title": "4. Third-Party Services",
+    "privacy_s4_body": "We use Google OAuth for authentication and may integrate with Google Calendar. These services have their own privacy policies. We do not share your data with other third parties.",
+    "privacy_s5_title": "5. Your Rights",
+    "privacy_s5_body": "You can access, update, or delete your data at any time through the Settings page. You can also request account deletion by contacting support.",
+    "terms_title": "Terms of Service",
+    "terms_s1_title": "1. Acceptance of Terms",
+    "terms_s1_body": "By accessing or using Karsa, you agree to be bound by these Terms of Service. If you do not agree, do not use the service.",
+    "terms_s2_title": "2. Description of Service",
+    "terms_s2_body": "Karsa is an AI-powered personal productivity assistant that helps you manage tasks, projects, notes, and daily planning. The service is provided as-is and may be updated from time to time.",
+    "terms_s3_title": "3. User Accounts",
+    "terms_s3_body": "You are responsible for maintaining the security of your account. You must not share your account credentials. Notify us immediately of any unauthorized use.",
+    "terms_s4_title": "4. Acceptable Use",
+    "terms_s4_body": "You agree not to misuse the service, including but not limited to: attempting unauthorized access, disrupting the service, or using it for illegal activities.",
+    "terms_s5_title": "5. Intellectual Property",
+    "terms_s5_body": "The service and its original content, features, and functionality are owned by Karsa and are protected by international copyright, trademark, and other intellectual property laws.",
+    "terms_s6_title": "6. Limitation of Liability",
+    "terms_s6_body": "In no event shall Karsa be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the service."
   }
 }

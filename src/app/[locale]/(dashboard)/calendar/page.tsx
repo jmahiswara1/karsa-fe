@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { CalendarViewTab, EntriesCountChip } from '@/components/calendar/CalendarViewTab';
 import { CalendarSettings } from '@/components/calendar/CalendarSettings';
@@ -16,6 +16,7 @@ import { useCalendarStatus, useCalendarEvents } from '@/hooks/use-calendar-googl
 
 export default function CalendarPage() {
   const tPages = useTranslations('Pages');
+  const locale = useLocale();
   const state = useCalendarPageState();
 
   const { data: isCalendarConnected = false } = useCalendarStatus();
@@ -40,12 +41,12 @@ export default function CalendarPage() {
 
   const subtitle = useMemo(
     () =>
-      state.date.toLocaleDateString('id-ID', {
+      state.date.toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
       }),
-    [state.date],
+    [state.date, locale],
   );
 
   return (

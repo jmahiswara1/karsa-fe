@@ -52,10 +52,8 @@ export default function AuthCallbackPage() {
   return (
     <div className="flex w-full flex-col items-center justify-center py-24">
       <Loader2 className="mb-6 h-12 w-12 animate-spin text-blue-600" />
-      <h2 className="mb-2 text-2xl font-semibold text-gray-900">
-        {t('login_loading') || 'Authenticating...'}
-      </h2>
-      <p className="text-gray-500">Please wait while we set up your secure session.</p>
+      <h2 className="mb-2 text-2xl font-semibold text-gray-900">{t('login_loading')}</h2>
+      <p className="text-gray-500">{t('callback_waiting')}</p>
     </div>
   );
 }

@@ -129,8 +129,10 @@ export default function PendingPage() {
           <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 shadow-sm">
             <ShieldCheck className="h-9 w-9 text-emerald-500" strokeWidth={1.5} />
           </div>
-          <h1 className="mb-3 text-xl font-semibold tracking-tight text-gray-800">Approved</h1>
-          <p className="text-sm text-gray-400">Redirecting you to login...</p>
+          <h1 className="mb-3 text-xl font-semibold tracking-tight text-gray-800">
+            {t('approved_title')}
+          </h1>
+          <p className="text-sm text-gray-400">{t('approved_redirecting')}</p>
         </div>
       )}
 

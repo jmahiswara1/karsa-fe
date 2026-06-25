@@ -68,9 +68,9 @@ export function FeatureSection() {
                     </svg>
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-gray-900">Series A Fundraising</div>
+                    <div className="text-sm font-bold text-gray-900">{t('sample_project')}</div>
                     <div className="text-xs font-medium text-gray-500">
-                      3 active tasks • 2 notes
+                      {t('sample_tasks_count')}
                     </div>
                   </div>
                 </div>
@@ -94,10 +94,10 @@ export function FeatureSection() {
                       <line x1="16" x2="8" y1="17" y2="17" />
                       <polyline points="10 9 9 9 8 9" />
                     </svg>
-                    <span className="text-sm font-semibold text-gray-700">Pitch Deck v2</span>
+                    <span className="text-sm font-semibold text-gray-700">{t('sample_doc1')}</span>
                   </div>
                   <span className="rounded bg-blue-100 px-2 py-1 text-[10px] font-bold tracking-wider text-blue-700 uppercase">
-                    Document
+                    {t('sample_doc1_tag')}
                   </span>
                 </div>
                 <div className="flex w-full items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
@@ -118,11 +118,11 @@ export function FeatureSection() {
                       </svg>
                     </div>
                     <span className="text-sm font-semibold text-gray-400 line-through">
-                      Financial Projections
+                      {t('sample_doc2')}
                     </span>
                   </div>
                   <span className="rounded bg-green-100 px-2 py-1 text-[10px] font-bold tracking-wider text-green-700 uppercase">
-                    Done
+                    {t('sample_doc2_tag')}
                   </span>
                 </div>
               </div>
@@ -167,21 +167,17 @@ export function FeatureSection() {
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-gray-200 pb-2">
                   <span className="text-xs font-bold tracking-wider text-gray-500 uppercase">
-                    Morning Focus
+                    {t('sample_morning_focus')}
                   </span>
-                  <span className="text-xs font-bold text-blue-600">09:00 - 12:00</span>
+                  <span className="text-xs font-bold text-blue-600">{t('sample_time')}</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
                     1
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">
-                      Finish Presentation Deck
-                    </div>
-                    <div className="mt-1 text-xs text-gray-500">
-                      High Priority • Estimated 2 hrs
-                    </div>
+                    <div className="text-sm font-semibold text-gray-900">{t('sample_task1')}</div>
+                    <div className="mt-1 text-xs text-gray-500">{t('sample_task1_meta')}</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -189,10 +185,8 @@ export function FeatureSection() {
                     2
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">
-                      Reply to pending emails
-                    </div>
-                    <div className="mt-1 text-xs text-gray-500">Low Energy Task • 30 mins</div>
+                    <div className="text-sm font-semibold text-gray-900">{t('sample_task2')}</div>
+                    <div className="mt-1 text-xs text-gray-500">{t('sample_task2_meta')}</div>
                   </div>
                 </div>
               </div>

@@ -28,6 +28,8 @@ export function Footer() {
             <Link
               href="https://www.instagram.com/j.mahiswara_"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
               className="transition-colors hover:text-gray-900"
             >
               <svg
@@ -50,6 +52,8 @@ export function Footer() {
             <Link
               href="https://www.linkedin.com/in/gadangmahiswara/"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
               className="transition-colors hover:text-gray-900"
             >
               <svg
@@ -72,6 +76,8 @@ export function Footer() {
             <Link
               href="https://www.threads.com/@biasaa.ae"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Threads"
               className="transition-colors hover:text-gray-900"
             >
               <svg
@@ -93,6 +99,8 @@ export function Footer() {
             <Link
               href="https://github.com/jmahiswara1"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
               className="transition-colors hover:text-gray-900"
             >
               <svg
@@ -144,7 +152,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="mailto:hello@karsa.app"
                   className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
                 >
                   {t('contact')}

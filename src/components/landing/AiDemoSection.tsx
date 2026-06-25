@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 export function AiDemoSection() {
   const t = useTranslations('AiDemo');
   const [text, setText] = useState('');
-  const fullText = 'Prepare the product roadmap presentation for tomorrow';
+  const fullText = t('typing_text');
   const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
@@ -138,7 +138,7 @@ export function AiDemoSection() {
             </div>
 
             {/* Generated Result Container */}
-            <div className="flex h-[200px] items-start justify-center">
+            <div className="flex min-h-[200px] items-start justify-center">
               {showResult && (
                 <motion.div
                   initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -161,17 +161,15 @@ export function AiDemoSection() {
                       >
                         <path d="M5 12l5 5L20 7" />
                       </svg>
-                      Task Captured
+                      {t('result_captured')}
                     </span>
-                    <span className="text-xs font-medium text-gray-500">Added to Inbox</span>
+                    <span className="text-xs font-medium text-gray-500">{t('result_inbox')}</span>
                   </div>
                   <div className="flex flex-col gap-4 p-5">
                     <div className="flex items-start gap-3">
                       <div className="mt-1 h-5 w-5 rounded-full border-2 border-gray-300"></div>
                       <div>
-                        <div className="text-lg font-bold text-gray-900">
-                          Prepare product roadmap presentation
-                        </div>
+                        <div className="text-lg font-bold text-gray-900">{t('result_title')}</div>
                         <div className="mt-2 flex flex-wrap items-center gap-2">
                           <span className="inline-flex items-center gap-1 rounded-md bg-red-50 px-2.5 py-1 text-xs font-bold text-red-700">
                             <svg
@@ -190,7 +188,7 @@ export function AiDemoSection() {
                               <line x1="8" x2="8" y1="2" y2="6" />
                               <line x1="3" x2="21" y1="10" y2="10" />
                             </svg>
-                            Tomorrow, 2:00 PM
+                            {t('result_deadline')}
                           </span>
                           <span className="inline-flex items-center gap-1 rounded-md bg-purple-50 px-2.5 py-1 text-xs font-bold text-purple-700">
                             <svg
@@ -208,7 +206,7 @@ export function AiDemoSection() {
                               <line x1="12" x2="12" y1="8" y2="12" />
                               <line x1="12" x2="12.01" y1="16" y2="16" />
                             </svg>
-                            High Priority
+                            {t('result_priority')}
                           </span>
                         </div>
                       </div>

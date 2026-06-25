@@ -45,24 +45,20 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <PageIntro title={t('title')} subtitle={t('subtitle')} />
 
       <div className="inline-flex gap-1 rounded-xl border border-gray-100 bg-gray-50/80 p-1">
-        {tabs.map(({ key, href, icon: Icon }) => {
-          const active = isActive({
-            key,
-            href,
-            icon: Icon,
-            exact: key === 'dashboard',
-          });
+        {tabs.map((tab) => {
+          const active = isActive(tab);
+          const Icon = tab.icon;
           return (
             <Link
-              key={key}
-              href={href}
+              key={tab.key}
+              href={tab.href}
               className={cn(
                 'flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all',
                 active ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700',
               )}
             >
               <Icon className="h-4 w-4" />
-              {t(`tab_${key}`)}
+              {t(`tab_${tab.key}`)}
             </Link>
           );
         })}

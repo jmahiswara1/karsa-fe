@@ -157,7 +157,7 @@ export default function UserActivityPage() {
         <Select
           value={actionFilter}
           onValueChange={(v) => {
-            setActionFilter(v);
+            setActionFilter(v ?? '');
             setPage(0);
           }}
         >
@@ -177,7 +177,7 @@ export default function UserActivityPage() {
         <Select
           value={entityFilter}
           onValueChange={(v) => {
-            setEntityFilter(v);
+            setEntityFilter(v ?? '');
             setPage(0);
           }}
         >
@@ -201,7 +201,11 @@ export default function UserActivityPage() {
             <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
           </div>
         ) : activities.length === 0 ? (
-          <EmptyState title={t('activity_empty')} description={t('activity_empty_desc')} />
+          <EmptyState
+            icon={FileText}
+            title={t('activity_empty')}
+            description={t('activity_empty_desc')}
+          />
         ) : (
           <table className="w-full">
             <thead>

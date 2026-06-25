@@ -108,7 +108,7 @@ export default function AdminUsersPage() {
           <Select
             value={roleFilter}
             onValueChange={(val) => {
-              setRoleFilter(val === '__all__' ? '' : val);
+              setRoleFilter((val ?? '') === '__all__' ? '' : (val ?? ''));
               setPage(0);
             }}
           >
@@ -126,7 +126,7 @@ export default function AdminUsersPage() {
           <Select
             value={statusFilter}
             onValueChange={(val) => {
-              setStatusFilter(val === '__all__' ? '' : val);
+              setStatusFilter((val ?? '') === '__all__' ? '' : (val ?? ''));
               setPage(0);
             }}
           >

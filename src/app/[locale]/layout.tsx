@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Poppins, Roboto, Caveat } from 'next/font/google';
+import { Poppins, Roboto } from 'next/font/google';
 import '../globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -16,12 +16,6 @@ const poppins = Poppins({
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
   variable: '--font-sans',
-  subsets: ['latin'],
-});
-
-const caveat = Caveat({
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-caveat',
   subsets: ['latin'],
 });
 
@@ -43,7 +37,7 @@ export default async function RootLayout(
   return (
     <html
       lang={locale}
-      className={`${roboto.variable} ${poppins.variable} ${caveat.variable} h-full antialiased`}
+      className={`${roboto.variable} ${poppins.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col" suppressHydrationWarning>

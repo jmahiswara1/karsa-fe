@@ -14,8 +14,8 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const navLinks = [
     { href: '#features', label: t('features') },
-    { href: '#how-it-works', label: t('how_it_works') },
     { href: '#pricing', label: t('pricing') },
+    { href: '#how-it-works', label: t('how_it_works') },
     { href: '#faq', label: t('faq') },
   ];
 
@@ -29,6 +29,7 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
             width={32}
             height={32}
             className="object-contain"
+            priority
           />
           <span className="text-xl font-semibold tracking-tight text-gray-900">Karsa</span>
         </Link>
@@ -75,12 +76,20 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
                 <LogoutButton />
               </>
             ) : (
-              <Link
-                href="/login?returnTo=/"
-                className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-blue-200 transition-all hover:bg-blue-700 active:scale-95"
-              >
-                {t('log_in')}
-              </Link>
+              <>
+                <Link
+                  href="/login?returnTo=/"
+                  className="text-sm font-medium text-gray-600 transition-colors hover:text-blue-600"
+                >
+                  {t('log_in')}
+                </Link>
+                <Link
+                  href="/login?returnTo=/"
+                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-blue-200 transition-all hover:bg-blue-700 active:scale-95"
+                >
+                  {t('sign_up')}
+                </Link>
+              </>
             )}
           </div>
 
@@ -89,6 +98,8 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
             onClick={() => setOpen(!open)}
             className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 transition-colors hover:bg-gray-100 md:hidden"
             aria-label="Toggle menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -97,7 +108,7 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-gray-100 bg-white px-6 pb-6 md:hidden">
+        <div id="mobile-menu" className="border-t border-gray-100 bg-white px-6 pb-6 md:hidden">
           <div className="flex flex-col gap-1 pt-4">
             {navLinks.map((link) => (
               <Link

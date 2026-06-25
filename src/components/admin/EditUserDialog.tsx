@@ -109,7 +109,7 @@ export function EditUserDialog({ user, open, onOpenChange, onSaved }: EditUserDi
           {/* Role */}
           <div className="space-y-2">
             <Label>{t('field_role')}</Label>
-            <Select value={role} onValueChange={setRole}>
+            <Select value={role} onValueChange={(v) => setRole(v ?? '')}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -124,7 +124,7 @@ export function EditUserDialog({ user, open, onOpenChange, onSaved }: EditUserDi
           {/* Status */}
           <div className="space-y-2">
             <Label>{t('field_status')}</Label>
-            <Select value={status} onValueChange={setStatus}>
+            <Select value={status} onValueChange={(v) => setStatus(v ?? '')}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>

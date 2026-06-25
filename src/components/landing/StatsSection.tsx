@@ -1,8 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 export function StatsSection() {
+  const t = useTranslations('Stats');
+
   return (
     <section className="mx-auto max-w-5xl px-6 py-24 text-center" id="stats">
       <motion.div
@@ -12,8 +15,8 @@ export function StatsSection() {
         transition={{ duration: 0.6 }}
       >
         <h2 className="mb-2 text-3xl leading-tight font-bold text-gray-900 md:text-5xl">
-          Type like a human. <br className="hidden md:block" />
-          <span className="text-blue-600">Organize like a machine.</span>
+          {t('title_1')} <br className="hidden md:block" />
+          <span className="text-blue-600">{t('title_2')}</span>
         </h2>
       </motion.div>
 
@@ -45,8 +48,8 @@ export function StatsSection() {
             </svg>
           </div>
           <div className="text-left">
-            <div className="text-2xl font-bold text-gray-900">10,000+</div>
-            <div className="text-xs font-medium text-gray-400">Tasks Completed</div>
+            <div className="text-2xl font-bold text-gray-900">{t('stat1_value')}</div>
+            <div className="text-xs font-medium text-gray-400">{t('stat1_label')}</div>
           </div>
         </div>
 
@@ -68,8 +71,8 @@ export function StatsSection() {
             </svg>
           </div>
           <div className="text-left">
-            <div className="text-2xl font-bold text-gray-900">+35%</div>
-            <div className="text-xs font-medium text-gray-400">Efficiency Boost</div>
+            <div className="text-2xl font-bold text-gray-900">{t('stat2_value')}</div>
+            <div className="text-xs font-medium text-gray-400">{t('stat2_label')}</div>
           </div>
         </div>
 
@@ -92,9 +95,10 @@ export function StatsSection() {
           </div>
           <div className="text-left">
             <div className="text-2xl font-bold text-gray-900">
-              4.9<span className="text-lg font-normal text-gray-400">/5.0</span>
+              {t('stat3_value')}
+              <span className="text-lg font-normal text-gray-400">{t('stat3_suffix')}</span>
             </div>
-            <div className="text-xs font-medium text-gray-400">User Rating</div>
+            <div className="text-xs font-medium text-gray-400">{t('stat3_label')}</div>
           </div>
         </div>
       </motion.div>

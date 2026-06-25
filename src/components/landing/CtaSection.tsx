@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 export function CtaSection() {
   const t = useTranslations('Cta');
   return (
-    <section className="mx-auto max-w-7xl px-6 pt-24 pb-8" id="cta">
+    <section className="mx-auto max-w-7xl px-6 py-24" id="cta">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -31,7 +31,7 @@ export function CtaSection() {
 
           <div className="flex flex-col items-start gap-4 sm:flex-row">
             <Link
-              href="/dashboard"
+              href="/login?returnTo=/dashboard"
               className="flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-bold text-blue-900 shadow-[0_8px_20px_rgba(255,255,255,0.1)] transition-all hover:bg-gray-50"
             >
               {t('button')}
@@ -70,17 +70,17 @@ export function CtaSection() {
             <div className="flex flex-1 flex-col gap-5 bg-gray-50 px-5 pt-12 pb-6">
               {/* Header */}
               <div>
-                <div className="text-xs font-medium text-gray-500">Hello,</div>
-                <div className="text-xl font-extrabold text-gray-900">Gadang Mahiswara</div>
+                <div className="text-xs font-medium text-gray-500">{t('phone_hello')}</div>
+                <div className="text-xl font-extrabold text-gray-900">{t('phone_name')}</div>
               </div>
 
               {/* Tabs */}
               <div className="flex gap-2 rounded-full bg-gray-200/50 p-1">
                 <div className="flex-1 rounded-full bg-white py-1.5 text-center text-xs font-bold text-gray-900 shadow-sm">
-                  Today
+                  {t('phone_tab_today')}
                 </div>
                 <div className="flex-1 rounded-full py-1.5 text-center text-xs font-bold text-gray-500">
-                  Upcoming
+                  {t('phone_tab_upcoming')}
                 </div>
               </div>
 
@@ -88,16 +88,18 @@ export function CtaSection() {
               <div className="relative overflow-hidden rounded-2xl bg-[#0f2e73] p-4 text-white">
                 <div className="absolute top-0 right-0 h-24 w-24 rounded-full bg-blue-500/30 blur-xl"></div>
                 <div className="relative z-10">
-                  <div className="mb-1 text-xs font-bold text-blue-200">Morning Focus</div>
+                  <div className="mb-1 text-xs font-bold text-blue-200">
+                    {t('phone_focus_title')}
+                  </div>
                   <div className="mb-3 text-sm leading-tight font-bold">
-                    Product Strategy <br /> Review
+                    {t('phone_focus_desc')}
                   </div>
                   <div className="flex gap-2">
                     <span className="rounded bg-white/20 px-2 py-1 text-[10px] font-bold">
-                      2h 30m
+                      {t('phone_focus_time')}
                     </span>
                     <span className="rounded bg-white/20 px-2 py-1 text-[10px] font-bold">
-                      High Priority
+                      {t('phone_focus_priority')}
                     </span>
                   </div>
                 </div>
@@ -105,20 +107,24 @@ export function CtaSection() {
 
               {/* Task List */}
               <div>
-                <div className="mb-3 text-xs font-bold text-gray-900">Tasks</div>
+                <div className="mb-3 text-xs font-bold text-gray-900">{t('phone_tasks')}</div>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
                     <div className="mt-0.5 h-4 w-4 rounded-full border-2 border-blue-500"></div>
                     <div>
-                      <div className="text-xs font-bold text-gray-900">Update PRD document</div>
-                      <div className="mt-0.5 text-[10px] text-gray-400">10:00 AM • Document</div>
+                      <div className="text-xs font-bold text-gray-900">{t('phone_task1')}</div>
+                      <div className="mt-0.5 text-[10px] text-gray-400">
+                        {t('phone_task1_meta')}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
                     <div className="mt-0.5 h-4 w-4 rounded-full border-2 border-gray-300"></div>
                     <div>
-                      <div className="text-xs font-bold text-gray-900">Design team sync</div>
-                      <div className="mt-0.5 text-[10px] text-gray-400">1:00 PM • Meeting</div>
+                      <div className="text-xs font-bold text-gray-900">{t('phone_task2')}</div>
+                      <div className="mt-0.5 text-[10px] text-gray-400">
+                        {t('phone_task2_meta')}
+                      </div>
                     </div>
                   </div>
                 </div>

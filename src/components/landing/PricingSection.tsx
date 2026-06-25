@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Check, Crown, Zap } from 'lucide-react';
 
@@ -49,7 +50,7 @@ export function PricingSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl border border-gray-200 bg-white p-8"
+          className="flex flex-col rounded-2xl border border-gray-200 bg-white p-8"
         >
           <div className="mb-6">
             <div className="mb-2 flex items-center gap-2">
@@ -63,7 +64,7 @@ export function PricingSection() {
             <p className="mt-2 text-sm text-gray-500">{t('free_desc')}</p>
           </div>
 
-          <ul className="mb-8 space-y-3">
+          <ul className="mb-8 flex-1 space-y-3">
             {freeFeatures.map((key) => (
               <li key={key} className="flex items-start gap-3">
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
@@ -72,9 +73,12 @@ export function PricingSection() {
             ))}
           </ul>
 
-          <button className="w-full rounded-xl border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50">
+          <Link
+            href="/login?returnTo=/dashboard"
+            className="mt-auto block w-full rounded-xl border border-gray-200 bg-white px-6 py-3 text-center text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+          >
             {t('get_started')}
-          </button>
+          </Link>
         </motion.div>
 
         {/* Pro Plan */}
@@ -83,7 +87,7 @@ export function PricingSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ delay: 0.2 }}
-          className="relative rounded-2xl border-2 border-blue-600 bg-white p-8 shadow-lg shadow-blue-600/10"
+          className="relative flex flex-col rounded-2xl border-2 border-blue-600 bg-white p-8 shadow-lg shadow-blue-600/10"
         >
           <div className="absolute -top-3 left-1/2 -translate-x-1/2">
             <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-4 py-1 text-xs font-semibold text-white">
@@ -104,7 +108,7 @@ export function PricingSection() {
             <p className="mt-2 text-sm text-gray-500">{t('pro_desc')}</p>
           </div>
 
-          <ul className="mb-8 space-y-3">
+          <ul className="mb-8 flex-1 space-y-3">
             {proFeatures.map((key) => (
               <li key={key} className="flex items-start gap-3">
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
@@ -113,12 +117,12 @@ export function PricingSection() {
             ))}
           </ul>
 
-          <button
-            disabled
-            className="w-full cursor-not-allowed rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white opacity-70 transition-colors"
+          <Link
+            href="mailto:hello@karsa.app?subject=Pro%20Plan%20Waitlist"
+            className="mt-auto block w-full rounded-xl bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
-            {t('coming_soon')}
-          </button>
+            {t('notify_me')}
+          </Link>
         </motion.div>
       </div>
     </section>

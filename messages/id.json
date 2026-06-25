@@ -1,4 +1,8 @@
 {
+  "Metadata": {
+    "title": "Karsa - Asisten Produktivitas Berbasis AI",
+    "description": "Rencanakan, atur, dan selesaikan tugas harian Anda dengan mudah menggunakan ruang kerja AI Karsa. Coba gratis."
+  },
   "Navbar": {
     "features": "Fitur",
     "how_it_works": "Cara Kerja",
@@ -13,13 +17,22 @@
     "title_1": "Buat hari ",
     "title_2": "terasa ringan",
     "title_3": "bersama Karsa",
+    "subtitle": "Merencanakan hari Anda seharusnya tidak lebih dari beberapa detik. Saran AI selalu disesuaikan dengan alur kerja unik Anda.",
+    "cta_note": "Tanpa kartu kredit",
+    "see_how": "Lihat cara kerjanya",
     "users_rating": "Lebih dari 10.000+ pengguna",
     "button": "Coba Karsa Gratis"
   },
   "AiDemo": {
     "title_1": "Ketik selayaknya manusia. ",
     "title_2": "Tertata secara otomatis.",
-    "description": "Tanpa drop-down, tanpa pemilih tanggal. Cukup ketik apa yang perlu Anda lakukan, dan AI Karsa menangani sisanya."
+    "description": "Tanpa drop-down, tanpa pemilih tanggal. Cukup ketik apa yang perlu Anda lakukan, dan AI Karsa menangani sisanya.",
+    "typing_text": "Siapkan presentasi roadmap produk untuk besok",
+    "result_captured": "Tugas Tercatat",
+    "result_inbox": "Ditambahkan ke Inbox",
+    "result_title": "Siapkan presentasi roadmap produk",
+    "result_deadline": "Besok, 14:00",
+    "result_priority": "Prioritas Tinggi"
   },
   "Feature": {
     "title_1": "Semua yang Anda butuhkan. ",
@@ -28,7 +41,19 @@
     "card1_title": "Proyek & Catatan Terpadu",
     "card1_desc": "Hubungkan tugas harian dengan tujuan tingkat tinggi Anda. Lampirkan catatan rapat, dokumen, dan pencapaian langsung ke ruang proyek Anda.",
     "card2_title": "Rencana Harian Cerdas",
-    "card2_desc": "Mulai hari dengan kejelasan. Karsa menganalisis tumpukan tugas, tenggat waktu, dan produktivitas Anda untuk menghasilkan jadwal harian optimal."
+    "card2_desc": "Mulai hari dengan kejelasan. Karsa menganalisis tumpukan tugas, tenggat waktu, dan produktivitas Anda untuk menghasilkan jadwal harian optimal.",
+    "sample_project": "Penggalangan Dana Seri A",
+    "sample_tasks_count": "3 tugas aktif · 2 catatan",
+    "sample_doc1": "Pitch Deck v2",
+    "sample_doc1_tag": "Dokumen",
+    "sample_doc2": "Proyeksi Keuangan",
+    "sample_doc2_tag": "Selesai",
+    "sample_morning_focus": "Fokus Pagi",
+    "sample_time": "09:00 - 12:00",
+    "sample_task1": "Selesaikan Presentasi",
+    "sample_task1_meta": "Prioritas Tinggi · Estimasi 2 jam",
+    "sample_task2": "Balas email tertunda",
+    "sample_task2_meta": "Tugas Energi Rendah · 30 menit"
   },
   "HowItWorks": {
     "title_1": "Tiga langkah menuju ",
@@ -57,6 +82,7 @@
     "get_started": "Mulai",
     "get_pro": "Dapatkan Pro",
     "coming_soon": "Segera Hadir",
+    "notify_me": "Beritahu Saya",
     "feature_unlimited_tasks": "Tugas & proyek tanpa batas",
     "feature_notes": "Catatan dengan folder",
     "feature_ai_limited": "Asisten AI (terbatas)",
@@ -92,7 +118,20 @@
     "title_2": "rekan Anda",
     "title_3": " dalam fokus kerja.",
     "subtitle": "Rencanakan, atur, dan selesaikan tugas harian Anda tanpa hambatan.",
-    "button": "Coba Karsa Gratis"
+    "button": "Coba Karsa Gratis",
+    "phone_hello": "Halo,",
+    "phone_name": "Pengguna",
+    "phone_tab_today": "Hari Ini",
+    "phone_tab_upcoming": "Mendatang",
+    "phone_focus_title": "Fokus Pagi",
+    "phone_focus_desc": "Review Strategi Produk",
+    "phone_focus_time": "2j 30m",
+    "phone_focus_priority": "Prioritas Tinggi",
+    "phone_tasks": "Tugas",
+    "phone_task1": "Perbarui dokumen PRD",
+    "phone_task1_meta": "10:00 · Dokumen",
+    "phone_task2": "Sinkron tim desain",
+    "phone_task2_meta": "13:00 · Rapat"
   },
   "AuthCarousel": {
     "slide1_title": "Bekerja Lebih Tenang.",
@@ -824,5 +863,16 @@
     "title": "Halaman tidak ditemukan",
     "subtitle": "Halaman yang Anda cari tidak ada atau telah dipindahkan.",
     "back_home": "Kembali ke Beranda"
+  },
+  "Stats": {
+    "title_1": "Produktivitas, ",
+    "title_2": "terukur.",
+    "stat1_value": "10.000+",
+    "stat1_label": "Tugas Selesai",
+    "stat2_value": "+35%",
+    "stat2_label": "Peningkatan Efisiensi",
+    "stat3_value": "4.9",
+    "stat3_suffix": "/5.0",
+    "stat3_label": "Rating Pengguna"
   }
 }

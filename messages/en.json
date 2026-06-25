@@ -1,4 +1,8 @@
 {
+  "Metadata": {
+    "title": "Karsa - AI-Powered Productivity Assistant",
+    "description": "Plan, organize, and execute your daily tasks effortlessly with Karsa's AI-powered workspace. Try it free."
+  },
   "Navbar": {
     "features": "Features",
     "how_it_works": "How it works",
@@ -13,13 +17,22 @@
     "title_1": "Make today ",
     "title_2": "feel lighter",
     "title_3": "with Karsa",
+    "subtitle": "Planning your day should never take more than a few seconds. AI suggestions are always tailored for your unique workflow.",
+    "cta_note": "No credit card required",
+    "see_how": "See how it works",
     "users_rating": "Over 10,000+ users",
     "button": "Try Karsa Free"
   },
   "AiDemo": {
     "title_1": "Type like a human. ",
     "title_2": "Organize like a machine.",
-    "description": "No drop-downs, no date pickers. Just type what you need to do, and Karsa's AI handles the rest."
+    "description": "No drop-downs, no date pickers. Just type what you need to do, and Karsa's AI handles the rest.",
+    "typing_text": "Prepare the product roadmap presentation for tomorrow",
+    "result_captured": "Task Captured",
+    "result_inbox": "Added to Inbox",
+    "result_title": "Prepare product roadmap presentation",
+    "result_deadline": "Tomorrow, 2:00 PM",
+    "result_priority": "High Priority"
   },
   "Feature": {
     "title_1": "Everything you need to execute. ",
@@ -28,7 +41,19 @@
     "card1_title": "Unified Projects & Notes",
     "card1_desc": "Connect your daily tasks to your highest-level goals. Attach meeting notes, documents, and milestones directly to your project space so context is always one click away.",
     "card2_title": "Intelligent Daily Plan",
-    "card2_desc": "Start every day with clarity. Karsa analyzes your backlog, deadlines, and past productivity to generate an optimal daily schedule tailored just for you."
+    "card2_desc": "Start every day with clarity. Karsa analyzes your backlog, deadlines, and past productivity to generate an optimal daily schedule tailored just for you.",
+    "sample_project": "Series A Fundraising",
+    "sample_tasks_count": "3 active tasks · 2 notes",
+    "sample_doc1": "Pitch Deck v2",
+    "sample_doc1_tag": "Document",
+    "sample_doc2": "Financial Projections",
+    "sample_doc2_tag": "Done",
+    "sample_morning_focus": "Morning Focus",
+    "sample_time": "09:00 - 12:00",
+    "sample_task1": "Finish Presentation Deck",
+    "sample_task1_meta": "High Priority · Estimated 2 hrs",
+    "sample_task2": "Reply to pending emails",
+    "sample_task2_meta": "Low Energy Task · 30 mins"
   },
   "HowItWorks": {
     "title_1": "Three steps to ",
@@ -57,6 +82,7 @@
     "get_started": "Get Started",
     "get_pro": "Get Pro",
     "coming_soon": "Coming Soon",
+    "notify_me": "Notify Me",
     "feature_unlimited_tasks": "Unlimited tasks & projects",
     "feature_notes": "Notes with folders",
     "feature_ai_limited": "AI Assistant (limited)",
@@ -92,7 +118,20 @@
     "title_2": "your partner",
     "title_3": " in deep work.",
     "subtitle": "Plan, organize, and execute your daily tasks effortlessly.",
-    "button": "Try Karsa Free"
+    "button": "Try Karsa Free",
+    "phone_hello": "Hello,",
+    "phone_name": "User",
+    "phone_tab_today": "Today",
+    "phone_tab_upcoming": "Upcoming",
+    "phone_focus_title": "Morning Focus",
+    "phone_focus_desc": "Product Strategy Review",
+    "phone_focus_time": "2h 30m",
+    "phone_focus_priority": "High Priority",
+    "phone_tasks": "Tasks",
+    "phone_task1": "Update PRD document",
+    "phone_task1_meta": "10:00 AM · Document",
+    "phone_task2": "Design team sync",
+    "phone_task2_meta": "1:00 PM · Meeting"
   },
   "AuthCarousel": {
     "slide1_title": "Plan less. Do more.",
@@ -824,5 +863,16 @@
     "title": "Page not found",
     "subtitle": "The page you're looking for doesn't exist or has been moved.",
     "back_home": "Back to Home"
+  },
+  "Stats": {
+    "title_1": "Productivity, ",
+    "title_2": "measured.",
+    "stat1_value": "10,000+",
+    "stat1_label": "Tasks Completed",
+    "stat2_value": "+35%",
+    "stat2_label": "Efficiency Boost",
+    "stat3_value": "4.9",
+    "stat3_suffix": "/5.0",
+    "stat3_label": "User Rating"
   }
 }

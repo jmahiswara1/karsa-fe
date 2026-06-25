@@ -819,5 +819,10 @@
     "empty_no_priorities": "Nothing on your plate yet",
     "empty_no_priorities_hint": "Generate a plan with AI or add items manually.",
     "focus_message_loading": "Thinking about your day..."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "subtitle": "The page you're looking for doesn't exist or has been moved.",
+    "back_home": "Back to Home"
   }
 }

@@ -819,5 +819,10 @@
     "empty_no_priorities": "Belum ada di piringmu",
     "empty_no_priorities_hint": "Generate rencana dengan AI atau tambah manual.",
     "focus_message_loading": "Memikirkan harimu..."
+  },
+  "NotFound": {
+    "title": "Halaman tidak ditemukan",
+    "subtitle": "Halaman yang Anda cari tidak ada atau telah dipindahkan.",
+    "back_home": "Kembali ke Beranda"
   }
 }

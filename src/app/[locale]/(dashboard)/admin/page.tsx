@@ -83,8 +83,8 @@ export default function AdminDashboardPage() {
     return (
       <EmptyState
         icon={Users}
-        title="Failed to load stats"
-        description="Could not load dashboard statistics. Please try again."
+        title={t('error_load_stats_title')}
+        description={t('error_load_stats_desc')}
       />
     );
   }

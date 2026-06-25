@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  Menu,
-  Bell,
-  Search,
-  ChevronDown,
-  Sun,
-  Moon,
-  Monitor,
-  LogOut,
-  Settings,
-} from 'lucide-react';
+import { Menu, ChevronDown, Sun, Moon, Monitor, LogOut, Settings } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -29,12 +19,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-const ROLE_LABELS: Record<UserRole, string> = {
-  FREE: 'Free',
-  PRO: 'Pro',
-  ADMIN: 'Admin',
-};
 
 interface DashboardHeaderProps {
   onMenuClick: () => void;
@@ -61,7 +45,13 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const tSidebar = useTranslations('Sidebar');
   const tDash = useTranslations('Dashboard');
   const tAuth = useTranslations('Auth');
+  const tAdmin = useTranslations('Admin');
   const { user, logout } = useAuthStore();
+  const roleLabels: Record<UserRole, string> = {
+    FREE: tAdmin('role_free'),
+    PRO: tAdmin('role_pro'),
+    ADMIN: tAdmin('role_admin'),
+  };
   const showConfirm = useDialogStore((state) => state.showConfirm);
   const router = useRouter();
   const title = useDashboardTitle(tPages, tSidebar);
@@ -116,18 +106,6 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Search bar — hidden on mobile */}
-      <div className="hidden flex-1 md:flex md:max-w-sm">
-        <div className="relative w-full">
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search here"
-            className="border-border bg-muted/40 text-foreground placeholder:text-muted-foreground/70 focus:border-primary/40 focus:bg-card focus:ring-primary/15 h-9 w-full rounded-xl border pr-4 pl-9 text-sm transition-all outline-none focus:ring-2"
-          />
-        </div>
-      </div>
-
       {/* Mobile page title */}
       <h2 className="text-foreground flex-1 text-base font-semibold md:hidden">{title}</h2>
 
@@ -142,16 +120,6 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           title={mounted ? (theme ?? 'system') : 'system'}
         >
           <ThemeIcon style={{ width: '1.125rem', height: '1.125rem' }} />
-        </button>
-
-        {/* Notification bell */}
-        <button
-          className="text-muted-foreground hover:bg-muted hover:text-foreground relative flex h-9 w-9 items-center justify-center rounded-xl transition-colors"
-          aria-label={tDash('notification_title')}
-          title={tDash('notification_title')}
-        >
-          <Bell className="h-4.5 w-4.5" style={{ width: '1.125rem', height: '1.125rem' }} />
-          <span className="bg-primary ring-card absolute top-2 right-2 h-2 w-2 rounded-full ring-2" />
         </button>
 
         {/* User info — desktop */}
@@ -174,7 +142,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                     {user.name ?? user.email}
                   </span>
                   <span className="text-muted-foreground mt-1.5 truncate text-xs leading-none">
-                    {ROLE_LABELS[user.role ?? 'FREE']}
+                    {roleLabels[user.role ?? 'FREE']}
                   </span>
                 </div>
                 <ChevronDown className="text-muted-foreground ml-1 h-4 w-4 shrink-0 transition-transform" />
@@ -205,7 +173,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                         {user.email}
                       </p>
                       <p className="text-muted-foreground mt-0.5 truncate text-[11px] leading-none">
-                        {ROLE_LABELS[user.role ?? 'FREE']}
+                        {roleLabels[user.role ?? 'FREE']}
                       </p>
                     </div>
                   </div>
@@ -217,14 +185,14 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                 className="focus:bg-primary/5 focus:text-primary cursor-pointer rounded-xl px-3 py-2.5 transition-colors"
               >
                 <Settings className="text-muted-foreground mr-3 h-4.5 w-4.5" />
-                <span className="text-sm font-medium">Settings</span>
+                <span className="text-sm font-medium">{tDash('settings')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleLogoutClick}
                 className="cursor-pointer rounded-xl px-3 py-2.5 text-red-600 transition-colors focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
               >
                 <LogOut className="mr-3 h-4.5 w-4.5" />
-                <span className="text-sm font-medium">Log out</span>
+                <span className="text-sm font-medium">{tDash('log_out')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

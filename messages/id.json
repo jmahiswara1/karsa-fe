@@ -182,7 +182,10 @@
     "pending_auto_redirect": "Anda akan dialihkan secara otomatis setelah disetujui.",
     "rejected_title": "Akun Ditolak",
     "rejected_subtitle": "Pendaftaran akun Anda telah ditolak oleh admin. Silakan hubungi dukungan untuk informasi lebih lanjut.",
-    "rejected_back": "Kembali ke Login"
+    "rejected_back": "Kembali ke Login",
+    "callback_waiting": "Mohon tunggu sementara kami menyiapkan sesi Anda.",
+    "approved_title": "Disetujui",
+    "approved_redirecting": "Mengalihkan Anda ke halaman login..."
   },
   "Footer": {
     "description": "Platform andalan Anda untuk alat ruang kerja cerdas dan wawasan perencanaan harian.",
@@ -300,7 +303,9 @@
     "mini_chat_clear_title": "Bersihkan Chat",
     "mini_chat_clear_desc": "Apakah Anda yakin ingin membersihkan chat ini? Tindakan ini tidak dapat dibatalkan.",
     "mini_chat_clear_btn": "Bersihkan",
-    "mini_chat_cancel_btn": "Batal"
+    "mini_chat_cancel_btn": "Batal",
+    "settings": "Pengaturan",
+    "log_out": "Keluar"
   },
   "Pages": {
     "tasks_title": "Tugas",
@@ -766,7 +771,14 @@
     "confirm_reject_title": "Tolak pengguna ini?",
     "confirm_reject_desc": "Pengguna tidak akan dapat mengakses Karsa.",
     "confirm_yes": "Ya",
-    "confirm_no": "Batal"
+    "confirm_no": "Batal",
+    "error_load_stats_title": "Gagal memuat statistik",
+    "error_load_stats_desc": "Tidak dapat memuat statistik dashboard. Silakan coba lagi.",
+    "error_load_users": "Gagal memuat pengguna",
+    "error_load_activities": "Gagal memuat aktivitas",
+    "error_load_pending": "Gagal memuat pengguna tertunda",
+    "error_load_invites": "Gagal memuat undangan",
+    "error_load_audit_logs": "Gagal memuat log audit"
   },
   "Focus": {
     "energy_label": "Energi",
@@ -874,5 +886,44 @@
     "stat3_value": "4.9",
     "stat3_suffix": "/5.0",
     "stat3_label": "Rating Pengguna"
+  },
+  "Priority": {
+    "low": "Rendah",
+    "medium": "Sedang",
+    "high": "Tinggi",
+    "urgent": "Mendesak"
+  },
+  "Status": {
+    "todo": "Todo",
+    "in_progress": "Sedang Dikerjakan",
+    "done": "Selesai",
+    "cancelled": "Dibatalkan"
+  },
+  "Legal": {
+    "last_updated": "Terakhir diperbarui:",
+    "privacy_title": "Kebijakan Privasi",
+    "privacy_s1_title": "1. Informasi yang Kami Kumpulkan",
+    "privacy_s1_body": "Kami mengumpulkan informasi yang Anda berikan langsung, seperti nama, email, dan data akun Google saat Anda masuk. Kami juga mengumpulkan data penggunaan termasuk tugas, proyek, catatan, dan interaksi dalam aplikasi.",
+    "privacy_s2_title": "2. Cara Kami Menggunakan Informasi Anda",
+    "privacy_s2_body": "Kami menggunakan data Anda untuk menyediakan, memelihara, dan meningkatkan Karsa. Data tugas dan proyek Anda diproses oleh AI kami untuk memberikan saran cerdas dan bantuan perencanaan. Kami tidak menjual data pribadi Anda.",
+    "privacy_s3_title": "3. Keamanan Data",
+    "privacy_s3_body": "Kami menerapkan langkah-langkah keamanan standar industri untuk melindungi data Anda, termasuk enkripsi saat disimpan dan dikirim. Namun, tidak ada metode transmisi elektronik atau penyimpanan yang 100% aman.",
+    "privacy_s4_title": "4. Layanan Pihak Ketiga",
+    "privacy_s4_body": "Kami menggunakan Google OAuth untuk autentikasi dan dapat terintegrasi dengan Google Calendar. Layanan ini memiliki kebijakan privasi masing-masing. Kami tidak membagikan data Anda dengan pihak ketiga lainnya.",
+    "privacy_s5_title": "5. Hak Anda",
+    "privacy_s5_body": "Anda dapat mengakses, memperbarui, atau menghapus data Anda kapan saja melalui halaman Pengaturan. Anda juga dapat meminta penghapusan akun dengan menghubungi dukungan.",
+    "terms_title": "Syarat Layanan",
+    "terms_s1_title": "1. Penerimaan Syarat",
+    "terms_s1_body": "Dengan mengakses atau menggunakan Karsa, Anda setuju untuk terikat oleh Syarat Layanan ini. Jika Anda tidak setuju, jangan gunakan layanan ini.",
+    "terms_s2_title": "2. Deskripsi Layanan",
+    "terms_s2_body": "Karsa adalah asisten produktivitas personal bertenaga AI yang membantu Anda mengelola tugas, proyek, catatan, dan perencanaan harian. Layanan diberikan sebagaimana adanya dan dapat diperbarui dari waktu ke waktu.",
+    "terms_s3_title": "3. Akun Pengguna",
+    "terms_s3_body": "Anda bertanggung jawab untuk menjaga keamanan akun Anda. Anda tidak boleh membagikan kredensial akun Anda. Segera beri tahu kami jika ada penggunaan tanpa izin.",
+    "terms_s4_title": "4. Penggunaan yang Dapat Diterima",
+    "terms_s4_body": "Anda setuju untuk tidak menyalahgunakan layanan, termasuk namun tidak terbatas pada: mencoba akses tanpa izin, mengganggu layanan, atau menggunakannya untuk aktivitas ilegal.",
+    "terms_s5_title": "5. Hak Kekayaan Intelektual",
+    "terms_s5_body": "Layanan dan konten aslinya, fitur, dan fungsionalitas dimiliki oleh Karsa dan dilindungi oleh hak cipta internasional, merek dagang, dan undang-undang kekayaan intelektual lainnya.",
+    "terms_s6_title": "6. Batasan Tanggung Jawab",
+    "terms_s6_body": "Dalam keadaan apapun Karsa tidak bertanggung jawab atas kerugian tidak langsung, insidental, khusus, konsekuensial, atau punitif yang timbul dari penggunaan layanan Anda."
   }
 }

@@ -1,11 +1,12 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { Link, usePathname } from '@/i18n/routing';
+import { ReactNode, useEffect } from 'react';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
-import { ShieldCheck, Users, UserCheck, Activity, Link2, History } from 'lucide-react';
+import { ShieldCheck, Users, UserCheck, Activity, Link2, History, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PageIntro } from '@/components/shared/page-header';
+import { useAuthStore } from '@/store/auth.store';
 
 const tabs = [
   { key: 'dashboard', href: '/admin', icon: ShieldCheck, exact: true },
@@ -19,6 +20,22 @@ const tabs = [
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const t = useTranslations('Admin');
+  const router = useRouter();
+  const { user, isLoading } = useAuthStore();
+
+  useEffect(() => {
+    if (!isLoading && user?.role !== 'ADMIN') {
+      router.replace('/dashboard');
+    }
+  }, [user, isLoading, router]);
+
+  if (isLoading || user?.role !== 'ADMIN') {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
 
   const isActive = (tab: (typeof tabs)[number]) =>
     tab.exact ? pathname === '/admin' : pathname.startsWith(tab.href);

@@ -36,8 +36,9 @@ export default function AuthCallbackPage() {
     }
 
     if (accessToken && refreshToken) {
-      document.cookie = `access_token=${accessToken}; path=/; max-age=${15 * 60}; SameSite=Lax`;
-      document.cookie = `refresh_token=${refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+      const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = `access_token=${accessToken}; path=/; max-age=${15 * 60}; SameSite=Lax${secure}`;
+      document.cookie = `refresh_token=${refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax${secure}`;
 
       const returnTo = sessionStorage.getItem('returnTo') || '/dashboard';
       sessionStorage.removeItem('returnTo');

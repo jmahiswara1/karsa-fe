@@ -38,6 +38,12 @@ export async function Navbar() {
             {t('how_it_works')}
           </Link>
           <Link
+            href="#pricing"
+            className="text-sm font-medium text-gray-600 transition-colors hover:text-blue-600"
+          >
+            {t('pricing')}
+          </Link>
+          <Link
             href="#faq"
             className="text-sm font-medium text-gray-600 transition-colors hover:text-blue-600"
           >

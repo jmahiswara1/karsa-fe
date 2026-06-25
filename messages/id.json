@@ -2,6 +2,7 @@
   "Navbar": {
     "features": "Fitur",
     "how_it_works": "Cara Kerja",
+    "pricing": "Harga",
     "faq": "FAQ",
     "log_in": "Masuk",
     "sign_up": "Daftar",
@@ -40,6 +41,31 @@
     "step3_title": "Eksekusi",
     "step3_desc": "Bangun dengan hari yang terencana. Selesaikan tugas tanpa hambatan dan saksikan skor produktivitas Anda melonjak."
   },
+  "Pricing": {
+    "title_1": "Harga yang ",
+    "title_2": "sederhana dan transparan",
+    "subtitle": "Mulai gratis. Upgrade saat Anda butuh lebih.",
+    "free_name": "Gratis",
+    "free_price": "Rp 0",
+    "free_period": "/bulan",
+    "free_desc": "Sempurna untuk memulai",
+    "pro_name": "Pro",
+    "pro_price": "Rp 49.000",
+    "pro_period": "/bulan",
+    "pro_desc": "Untuk pengguna power yang butuh lebih",
+    "most_popular": "Paling Populer",
+    "get_started": "Mulai",
+    "get_pro": "Dapatkan Pro",
+    "coming_soon": "Segera Hadir",
+    "feature_unlimited_tasks": "Tugas & proyek tanpa batas",
+    "feature_notes": "Catatan dengan folder",
+    "feature_ai_limited": "Asisten AI (terbatas)",
+    "feature_ai_unlimited": "Asisten AI (tanpa batas)",
+    "feature_calendar_sync": "Sinkronisasi Google Calendar",
+    "feature_export": "Ekspor data (CSV/PDF)",
+    "feature_priority_support": "Dukungan prioritas",
+    "feature_collabs": "Kolaborasi (segera)"
+  },
   "Faq": {
     "title_1": "Pertanyaan yang sering ",
     "title_2": "ditanyakan",
@@ -51,7 +77,15 @@
     "q3": "Apakah Karsa berbayar?",
     "a3": "Saat ini Karsa sepenuhnya gratis untuk digunakan! Karena kami masih dalam tahap awal, seluruh fitur dapat dinikmati tanpa biaya, namun penggunaan AI dibatasi secara wajar demi menjaga kestabilan sistem bagi semua pengguna.",
     "q4": "Apakah data saya aman?",
-    "a4": "Ya. Kami sangat menjaga privasi. Seluruh data Anda dienkripsi baik saat disimpan maupun transit. Kami tidak pernah menggunakan data Anda untuk melatih AI publik."
+    "a4": "Ya. Kami sangat menjaga privasi. Seluruh data Anda dienkripsi baik saat disimpan maupun transit. Kami tidak pernah menggunakan data Anda untuk melatih AI publik.",
+    "q5": "Apa saja yang termasuk dalam paket Gratis?",
+    "a5": "Paket Gratis mencakup tugas, proyek, dan catatan tanpa batas, serta permintaan AI terbatas per bulan. Sempurna untuk produktivitas pribadi dan memulai dengan Karsa.",
+    "q6": "Apa yang saya dapatkan dengan Pro?",
+    "a6": "Pro membuka penggunaan Asisten AI tanpa batas, sinkronisasi Google Calendar, ekspor data (CSV/PDF), dukungan prioritas, dan fitur kolaborasi yang akan datang.",
+    "q7": "Bisakah saya upgrade atau downgrade kapan saja?",
+    "a7": "Tentu! Anda bisa beralih antara Gratis dan Pro kapan saja. Perubahan berlaku di awal siklus tagihan berikutnya.",
+    "q8": "Apakah ada uji coba gratis untuk Pro?",
+    "a8": "Kami belum menawarkan uji coba gratis, tetapi kami memberikan jaminan uang kembali 30 hari. Jika Pro tidak cocok untuk Anda, hubungi kami dalam 30 hari untuk pengembalian dana penuh."
   },
   "Cta": {
     "title_1": "Karsa, ",

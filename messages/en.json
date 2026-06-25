@@ -2,6 +2,7 @@
   "Navbar": {
     "features": "Features",
     "how_it_works": "How it works",
+    "pricing": "Pricing",
     "faq": "FAQ",
     "log_in": "Log in",
     "sign_up": "Sign up",
@@ -40,6 +41,31 @@
     "step3_title": "Execute",
     "step3_desc": "Wake up to a perfectly planned day. Tick off tasks with zero friction and watch your productivity score soar."
   },
+  "Pricing": {
+    "title_1": "Simple, ",
+    "title_2": "transparent pricing",
+    "subtitle": "Start free. Upgrade when you need more.",
+    "free_name": "Free",
+    "free_price": "Rp 0",
+    "free_period": "/month",
+    "free_desc": "Perfect for getting started",
+    "pro_name": "Pro",
+    "pro_price": "Rp 49.000",
+    "pro_period": "/month",
+    "pro_desc": "For power users who need more",
+    "most_popular": "Most Popular",
+    "get_started": "Get Started",
+    "get_pro": "Get Pro",
+    "coming_soon": "Coming Soon",
+    "feature_unlimited_tasks": "Unlimited tasks & projects",
+    "feature_notes": "Notes with folders",
+    "feature_ai_limited": "AI Assistant (limited)",
+    "feature_ai_unlimited": "AI Assistant (unlimited)",
+    "feature_calendar_sync": "Google Calendar sync",
+    "feature_export": "Export data (CSV/PDF)",
+    "feature_priority_support": "Priority support",
+    "feature_collabs": "Collaboration (soon)"
+  },
   "Faq": {
     "title_1": "Frequently asked ",
     "title_2": "questions",
@@ -51,7 +77,15 @@
     "q3": "Do I have to pay to use Karsa?",
     "a3": "Currently, Karsa is completely free to use! Since we are in the early stages, all features are available at no cost, though AI requests may be subject to fair use limits to ensure stability for everyone.",
     "q4": "Is my data secure?",
-    "a4": "Yes. We take privacy seriously. All your data is encrypted at rest and in transit. We never use your personal tasks to train public AI models."
+    "a4": "Yes. We take privacy seriously. All your data is encrypted at rest and in transit. We never use your personal tasks to train public AI models.",
+    "q5": "What's included in the Free plan?",
+    "a5": "The Free plan includes unlimited tasks, projects, notes, and limited AI requests per month. It's perfect for personal productivity and getting started with Karsa.",
+    "q6": "What do I get with Pro?",
+    "a6": "Pro unlocks unlimited AI Assistant usage, Google Calendar sync, data export (CSV/PDF), priority support, and upcoming collaboration features. It's designed for power users who need more.",
+    "q7": "Can I upgrade or downgrade anytime?",
+    "a7": "Yes! You can switch between Free and Pro at any time. Changes take effect at the start of your next billing cycle.",
+    "q8": "Is there a free trial for Pro?",
+    "a8": "We don't offer a free trial yet, but we do provide a 30-day money-back guarantee. If Pro isn't right for you, contact us within 30 days for a full refund."
   },
   "Cta": {
     "title_1": "Karsa, ",

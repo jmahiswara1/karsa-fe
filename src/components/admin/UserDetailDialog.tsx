@@ -1,8 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Loader2, Mail, Calendar, Shield, Clock, ExternalLink, Pencil, Trash2 } from 'lucide-react';
+import { useRouter } from '@/i18n/routing';
+import {
+  Loader2,
+  Mail,
+  Calendar,
+  Shield,
+  Clock,
+  ExternalLink,
+  Pencil,
+  Trash2,
+  FileText,
+  FolderOpen,
+  StickyNote,
+  LogIn,
+  Bot,
+  ChevronDown,
+} from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
@@ -29,6 +45,15 @@ interface UserDetail {
   };
 }
 
+interface Activity {
+  id: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  details: Record<string, unknown> | null;
+  createdAt: string;
+}
+
 interface UserDetailDialogProps {
   userId: string | null;
   open: boolean;
@@ -36,12 +61,28 @@ interface UserDetailDialogProps {
   onRefresh?: () => void;
 }
 
+const ENTITY_ICONS: Record<string, React.ElementType> = {
+  Task: FileText,
+  Project: FolderOpen,
+  Note: StickyNote,
+  User: Shield,
+};
+
+function getActivityIcon(action: string, entityType: string): React.ElementType {
+  if (action === 'LOGIN') return LogIn;
+  if (action === 'AI_CREATE') return Bot;
+  return ENTITY_ICONS[entityType] || FileText;
+}
+
 export function UserDetailDialog({ userId, open, onOpenChange, onRefresh }: UserDetailDialogProps) {
   const t = useTranslations('Admin');
+  const router = useRouter();
   const [user, setUser] = useState<UserDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [isLoadingActivities, setIsLoadingActivities] = useState(false);
 
   useEffect(() => {
     if (!userId || !open) return;
@@ -53,6 +94,28 @@ export function UserDetailDialog({ userId, open, onOpenChange, onRefresh }: User
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false));
   }, [userId, open]);
+
+  const fetchActivities = useCallback(
+    async (take: number) => {
+      if (!userId) return;
+      setIsLoadingActivities(true);
+      try {
+        const res = await api.get(`/api/admin/users/${userId}/activities?take=${take}`);
+        setActivities(res.data.data);
+      } catch {
+        setActivities([]);
+      } finally {
+        setIsLoadingActivities(false);
+      }
+    },
+    [userId],
+  );
+
+  useEffect(() => {
+    if (!userId || !open) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchActivities(3);
+  }, [userId, open, fetchActivities]);
 
   const statusColors: Record<string, string> = {
     ACTIVE: 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -159,6 +222,60 @@ export function UserDetailDialog({ userId, open, onOpenChange, onRefresh }: User
                   </div>
                 </div>
               )}
+
+              {/* Recent Activity */}
+              <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+                <p className="mb-3 text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  {t('detail_recent_activity')}
+                </p>
+                {isLoadingActivities ? (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+                  </div>
+                ) : activities.length === 0 ? (
+                  <p className="py-4 text-center text-xs text-gray-400">
+                    {t('detail_no_activity')}
+                  </p>
+                ) : (
+                  <div className="max-h-48 space-y-2 overflow-y-auto">
+                    {activities.map((activity) => {
+                      const Icon = getActivityIcon(activity.action, activity.entityType);
+                      const details = activity.details as Record<string, unknown> | null;
+                      const title = details?.title as string | undefined;
+                      return (
+                        <div
+                          key={activity.id}
+                          className="flex items-start gap-2.5 rounded-lg px-2 py-1.5 hover:bg-gray-100/50"
+                        >
+                          <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-xs text-gray-700">
+                              <span className="font-medium">{activity.action}</span>{' '}
+                              <span className="text-gray-500">{activity.entityType}</span>
+                              {title && <span className="text-gray-500"> &middot; {title}</span>}
+                            </p>
+                            <p className="text-[10px] text-gray-400">
+                              {new Date(activity.createdAt).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {(user._count?.activityLogs ?? 0) > 3 && (
+                      <button
+                        onClick={() => {
+                          onOpenChange(false);
+                          router.push(`/admin/users/${userId}/activity`);
+                        }}
+                        className="flex w-full items-center justify-center gap-1 pt-2 text-xs text-gray-500 hover:text-gray-700"
+                      >
+                        <ChevronDown className="h-3 w-3" />
+                        {t('detail_view_all_activity')}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
 
               {/* Actions */}
               <div className="flex items-center gap-2 border-t border-gray-100 pt-4">

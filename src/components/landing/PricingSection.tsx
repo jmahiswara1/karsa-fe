@@ -117,12 +117,12 @@ export function PricingSection() {
             ))}
           </ul>
 
-          <Link
-            href="mailto:hello@karsa.app?subject=Pro%20Plan%20Waitlist"
-            className="mt-auto block w-full rounded-xl bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+          <button
+            disabled
+            className="mt-auto block w-full cursor-not-allowed rounded-xl bg-gray-200 px-6 py-3 text-center text-sm font-semibold text-gray-400"
           >
-            {t('notify_me')}
-          </Link>
+            {t('coming_soon')}
+          </button>
         </motion.div>
       </div>
     </section>

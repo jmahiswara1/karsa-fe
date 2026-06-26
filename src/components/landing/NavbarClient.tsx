@@ -79,15 +79,9 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
               <>
                 <Link
                   href="/login?returnTo=/"
-                  className="text-sm font-medium text-gray-600 transition-colors hover:text-blue-600"
-                >
-                  {t('log_in')}
-                </Link>
-                <Link
-                  href="/login?returnTo=/"
                   className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-blue-200 transition-all hover:bg-blue-700 active:scale-95"
                 >
-                  {t('sign_up')}
+                  {t('log_in')}
                 </Link>
               </>
             )}

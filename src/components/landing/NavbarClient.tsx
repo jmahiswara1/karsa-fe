@@ -14,8 +14,8 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const navLinks = [
     { href: '#features', label: t('features') },
-    { href: '#pricing', label: t('pricing') },
     { href: '#how-it-works', label: t('how_it_works') },
+    { href: '#pricing', label: t('pricing') },
     { href: '#faq', label: t('faq') },
   ];
 

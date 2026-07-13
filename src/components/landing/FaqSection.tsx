@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
-const faqIndices = [1, 2, 3, 4, 5, 6, 7, 8];
+const faqIndices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export function FaqSection() {
   const t = useTranslations('Faq');

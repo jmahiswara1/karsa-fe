@@ -6,6 +6,7 @@ import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
 import { AiDemoSection } from '@/components/landing/AiDemoSection';
 import { FeatureSection } from '@/components/landing/FeatureSection';
 import { PricingSection } from '@/components/landing/PricingSection';
+import { TeamWorkspaceSection } from '@/components/landing/TeamWorkspaceSection';
 import { FaqSection } from '@/components/landing/FaqSection';
 import { CtaSection } from '@/components/landing/CtaSection';
 import { StatsSection } from '@/components/landing/StatsSection';
@@ -52,8 +53,9 @@ export default function Home() {
         <AiDemoSection />
         <StatsSection />
         <FeatureSection />
-        <PricingSection />
+        <TeamWorkspaceSection />
         <HowItWorksSection />
+        <PricingSection />
         <FaqSection />
         <CtaSection />
       </main>

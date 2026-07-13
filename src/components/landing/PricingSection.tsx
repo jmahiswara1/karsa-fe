@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
-import { Check, Crown, Zap } from 'lucide-react';
+import { Check, Crown, Zap, Users } from 'lucide-react';
 
 const freeFeatures = ['feature_unlimited_tasks', 'feature_notes', 'feature_ai_limited'] as const;
 
@@ -15,6 +15,16 @@ const proFeatures = [
   'feature_export',
   'feature_priority_support',
   'feature_collabs',
+] as const;
+
+const teamFeatures = [
+  'feature_shared_projects',
+  'feature_task_assignment',
+  'feature_team_dashboard',
+  'feature_team_ai',
+  'feature_role_management',
+  'feature_comments',
+  'feature_priority_support',
 ] as const;
 
 export function PricingSection() {
@@ -43,7 +53,7 @@ export function PricingSection() {
         </motion.p>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         {/* Free Plan */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -87,15 +97,8 @@ export function PricingSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ delay: 0.2 }}
-          className="relative flex flex-col rounded-2xl border-2 border-blue-600 bg-white p-8 shadow-lg shadow-blue-600/10"
+          className="flex flex-col rounded-2xl border border-gray-200 bg-white p-8"
         >
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-4 py-1 text-xs font-semibold text-white">
-              <Crown className="h-3 w-3" />
-              {t('most_popular')}
-            </span>
-          </div>
-
           <div className="mb-6">
             <div className="mb-2 flex items-center gap-2">
               <Crown className="h-5 w-5 text-blue-600" />
@@ -110,6 +113,50 @@ export function PricingSection() {
 
           <ul className="mb-8 flex-1 space-y-3">
             {proFeatures.map((key) => (
+              <li key={key} className="flex items-start gap-3">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+                <span className="text-sm text-gray-600">{t(key)}</span>
+              </li>
+            ))}
+          </ul>
+
+          <button
+            disabled
+            className="mt-auto block w-full cursor-not-allowed rounded-xl bg-gray-200 px-6 py-3 text-center text-sm font-semibold text-gray-400"
+          >
+            {t('coming_soon')}
+          </button>
+        </motion.div>
+
+        {/* Team Plan */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ delay: 0.3 }}
+          className="relative flex flex-col rounded-2xl border-2 border-blue-600 bg-white p-8 shadow-lg shadow-blue-600/10"
+        >
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-4 py-1 text-xs font-semibold text-white">
+              <Users className="h-3 w-3" />
+              {t('team_badge')}
+            </span>
+          </div>
+
+          <div className="mb-6">
+            <div className="mb-2 flex items-center gap-2">
+              <Users className="h-5 w-5 text-blue-600" />
+              <span className="text-sm font-medium text-blue-600">{t('team_name')}</span>
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-4xl font-extrabold text-gray-900">{t('team_price')}</span>
+              <span className="text-gray-500">{t('team_period')}</span>
+            </div>
+            <p className="mt-2 text-sm text-gray-500">{t('team_desc')}</p>
+          </div>
+
+          <ul className="mb-8 flex-1 space-y-3">
+            {teamFeatures.map((key) => (
               <li key={key} className="flex items-start gap-3">
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
                 <span className="text-sm text-gray-600">{t(key)}</span>

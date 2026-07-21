@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { Menu, X } from 'lucide-react';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { LogoutButton } from '../auth/LogoutButton';
+import { ThemeToggle } from '../ThemeToggle';
 
 export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
   const t = useTranslations('Navbar');
@@ -50,6 +51,7 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
         <div className="flex items-center gap-3">
           {/* Desktop CTA */}
           <div className="hidden items-center gap-4 md:flex">
+            <ThemeToggle />
             <LanguageSwitcher />
             {isLoggedIn ? (
               <>
@@ -115,9 +117,10 @@ export function NavbarClient({ isLoggedIn }: { isLoggedIn: boolean }) {
               </Link>
             ))}
           </div>
-          <div className="mt-4 border-t border-gray-100 pt-4">
-            <div className="mb-3 md:hidden">
+          <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+            <div className="mb-3 flex items-center justify-between md:hidden">
               <LanguageSwitcher />
+              <ThemeToggle />
             </div>
             {isLoggedIn ? (
               <Link

@@ -42,9 +42,11 @@ export default async function RootLayout(
     >
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
-          <QueryProvider>
-            <GlobalDialogProvider>{children}</GlobalDialogProvider>
-          </QueryProvider>
+          <ThemeProvider attribute="class" defaultTheme="light">
+            <QueryProvider>
+              <GlobalDialogProvider>{children}</GlobalDialogProvider>
+            </QueryProvider>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>
